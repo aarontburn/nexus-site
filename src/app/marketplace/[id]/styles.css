@@ -1,0 +1,101 @@
+
+.readme {
+    background-color: rgb(58, 58, 58);
+    padding: 1em;
+    height: 100%;
+}
+
+
+.md-container {
+   list-style-position: inside;
+}
+
+.md-container > * {
+    margin-bottom: 1rem;
+}
+
+.md-container > blockquote > * {
+    margin-bottom: 1rem;
+    
+}
+
+.md-container > h1,
+.md-container > h2 {
+    padding-bottom: .3em;
+    border-bottom: 1px solid #858585b3;
+    margin-bottom: 1rem;
+}
+
+
+
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1em;
+    margin-right: 2em;
+    position: relative;
+}
+
+.image-container p {
+    width: 128px;
+    font-size: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.module-link {
+    height: 2em;
+    width: 250px;
+    font-size: 1.25em;
+    margin-top: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.5em;
+    transition: 0.2s;
+    border: 1px solid rgb(36, 36, 36);
+    border-radius: 5px;
+    background-color: rgb(78, 78, 78);
+    color: white;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+
+
+.module-link:hover {
+    border-color: var(--accent-color);
+}
+
+.logo {
+    mask-size: cover;
+    mask-position: center;
+    background-color: white;
+
+    height: 1em;
+    width: 1em;
+    margin-right: 0.5em;
+}
+
+.nexus-logo {
+    mask-image: url("../../assets/logo-no-background.svg");
+}
+
+.git-logo {
+    mask-image: url("./github-logo.png");
+}
+
+.download-logo {
+    mask-image: url("../../assets/download-icon.png");
+}
+
+#button-container {
+    display: flex;
+}
+
+#button-container>.module-link {
+    margin-right: 5px;
+}

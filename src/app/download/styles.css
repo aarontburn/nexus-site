@@ -1,0 +1,77 @@
+
+.dl-left-container {
+    margin-right: 10rem;
+    position: absolute;
+    left: 10%;
+    top: 40%;
+    width: 40%;
+}
+
+.dl-left-container h1 {
+    font-size: 50px;
+}
+
+.dl-right-container {
+    position: absolute;
+    right: 0;
+    top: calc(85%- 75vh);
+    display: flex;
+    justify-content: end;
+}
+
+.download-button {
+    padding: 5px;
+    width: 175px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+    cursor: pointer;
+    margin-right: 1em;
+    height: 2.5em;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.download-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sample-image {
+    object-fit: cover;
+    object-position: 0;
+    width: 50vw;
+    height: 75vh;
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+    clip-path: inset(1px);
+}
+
+.logo {
+    mask-size: cover;
+    mask-position: center;
+    background-color: var(--background);
+
+    height: 24px;
+    width: 24px;
+    margin-right: 0.5em;
+}
+
+
+
+
+.Windows-logo {
+    mask-image: url(./windows.png);
+}
+
+.macOS-logo {
+    mask-image: url(./mac.png);
+}
+
+.Linux-logo {
+    mask-image: url(./linux.png);
+}

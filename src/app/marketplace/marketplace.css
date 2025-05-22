@@ -1,25 +1,3 @@
-.mbody {
-    display: flex;
-}
-
-.left {
-    order: 0;
-    flex-grow: 1;
-    flex-basis: 0;
-}
-
-.right {
-    order: 2;
-    flex-grow: 1;
-    flex-basis: 0;
-}
-
-.main {
-    padding-top: 2rem;
-    order: 1;
-    width: 75%;
-    min-width: 50%;
-}
 
 .main>input {
     width: 100%;
@@ -34,7 +12,7 @@
     display: flex;
     width: 100%;
     align-items: center;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--foreground);
 
 }
 
@@ -45,10 +23,34 @@
 }
 
 
+.module-info-name {
+    transition: 0.2s;
+}
+
+.module:hover .module-info-name {
+    color: var(--accent-color);
+}
+
+
 .module-image-container>img {
     width: 100%;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
+.module-info-container h4 {
+    font-weight: 400;
+}   
+
+.module-abbreviation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 28px;
+}
 
 
 @media (min-width: 576px) {

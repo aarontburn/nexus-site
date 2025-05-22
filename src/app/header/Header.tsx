@@ -16,7 +16,7 @@ export function Header() {
 
             <NavButton displayText="About" callback={() => router.push('/about')} fontSize={FONT_SIZE} />
             <NavButton displayText="Download" callback={() => router.push('/download')} fontSize={FONT_SIZE} />
-            <NavButton displayText="Module Marketplace" callback={() => router.push('/marketplace')} fontSize={FONT_SIZE} />
+            <NavButton displayText="Marketplace" callback={() => router.push('/marketplace')} fontSize={FONT_SIZE} />
             <Spacer />
 
         </div>
