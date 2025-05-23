@@ -11,12 +11,34 @@
     z-index: 1000;
 }
 
+.header-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.header-logo-container:hover > .nav-button {
+    color: var(--accent-color)
+}
+
+.header-logo-container > .component-nexus-logo {
+    background-color: var(--foreground);
+    transition: 0.2s;
+}
+
+.header-logo-container:hover > .component-nexus-logo {
+    background-color: var(--accent-color);
+}
+
+
 
 .nav-button {
     box-sizing: content-box;
     margin: 0 1rem;
     transition: 0.2s;
-    padding: 0.25rem 1rem;
+    padding: 0.25rem 0;
+    padding-right: 2rem;
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;

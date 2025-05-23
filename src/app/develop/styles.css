@@ -1,0 +1,40 @@
+
+
+.develop-page {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 20%;
+    border-right: 1px solid var(--background-light);
+    padding-left: 1rem;
+    height: 100%;
+}
+
+.sidebar details,
+.sidebar p {
+    margin: 0.5rem 0;
+    cursor: pointer;
+
+}
+
+
+.sidebar summary {
+    color: gray
+}
+
+.sidebar p {
+    transition: 0.2s;
+}
+
+.sidebar p:hover {
+    color: var(--accent-color);
+}
+
+
+.develop-content {
+    padding-left: 1rem;
+    width: 80%;
+}
+

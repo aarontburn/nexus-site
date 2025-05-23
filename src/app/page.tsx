@@ -1,12 +1,12 @@
 "use client"
 
-import { NexusText, VerticalSpacer } from "./components/Components";
+import { NexusLogo, NexusText, VerticalSpacer } from "./components/Components";
 import "./styles.css";
 
 import googleCalendarImage from "./assets/google-calendar.png";
 import debugConsoleImage from "./assets/debug-console.png";
 import spotifyMonkeyImage from "./assets/spotify-monkey.png";
-import { Ref, useRef } from "react";
+import { Ref, useEffect, useRef } from "react";
 
 
 function Accented({ children }: any) {
@@ -25,21 +25,28 @@ function Link({ url, text }: { text: string, url: string }) {
 
 export default function Home() {
     const aboutRef: Ref<HTMLHeadingElement | null> = useRef(null);
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
+
     return <div>
         <VerticalSpacer size="5rem" />
 
         <div className="container first">
             <div className="left">
+                <NexusLogo width={"10rem"} height={"10rem"} />
+
                 <div className="title">
                     <h1 className="title-text">NEXUS</h1>
-                    <div className="nexus"></div>
                 </div>
 
                 <VerticalSpacer size="2rem" />
 
                 <p style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
 
-                <a className="main-download" href="/download">
+                <a className="main-clickable" href="/download">
                     Download Now
                 </a>
 
@@ -48,7 +55,7 @@ export default function Home() {
                         behavior: "smooth",
                         block: "center"
                     })}
-                    className="main-download"
+                    className="main-clickable"
                     style={{ backgroundColor: "var(--accent-color)" }}>
                     Learn More
                 </button>
@@ -67,6 +74,7 @@ export default function Home() {
         </div>
 
         <div className="container second">
+            <div className="background-image"></div>
             <h1 ref={aboutRef}>What is {<NexusText />}?</h1>
             <p>
                 Nexus is a versatile, cross-platform application loader designed to be a toolbox.
@@ -79,13 +87,13 @@ export default function Home() {
         <div className="container third">
             <VerticalSpacer size="7rem" />
 
-            <h2 style={{ fontSize: "2em" }}>
+            <h2 style={{ fontSize: "1.5em" }}>
                 Install community-made <span style={{ color: "var(--accent-color)" }}>modules</span> that serve any purpose for any user.
             </h2>
-            <VerticalSpacer size="2rem" />
+            <VerticalSpacer size="1rem" />
 
             <div className="desc-box">
-                <h1 >Are you a</h1>
+                <h1>Are you a</h1>
                 <div className="feature-grid">
                     <Card>
                         <h3>🎨 Artist or Designer?</h3>
@@ -125,6 +133,8 @@ export default function Home() {
 
                 <VerticalSpacer size="1rem" />
                 <h1>One application. Infinite uses.</h1>
+                <VerticalSpacer size="5rem" />
+
             </div>
         </div>
 
@@ -176,6 +186,11 @@ export default function Home() {
                 </Card>
 
             </div>
+
+
+            <a className="main-clickable" href="/develop">
+                Start Developing
+            </a>
         </div>
 
     </div>

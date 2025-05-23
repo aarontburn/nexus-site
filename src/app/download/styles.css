@@ -14,10 +14,22 @@
 .dl-right-container {
     position: absolute;
     right: 0;
-    top: calc(85%- 75vh);
+    top: 50%;
+    transform: translateY(calc(-50% + 2.5rem));
     display: flex;
     justify-content: end;
 }
+
+.sample-image {
+    object-fit: cover;
+    object-position: 0;
+    width: 50vw;
+    height: 75vh;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    clip-path: inset(1px);
+}
+
 
 .dl-download-button {
     height: 3rem;
@@ -41,15 +53,6 @@
     flex-wrap: wrap;
 }
 
-.sample-image {
-    object-fit: cover;
-    object-position: 0;
-    width: 50vw;
-    height: 75vh;
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
-    clip-path: inset(1px);
-}
 
 .dl-logo {
     mask-size: cover;

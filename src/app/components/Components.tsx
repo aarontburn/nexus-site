@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+import "./components.css"
+
+import { CSSProperties, ReactNode } from "react";
 
 export const Spacer = ({ size = "auto" }) => {
     return <div style={{ marginRight: size }}></div>;
@@ -16,6 +18,19 @@ export function NexusText() {
 export function NavButton({ displayText, callback, fontSize, width }: { displayText: string, callback: () => void, fontSize: string, width?: string }) {
     return <h2 className="nav-button" style={{ fontSize: fontSize, width: width }} onClick={callback}>{displayText}</h2>
 }
+
+
+export interface NexusLogoProps {
+    width: string | number;
+    height: string | number;
+    style?: CSSProperties | undefined;
+    className?: string | undefined
+}
+
+export function NexusLogo(props: NexusLogoProps) {
+    return <div className={"component-nexus-logo " + (props.className ?? "")} style={{...props.style, ...{ width: props.width, height: props.height }}}></div>
+}
+
 
 export function Bold({ children }: { children?: ReactNode }) {
     return <div style={{ fontWeight: 550 }}>
