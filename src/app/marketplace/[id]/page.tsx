@@ -7,6 +7,7 @@ import "../marketplace.css"
 import Markdown from 'react-markdown'
 import { getAbbreviation } from '../../utils/utils';
 import "../../page.css"
+import { VerticalSpacer } from '../../components/Components';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -30,6 +31,8 @@ export default function ModulePage({ params }: PageProps) {
 
     return !moduleInfo ? <></> :
         <div className="page">
+            <VerticalSpacer size={"5rem"} />
+
             <div className="body mbody">
                 <div className="left"></div>
                 <div className="right"></div>

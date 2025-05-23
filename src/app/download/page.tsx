@@ -1,10 +1,11 @@
 import "./styles.css"
 import sampleImage from "../assets/sample-image.png"
+import { VerticalSpacer } from "../components/Components"
 
 function OSDownload({ platform }: { platform: string }) {
     return <>
-        <button className="download-button" >
-            <div className={`${platform}-logo logo`}></div>
+        <button className="dl-download-button" >
+            <div className={`${platform}-logo dl-logo`}></div>
             {platform}
         </button>
 
@@ -14,6 +15,7 @@ function OSDownload({ platform }: { platform: string }) {
 
 export default function NexusDownload() {
     return <div className="page">
+        <VerticalSpacer size={"5rem"} />
         <div className="body">
             <div className="dl-left-container">
                 <h1>

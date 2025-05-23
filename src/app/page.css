@@ -21,8 +21,8 @@
     width: 75%;
     min-width: 50%;
     background-color: var(--background-light);
-    padding: 1em;
-    margin-top: 1em;
+    padding: 1rem;
+    margin-top: 1rem;
     border-radius: 5px;
     height: fit-content;
 }

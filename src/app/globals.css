@@ -4,16 +4,14 @@
 }
 
 :root {
+    --foreground: #171717;
+
     --background: #ffffff;
     --background-light: #cacaca;
 
-
-    --foreground: #171717;
-    
-
-
     --accent-color: #2290B5;
 }
+
 
 @media (prefers-color-scheme: dark) {
     :root {
@@ -22,6 +20,17 @@
         --background: #171717;
         --background-light: rgb(36, 36, 36);
 
+    }
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+
+@media (min-width: 1921px) and (min-height: 1081px) {
+    html {
+        font-size: 125%;
     }
 }
 

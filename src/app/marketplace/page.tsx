@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { getAbbreviation } from "../utils/utils";
 import "../page.css"
+import { VerticalSpacer } from "../components/Components";
 
 
 
@@ -23,6 +24,8 @@ export default function NexusMarket() {
     }, [])
 
     return <div className="page">
+        <VerticalSpacer size={"5rem"} />
+
         <div className="body mbody">
             <div className="left"></div>
             <div className="right"></div>

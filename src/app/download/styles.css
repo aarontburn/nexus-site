@@ -2,13 +2,13 @@
 .dl-left-container {
     margin-right: 10rem;
     position: absolute;
-    left: 10%;
+    left: 5%;
     top: 40%;
     width: 40%;
 }
 
 .dl-left-container h1 {
-    font-size: 50px;
+    font-size: 3rem;
 }
 
 .dl-right-container {
@@ -19,17 +19,17 @@
     justify-content: end;
 }
 
-.download-button {
-    padding: 5px;
-    width: 175px;
-    font-size: 20px;
+.dl-download-button {
+    height: 3rem;
+    width: 10rem;
+
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1em;
+    margin-top: 1rem;
     cursor: pointer;
-    margin-right: 1em;
-    height: 2.5em;
+    margin-right: 1rem;
     border-radius: 10px;
     border: none;
     background-color: var(--foreground);
@@ -46,19 +46,19 @@
     object-position: 0;
     width: 50vw;
     height: 75vh;
-    border-top-left-radius: 2em;
-    border-bottom-left-radius: 2em;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
     clip-path: inset(1px);
 }
 
-.logo {
+.dl-logo {
     mask-size: cover;
     mask-position: center;
     background-color: var(--background);
 
-    height: 24px;
-    width: 24px;
-    margin-right: 0.5em;
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-right: 0.5rem;
 }
 
 

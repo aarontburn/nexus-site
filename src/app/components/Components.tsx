@@ -13,10 +13,8 @@ export function NexusText() {
     return <span style={{ color: "var(--accent-color)" }}>Nexus</span>
 }
 
-export function NavButton({ displayText, callback, fontSize, image, width }: { displayText: string, callback: () => void, fontSize: string, image?: string, width?: string }) {
-    if (image === undefined) {
-        return <h2 className="nav-button" style={{ fontSize: fontSize, width: width }} onClick={callback}>{displayText}</h2>
-    }
+export function NavButton({ displayText, callback, fontSize, width }: { displayText: string, callback: () => void, fontSize: string, width?: string }) {
+    return <h2 className="nav-button" style={{ fontSize: fontSize, width: width }} onClick={callback}>{displayText}</h2>
 }
 
 export function Bold({ children }: { children?: ReactNode }) {
