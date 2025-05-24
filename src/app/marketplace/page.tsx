@@ -6,13 +6,12 @@ import { getAllRemoteModules, ModuleInfo } from "./NexusDatabase";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { getAbbreviation } from "../utils/utils";
-import "../page.css"
 import { VerticalSpacer } from "../components/Components";
-
-
+import MarketplaceHeader from "./MarketplaceHeader";
 
 
 export default function NexusMarket() {
+
     const [searchQuery, setSearchQuery] = useState<string>()
     const [databaseModules, setDatabaseModules] = useState<ModuleInfo[]>([]);
 
@@ -24,26 +23,24 @@ export default function NexusMarket() {
     }, [])
 
     return <div className="page">
+        <MarketplaceHeader />
         <VerticalSpacer size={"5rem"} />
 
-        <div className="body mbody">
-            <div className="left"></div>
-            <div className="right"></div>
-            <div className="main">
-                <h2>All Modules</h2>
+        <div className="body">
+            <h2>All Modules</h2>
 
-                <input type="text" />
+            <input type="text" />
 
 
-                <div id="module-container">
-                    {databaseModules.map((moduleInfo, index) => <Module key={index} info={moduleInfo} />)}
-
-                </div>
+            <div id="module-container">
+                {databaseModules.map((moduleInfo, index) => <Module key={index} info={moduleInfo} />)}
 
             </div>
 
+
         </div>
     </div>
+
 }
 
 

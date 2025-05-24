@@ -1,23 +1,52 @@
 "use client";
 
-import { Ref, useEffect, useRef, useState } from "react";
+import { Ref, useCallback, useEffect, useRef, useState } from "react";
 import { VerticalSpacer } from "../../components/Components";
 import "./styles.css";
 import "./markdown.css"
 import { FileTree, getAllDocuments, getMarkdown } from "./markdown-accessor";
-import Markdown, { UrlTransform } from "react-markdown";
+import Markdown from "react-markdown";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 const FileTreeView = ({ onClick, tree, level = 0 }: { onClick: (name: string) => void, tree: FileTree, level?: number }) => {
     return (
         <>
-            {Object.entries(tree).sort(([name1, child1], [name2, child2]) => {
+            {Object.entries(tree).sort((a: [string, FileTree | null], b: [string, FileTree | null]) => {
+                const [name1, child1] = a;
+                const [name2, child2] = b;
+
+                const isAFolder: boolean = child1 !== null;
+                const isBFolder: boolean = child2 !== null;
+
+                if (level === 0) {
+                    if (name1 === "Getting Started") {
+                        return -1;
+                    } else if (name2 === "Getting Started") {
+                        return 1;
+                    }
+                }
+
+                if (isAFolder && !isBFolder) {
+                    if (name1.charAt(0) >= "0" && name1.charAt(0) <= "9") {
+                        return name1.localeCompare(name2);
+                    }
+                    return 1;
+                }
+                if (!isAFolder && isBFolder) {
+                    if (name2.charAt(0) >= "0" && name2.charAt(0) <= "9") {
+                        return name1.localeCompare(name2);
+                    }
+                    return -1;
+                }
+
+                return name1.localeCompare(name2);
+
             }).map(([name, child], index) => (
                 <React.Fragment key={name + index}>
                     {child ? (
-                        <details style={{ marginLeft: `${level / 2}rem` }}>
+                        <details style={{ marginLeft: `${level}rem` }} open={index === 0}>
                             <summary>{name}</summary>
                             <FileTreeView onClick={onClick} tree={child} level={level + 1} />
                         </details>
@@ -26,7 +55,7 @@ const FileTreeView = ({ onClick, tree, level = 0 }: { onClick: (name: string) =>
                             onClick={() => onClick(name)}
                             style={{ marginLeft: `${level / 2}rem` }}
                         >
-                            {name.replace(".md", '')}
+                            {name.includes(".ts") || name.includes(".json") ? <code>{name.replace(".md", '')}</code> : name.replace(".md", '')}
                         </p>
                     )}
                 </React.Fragment>
@@ -48,30 +77,36 @@ function getMarkdownID(pathName: string) {
 
 export default function DevelopPage() {
     const markdownRef: Ref<HTMLDivElement | null> = useRef(null);
-
     const selectedMarkdownID: string | undefined = getMarkdownID(usePathname());
 
     const [sections, setSections] = useState<FileTree>({});
     const [markdown, setMarkdown] = useState<string>('');
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
 
-    const onSectionPressed = (p: string) => {
-        if (!filePaths[p]) {
+    const onSectionPressed = useCallback((p: string) => {
+        if (filePaths[p] === undefined) {
             return;
         }
         window.history.replaceState({}, '', `/develop/${p}`);
-        getMarkdown(filePaths[p]).then(setMarkdown);
-    }
+        getMarkdown(filePaths[p]).then((markdown) => {
+            setMarkdown(markdown)
+        });
+    }, [filePaths])
 
     useEffect(() => {
-        markdownRef.current?.scrollIntoView({ block: "center" })
-    }, [markdown])
+        markdownRef.current?.scroll({
+            top: 0
+        });
+    }, [markdown, markdownRef])
 
     useEffect(() => {
-        if (selectedMarkdownID) {
-            onSectionPressed(selectedMarkdownID);
+        if (!selectedMarkdownID || !filePaths[selectedMarkdownID]) {
+            return;
         }
+        getMarkdown(filePaths[selectedMarkdownID]).then(setMarkdown);
+        window.history.replaceState({}, '', `/develop/${selectedMarkdownID}`);
     }, [filePaths]);
+
 
     useEffect(() => {
         getAllDocuments().then(([filePaths, tree]) => {
@@ -112,7 +147,14 @@ export default function DevelopPage() {
                         ),
                     }}
 
-                    urlTransform={(url) => url.startsWith("https") ? url : url.split("/").at(-1)}
+                    urlTransform={(url) => {
+                        if (url.includes("/assets/")){
+                            return `/docs/assets/` + url.split("/").at(-1)
+                        }
+
+                        return url.startsWith("https") ? url : url.split("/").at(-1)
+                    }}
+                    
                     rehypePlugins={[rehypeRaw]}
                 >
                     {markdown}

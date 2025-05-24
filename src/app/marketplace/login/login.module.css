@@ -1,0 +1,62 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-container {
+    width: 50rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.login-container h1 {
+    font-size: 3rem;
+}
+
+.error {
+    color: rgb(215, 29, 29)
+}
+
+
+.input-field {
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    padding: 0.25rem 0.5rem;
+    background-color: rgb(73, 73, 73);
+    border: 1px solid var(--background-light);
+    border-radius: 5px;
+    transition: 0.2s;
+    width: 20rem;
+
+    &:focus {
+        outline: none;
+        border: 1px solid var(--accent-color)
+    }
+}
+
+.login-container > button {
+    width:  10rem;
+    height: 2.25rem;
+    font-size: 1.15rem;
+    transition: 0.2s;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+
+    &:hover {
+        background-color: var(--accent-color);
+    }
+}
+
+.login-container a {
+    color: var(--accent-color);
+}
+
+.no-account {
+    font-size: 1rem;
+}

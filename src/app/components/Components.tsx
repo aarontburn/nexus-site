@@ -2,7 +2,7 @@ import "./components.css"
 
 import { CSSProperties, ReactNode } from "react";
 
-export const Spacer = ({ size = "auto" }) => {
+export const HorizontalSpacer = ({ size = "auto" }) => {
     return <div style={{ marginRight: size }}></div>;
 }
 

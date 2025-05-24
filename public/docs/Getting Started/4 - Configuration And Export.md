@@ -29,7 +29,6 @@ Taken from the [module-info.json documentation](../API/module-info.json.md):
 > - `name` must be a string.
 > - `name` cannot only contain whitespace or be an empty string.
 > 
-> 
 > ### `id: string` (*required*)
 > The ID of your module.
 > - `id` cannot be undefined.

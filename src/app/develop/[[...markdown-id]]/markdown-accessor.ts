@@ -15,12 +15,12 @@ function buildFileTree(paths: string[]): FileTree {
     const root: FileTree = {};
 
     for (const path of paths) {
-        const parts = path.replace(/\\/g, "/").split("/");
-        let current = root;
+        const parts: string[] = path.replace(/\\/g, "/").split("/");
+        let current: FileTree = root;
 
         for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            const isFile = i === parts.length - 1;
+            const part: string = parts[i];
+            const isFile: boolean = i === parts.length - 1;
 
             if (!(part in current)) {
                 current[part] = isFile ? null : {};
@@ -43,6 +43,7 @@ export async function getAllDocuments(): Promise<[string[], FileTree]> {
 
 
 export async function getMarkdown(mdPath: string) {
+    console.log("Getting markdown for " + mdPath)
     const file = await fs.promises.readFile(path.join(DOC_PATH, mdPath), "utf8");
     return file;
 }

@@ -16,7 +16,7 @@ export interface ModuleInfo {
 
 
 
-const URI: string = `mongodb+srv://readonly:readonly@nexus-modules.hkxvzhe.mongodb.net/?retryWrites=true&w=majority&appName=nexus-modules`;
+const { MONGODB_URI } = process.env;
 const DATABASE_NAME: string = "nexus-modules";
 const COLLECTION_NAME: string = "modules";
 
@@ -31,7 +31,7 @@ const moduleCache: Map<string, ModuleInfo> = new Map();
 
 export async function connectToDatabase() {
     console.log("Creating a new connection to the database.")
-    client = new MongoClient(URI);
+    client = new MongoClient(MONGODB_URI as string);
     database = client.db(DATABASE_NAME);
     moduleCollection = database.collection<ModuleInfo>(COLLECTION_NAME);
 }

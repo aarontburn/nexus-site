@@ -1,15 +1,19 @@
+"use client"
 
-import Transition from "./components/Transition";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { Header } from "./header/Header";
 
 
-export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en">
             <body>
-                <Header />
+                <SessionProvider>
+                    <Header />
                     {children}
+                </SessionProvider>
+
             </body>
         </html>
     );

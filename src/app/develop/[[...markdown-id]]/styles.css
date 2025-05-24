@@ -18,21 +18,30 @@
 }
 
 
+.sidebar code {
+    background: #3d3d3d;
+    padding: 0 0.3em;
+    border-radius: 5px;
+
+}
+
 .sidebar summary {
     color: gray
 }
 
 .sidebar p {
     transition: 0.2s;
+
+    &:hover {
+        color: var(--accent-color);
+    }
 }
 
-.sidebar p:hover {
-    color: var(--accent-color);
-}
 
 
 .markdown-body {
     overflow-y: auto;
     padding-left: 1rem;
+    padding-right: 1rem;
     width: 80%;
 }

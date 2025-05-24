@@ -2,7 +2,7 @@
 
 import "./header.css"
 import { useRouter } from "next/navigation";
-import { NavButton, NexusLogo, Spacer } from "../components/Components";
+import { NavButton, NexusLogo, HorizontalSpacer } from "../components/Components";
 
 const FONT_SIZE: string = '1.25rem';
 
@@ -10,7 +10,7 @@ export function Header() {
     const router = useRouter();
     return <>
         <div id='header'>
-            <Spacer size="2rem" />
+            <HorizontalSpacer size="2rem" />
             <div className="header-logo-container" onClick={() => router.push('/')}>
                 <NexusLogo
                     width={"2.5rem"}
@@ -21,14 +21,14 @@ export function Header() {
             </div>
 
 
-            <Spacer size="5rem" />
+            <HorizontalSpacer size="5rem" />
 
             <NavButton displayText="Download" callback={() => router.push('/download')} fontSize={FONT_SIZE} />
             <NavButton displayText="Marketplace" callback={() => router.push('/marketplace')} fontSize={FONT_SIZE} />
 
-            <Spacer size="auto" />
+            <HorizontalSpacer size="auto" />
 
-            <NavButton displayText="Develop" callback={() => router.push('/develop')} fontSize={FONT_SIZE} />
+            <NavButton displayText="Develop" callback={() => router.push('/develop/1 - Introduction.md')} fontSize={FONT_SIZE} />
 
         </div>
 

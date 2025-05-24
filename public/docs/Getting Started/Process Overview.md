@@ -51,7 +51,7 @@ import { BooleanSetting } from "@nexus-app/nexus-module-builder/settings/types";
 
 // ...
 ```
-There is a set of classes and functions within `@nexus-app/nexus-module-builder` that may be useful to developing your module. Visit the [Process API](../API/Process.md) to learn about all the available classes.
+There is a set of classes and functions within `@nexus-app/nexus-module-builder` that may be useful to developing your module. Visit the [Process API](../API/Process.ts.md) to learn about all the available classes.
 
 
 ### Module Information
@@ -215,7 +215,7 @@ To send data to your renderer, the following function is provided from within yo
 Similar to how you receive events in your process, this sends information to your renderer. More information can be found in the next section.
 
 ---
-There are many more functions in the parent `Process` class that you can override, such as `onGUIShown`, `onGUIHidden`, `onExit`, and more. Visit the [Process API](../API/Process.md) for more documentation about all the functions you can use.
+There are many more functions in the parent `Process` class that you can override, such as `onGUIShown`, `onGUIHidden`, `onExit`, and more. Visit the [Process API](../API/Process.ts.md) for more documentation about all the functions you can use.
 
 ## Next Steps
 Learn about the renderer for your respective template.

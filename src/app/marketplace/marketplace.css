@@ -1,4 +1,15 @@
 
+.mp-header-content {
+    background-color: var(--background-light);
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    position: absolute;
+    width: 100%;
+}
+
+
 .main>input {
     width: 100%;
 }
