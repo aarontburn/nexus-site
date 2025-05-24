@@ -22,7 +22,7 @@ This file stores important constants to your module and defines how your module 
 Although the templates are pre-configured, you’ll still need to update `name` and `id` to reflect your module’s information. See the documentation below for specific rulesets about naming.
 
 
-Taken from the [module-info.json documentation](../../api/module-info.json.md):
+Taken from the [module-info.json documentation](../API/module-info.json.md):
 > ### `name: string` (*required*)
 > The display name of your module.
 > - `name` cannot be undefined.

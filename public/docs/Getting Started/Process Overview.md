@@ -51,7 +51,7 @@ import { BooleanSetting } from "@nexus-app/nexus-module-builder/settings/types";
 
 // ...
 ```
-There is a set of classes and functions within `@nexus-app/nexus-module-builder` that may be useful to developing your module. Visit the [Process API](../../api/Process.md) to learn about all the available classes.
+There is a set of classes and functions within `@nexus-app/nexus-module-builder` that may be useful to developing your module. Visit the [Process API](../API/Process.md) to learn about all the available classes.
 
 
 ### Module Information
@@ -77,7 +77,7 @@ These constants are used to identify and create your module.
 - `ICON_PATH`: The relative path to the modules icon. If this is undefined, the icon is replaced by the abbreviation of the `MODULE_NAME`. 
     - Can be a `svg`, `png`, `jpg`, or `jpeg`.
 
-You may have noticed that `MODULE_ID` and `MODULE_NAME` are `"{EXPORTED_MODULE_ID}"` and `"{EXPORTED_MODULE_NAME}"`, respectively. These values are replaced during module building to the values defined in `module-info.json` (learn more [here](../../api/module-info.json.md)) and **should not be modified.**
+Notice that `MODULE_ID` and `MODULE_NAME` are `"{EXPORTED_MODULE_ID}"` and `"{EXPORTED_MODULE_NAME}"`, respectively. These values are replaced during module building to the values defined in `module-info.json` (learn more [here](../API/module-info.json.md)) and **should not be modified.**
 
 
 ### The Process Class
@@ -193,11 +193,11 @@ export default class SampleProcess extends Process {
 The Nexus API provides an quick and easy way to add settings that the user may want to tweak. The `registerSettings` function is how you can register settings for your module.
 
 The current implementation will result in a UI like this:
-![Sample Setting UI](../../assets/sample-setting.png)
+![Sample Setting UI](../assets/sample-setting.png)
 
 In order, if you provide a `string`, it will result in a section header. If you provide an `Setting`, it will be a fully functional setting. 
 
-There are many different types of `Settings`, such as `BooleanSetting` for true/false, `StringSetting` for text input, `ChoiceSetting` for either radio buttons or dropdowns, etc.. Most default HTML `<input>` types are supported, however you are able to create your own settings. Visit the [Settings API](../../api/Settings.md) to learn more.
+There are many different types of `Settings`, such as `BooleanSetting` for true/false, `StringSetting` for text input, `ChoiceSetting` for either radio buttons or dropdowns, etc.. Most default HTML `<input>` types are supported, however you are able to create your own settings. Visit the [Settings API](../API/Settings.md) to learn more.
 
 Each `Setting` may have its own configurations, but all settings must have a:
 - Display Name (set via `setName()`)
@@ -215,12 +215,12 @@ To send data to your renderer, the following function is provided from within yo
 Similar to how you receive events in your process, this sends information to your renderer. More information can be found in the next section.
 
 ---
-There are many more functions in the parent `Process` class that you can override, such as `onGUIShown`, `onGUIHidden`, `onExit`, and more. Visit the [Process API](../../api/Process.md) for more documentation about all the functions you can use.
+There are many more functions in the parent `Process` class that you can override, such as `onGUIShown`, `onGUIHidden`, `onExit`, and more. Visit the [Process API](../API/Process.md) for more documentation about all the functions you can use.
 
 ## Next Steps
 Learn about the renderer for your respective template.
 
-### [Nexus: React Template](./react/2%20ReactRenderer.md)  
-### [Nexus: Vanilla TS Template](./vanilla/2%20VanillaRenderer.md)
-### [Nexus: Internal Template](./internal/3%20InternalRenderer.md)
-### [Nexus: Webpage Template](./webpage/3%20WebpageRenderer.md)
+### [Nexus: React Template](<./3 - React Module/3.2 - React Module Renderer.md>)  
+### [Nexus: Vanilla TS Template](<./3 - Vanilla HTML Module/3.2 - Vanilla Module Renderer.md>)
+### [Nexus: Internal Template](<./3 - Internal Module/3.3 - Internal Module Renderer.md>)
+### [Nexus: Webpage Template](<./3 - Internal Module/3.3 - Internal Module Renderer.md>)

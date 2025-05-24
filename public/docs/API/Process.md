@@ -4,7 +4,7 @@ The process is the backend of your module. It has no access to the DOM, and send
 
 ## Attributes
 ### `fileManager: FileManager`
-Handles all file IO from this module. See the [FileManager](./helpers/FileManager.md) class for more details.
+Handles all file IO from this module. See the [FileManager](./Helpers/FileManager.md) class for more details.
 
 ## Main Functions
 
@@ -141,7 +141,7 @@ public registerInternalSettings(): Setting<unknown>[] {
    ];
 }
 ```
-The `Settings` module keeps track of the bounds and the maximized state of the window on exit and restores it when the application is re-opened. However, these preferences do not need to be displayed to the user, and theese are considered an internal setting.
+The `Settings` module keeps track of the bounds and the maximized state of the window on exit and restores it when the application is re-opened. However, these preferences do not need to be displayed to the user, and these are considered an internal setting.
 
 ### `[async] onSettingModified(modifiedSetting?: Setting<unknown>): Promise<void>`
 This function triggers when a setting that belongs to this module is modified.

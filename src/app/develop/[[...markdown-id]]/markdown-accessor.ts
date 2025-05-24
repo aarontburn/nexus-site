@@ -44,6 +44,5 @@ export async function getAllDocuments(): Promise<[string[], FileTree]> {
 
 export async function getMarkdown(mdPath: string) {
     const file = await fs.promises.readFile(path.join(DOC_PATH, mdPath), "utf8");
-    
     return file;
 }

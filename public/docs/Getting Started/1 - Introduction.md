@@ -1,7 +1,5 @@
 # Nexus
 
-<img src="../../icons/256x256.png" alt="Nexus Logo" width="200" />
-
 ## What is Nexus?
 Nexus is an application environment and loader. Developers can create applications, or **modules**, that can be loaded into the Nexus environment, keeping everything in one place. 
 
@@ -30,4 +28,4 @@ TODO
 
 
 ## Developing for Nexus
-To begin developing a module for Nexus, visit [Building Your First Module](./tutorial/BuildingYourFirstModule.md).
+To begin developing a module for Nexus, visit [Building Your First Module](./2%20-%20Building%20Your%20First%20Module.md).

@@ -2,7 +2,7 @@
 
 
 ## Getting Started
-[**Introduction**](./getting_started/Introduction.md)  
+[**Introduction**](./Getting%20Started/1%20-%20Introduction.md)  
 [**Tutorial and Templates**](./getting_started/tutorial/BuildingYourFirstModule.md)   
 
 ## Guides

@@ -13,11 +13,11 @@ export function Header() {
             <Spacer size="2rem" />
             <div className="header-logo-container" onClick={() => router.push('/')}>
                 <NexusLogo
-                    width={"3.5rem"}
-                    height={"3.5rem"}
+                    width={"2.5rem"}
+                    height={"2.5rem"}
                 />
 
-                <NavButton displayText="Nexus" callback={() => { }} fontSize={"1.5rem"} />
+                <NavButton displayText="NEXUS" callback={() => { }} fontSize={"2rem"} />
             </div>
 
 

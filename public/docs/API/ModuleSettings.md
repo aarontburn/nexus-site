@@ -15,7 +15,7 @@ export default class SampleProcess extends Process {
     public initialize(): void {
         const moduleSettings: ModuleSettings = this.getSettings();
         console.log(moduleSettings.findSetting("sample_setting").getValue());
-	}
+    }
 
     // ...
 }

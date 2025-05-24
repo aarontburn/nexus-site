@@ -43,7 +43,7 @@ This is all the configuration for the `module-info.json`.
 ### 2. GitHub
 1. On the homepage of your repository, create a new release.
 
-![alt text](../assets/github-release.png)
+![Github Release Info Image](../assets/github-release.png)
 
 2. Set the tag to be the **version in your module-info.json**. The tag should match **exactly.**
 3. Attach your exported module `.zip` file as the **only** file in the release.

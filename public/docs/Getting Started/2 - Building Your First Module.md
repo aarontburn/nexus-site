@@ -19,14 +19,14 @@ Because each module requires quite a bit of configuration, it is **highly recomm
 Visit the tutorial for the template you want to develop with.
 
 
-### [Nexus with React **(Recommended)**](./react/1%20ReactSetup.md) 
+### [Nexus with React **(Recommended)**](<./3 - React Module/3.1 - React Module Setup.md>) 
 This template utilizes Vite + React + TypeScript to build your module.
 
 This template is right for you if:
 - You want to build a module with a UI
 - You want to build your module using React + TypeScript
 
-### [Nexus with Vanilla TypeScript](./vanilla/1%20VanillaSetup.md)
+### [Nexus with Vanilla TypeScript](<./3 - Vanilla HTML Module/3.1 - Vanilla Module Setup.md>)
 This template utilizes HTML + CSS + TypeScript. 
 
 This template is right for you if:
@@ -34,14 +34,14 @@ This template is right for you if:
 - You want to build your module using Vanilla HTML + CSS + TypeScript
 - You are okay with not being able to import other files within your renderer.
 
-### [Nexus Internal Template](./internal/1%20InternalSetup.md)
+### [Nexus Internal Template](<./3 - Internal Module/3.1 - Internal Module Setup.md>)
 This is to create modules with no GUI, useful for monitoring, adding additional settings, or interfacing with other modules.
 
 This template is right for you if:
 - You want to build a module WITHOUT a UI
 - You want to build a module using TypeScript.
 
-### [Nexus Webpage Template](./webpage/1%20WebpageSetup.md)
+### [Nexus Webpage Template](<./3 - Webpage Module/3.1 - Webpage Module Setup.md>)
 This is to quickly embed websites as a module.
 
 This template is right for you if:

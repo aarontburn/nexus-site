@@ -7,7 +7,7 @@ export const Spacer = ({ size = "auto" }) => {
 }
 
 export const VerticalSpacer = ({ size = "auto" }: { size?: string | number }) => {
-    return <div style={{ marginTop: size }}></div>;
+    return <div style={{ marginTop: size, height: "1px" }}></div>;
 }
 
 
@@ -28,7 +28,7 @@ export interface NexusLogoProps {
 }
 
 export function NexusLogo(props: NexusLogoProps) {
-    return <div className={"component-nexus-logo " + (props.className ?? "")} style={{...props.style, ...{ width: props.width, height: props.height }}}></div>
+    return <div className={"component-nexus-logo " + (props.className ?? "")} style={{ ...props.style, ...{ width: props.width, height: props.height } }}></div>
 }
 
 

@@ -3,7 +3,7 @@
 ## Overview
 Some of the internal modules expose an API that may be useful.
 
-Each response is wrapped in a [`DataResponse`](./helpers/DataResponse.md) object.
+Each response is wrapped in a [`DataResponse`](./Helpers/DataResponse.md) object.
 
 ## `nexus.Settings`
 This is the main setting handler.
@@ -65,7 +65,7 @@ This endpoint can be used to subscribe to access the current value of the `Accen
 ## `nexus.Auto_Updater`
 This module manages remote Nexus client updates and module updating.
 
-```
+```ts
 interface VersionInfo {
     url: string;
     currentVersion: string;
@@ -140,7 +140,7 @@ Returns the id of the currently visible module ID.
 ### `open-dev-tools`
 Opens the web developer tools for the caller module.
 
-Note: In development, this can be done with the keybind  `Shift+CommandOrControl+I`
+Note: In development, this can be done with the keybind `Shift+CommandOrControl+I`.
 
 > **Parameters**  
 > `mode?: 'left' | 'right' | 'bottom' | 'detach'` → The orientation of the devtools. If omitted, the devtools will open on the right. If the mode is invalid, this will default to `right`.  
@@ -153,7 +153,7 @@ Note: In development, this can be done with the keybind  `Shift+CommandOrControl
 ### `reload`
 Reloads the renderer of the caller module.
 
-Note: In development, this can be done with the keybind `CommandOrControl+R`
+Note: In development, this can be done with the keybind `CommandOrControl+R`.
 
 > **Parameters**  
 > `forceReload?: '--force'` → Force reloads the webpage, ignoring any cache.  

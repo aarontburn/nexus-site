@@ -28,19 +28,19 @@ This is the recommended format to build your setting. While specific setting imp
 
 ## Prebuilt Settings
 
-### [`BooleanSetting`](./setting_types/BooleanSetting.md)
+### [`BooleanSetting`](./Setting%20Types/BooleanSetting.md)
 Capture binary input (true/false, on/off).
 
-### [`ChoiceSetting`](./setting_types/ChoiceSetting.md)
+### [`ChoiceSetting`](./Setting%20Types/ChoiceSetting.md)
 Present the user with a choice of options where they can select a single one.
 
-### [`HexColorSetting`](./setting_types/HexColorSetting.md)
+### [`HexColorSetting`](./Setting%20Types/HexColorSetting.md)
 Capture color input as a hex color.
 
-### [`NumberSetting`](./setting_types/NumberSetting.md)
+### [`NumberSetting`](./Setting%20Types/NumberSetting.md)
 Capture numerical input from the user as a slider or an input box.
 
-### [`StringSetting`](./setting_types/StringSetting.md)
+### [`StringSetting`](./Setting%20Types/StringSetting.md)
 Capture string input from the user.
 
 
@@ -85,7 +85,7 @@ Sets the description of the setting. Cannot be reassigned once set.
 ---
 
 ### `setValidator(inputValidator: (input: any) => Promise<T | null> | T | null): Setting<T>`
-Sets an input validator for the setting. This cannot be reassigned once set. For an example of how to use this, visit the [`StringSetting` Usage Information](./setting_types/StringSetting.md#usage-information) for an example.
+Sets an input validator for the setting. This cannot be reassigned once set. For an example of how to use this, visit the [`StringSetting` Usage Information](./Setting%20Types/StringSetting.md#usage-information) for an example.
 > **Parameters**  
 > `inputValidator: (input: any) => Promise<T | null> | T | null` → An input validator function that checks and sanitizes the input. If it returns null, the value is rejected. This function **can** be async if your setting requires an async call to validate the value.  
 > **Returns**  
@@ -124,7 +124,7 @@ Sets the value of the setting. `value` is first parsed into `T` before assigning
 
 This function is async because the validation process can be async.
 
-If this function is called manually within your process, you must do a call to `this.fileManager.writeSettingsToStorage()` to write your updated settings to storage. See the [FileManager](./helpers/FileManager.md) class for more details.
+If this function is called manually within your process, you must do a call to `this.fileManager.writeSettingsToStorage()` to write your updated settings to storage. See the [FileManager](./Helpers/FileManager.md) class for more details.
 
 > **Parameters**  
 > `value: any` → The value to set the setting to.   
