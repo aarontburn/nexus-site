@@ -62,11 +62,23 @@ export async function getModule(moduleID: string): Promise<ModuleInfo | undefine
     if (!client) {
         await connectToDatabase();
     }
-    const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne({ id: moduleID }) ?? undefined;
+    const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne
     if (!result) {
         return undefined;
     }
     result._id = `${result._id}` as any;
     moduleCache.set(moduleID, result);
+    return result
+}
+
+export async function getModulesFromUser(userID: string) {
+    if (!client) {
+        await connectToDatabase();
+    }
+
+    const result: (WithId<ModuleInfo>[]) | undefined = await moduleCollection?.find({ userID }).toArray();
+    if (!result) {
+        return undefined;
+    }
     return result
 }

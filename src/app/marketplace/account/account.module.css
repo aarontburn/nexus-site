@@ -1,3 +1,15 @@
 .account-body {
     padding: 1rem;
+    height: calc(100% - 10rem);
+    display: flex;
+}
+
+.left {
+    width: 20rem;
+    height: 100%;
+    border-right: 1px solid var(--background-light);
+}
+
+.right {
+    padding: 0 1rem;
 }

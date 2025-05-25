@@ -21,7 +21,7 @@ export const register = async (values: RegisterProps) => {
                 error: 'Email already exists!'
             }
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword: string = await bcrypt.hash(password, 10);
         const user = new User({
             name,
             email,
