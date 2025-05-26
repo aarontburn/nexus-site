@@ -2,9 +2,13 @@
 
 import "./header.css"
 import { useRouter } from "next/navigation";
-import { NavButton, NexusLogo, HorizontalSpacer } from "../components/Components";
+import { NexusLogo, HorizontalSpacer } from "../components/Components";
 
 const FONT_SIZE: string = '1.25rem';
+
+function NavButton({ displayText, callback, fontSize, width }: { displayText: string, callback: () => void, fontSize: string, width?: string }) {
+    return <h2 className="nav-button" style={{ fontSize: fontSize, width: width }} onClick={callback}>{displayText}</h2>
+}
 
 export function Header() {
     const router = useRouter();

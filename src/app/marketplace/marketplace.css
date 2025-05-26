@@ -1,7 +1,7 @@
 
 .mp-header-content {
     background-color: var(--background-light);
-    height: 4rem;
+    height: calc(4rem + 1px);
     display: flex;
     align-items: center;
     padding: 0 1rem;

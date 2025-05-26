@@ -9,6 +9,7 @@
 
     --background: #ededed;
     --background-light: #cacaca;
+    --background-light-2: #ededed;
 
     --accent-color: #2290B5;
 }
@@ -21,6 +22,7 @@
 
         --background: #171717;
         --background-light: rgb(36, 36, 36);
+        --background-light-2: rgb(71, 71, 71);
 
     }
 }

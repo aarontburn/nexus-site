@@ -1,15 +1,182 @@
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+}
+
+.aligned {
+    display: flex;
+    align-items: center;
+}
+
 .account-body {
     padding: 1rem;
-    height: calc(100% - 10rem);
+    padding-right: 0;
+    height: calc(100% - 9rem - 1px);
+    width: 100%;
     display: flex;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.edit-fields {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.edit-fields label {
+    margin-right: 1rem;
+}
+
+.edit-field {
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.edit-field * {
+    font-size: 1rem;
+}
+
+.edit-field input {
+    outline: none;
+    padding: 0.25rem;
+    width: 100%;
+    
+    background-color: var(--background-light-2);
+    border: 1px solid var(--background-light);
+    transition: 0.2s;
+    border-radius: 5px;
+
+    &:focus {
+        border: 1px solid var(--accent-color);
+    }
+}
+
+.upload-or-text span:first-child {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+.upload-or-text span {
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        color: var(--accent-color);
+    }
+}
+
+
+.edit-fields textarea {
+    height: 20rem;
+    width: calc(100% - 1rem);
+    outline: none;
+    transition: 0.2s;
+    border: 1px solid var(--background-light-2);
+    padding: 0.5rem;
+    background-color: var(--background-light);
+    border-radius: 5px;
+
+    &:focus {
+        border: 1px solid var(--accent-color);
+    }
+}
+
+.account-body button,
+.account-body a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 5rem;
+    max-width: fit-content;
+    height: 1.5rem;
+    font-size: 0.95rem;
+    background-color: var(--background-light-2);
+    border: none;
+    border-radius: 5px;
+    transition: 0.2s;
+    cursor: pointer;
+    padding: 0 0.5rem;
+
+    &:hover {
+        background-color: var(--accent-color);
+    }
 }
 
 .left {
     width: 20rem;
-    height: 100%;
     border-right: 1px solid var(--background-light);
 }
 
 .right {
-    padding: 0 1rem;
+    padding-left: 1rem;
+    width: calc(100% - 20rem);
+    overflow-y: auto;
+    height: 100%;
+}
+
+.module-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+
+.module {
+    flex-grow: 1;
+    padding: 1rem;
+    border: 1px solid var(--background-light-2);
+    border-radius: 5px;
+    width: 22.5rem;
+}
+
+
+.image {
+    width: 64px;
+    height: 64px;
+    margin-right: 1rem;
+}
+
+.image p {
+    font-size: 1.5rem;
+}
+
+.image img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+
+
+.module-info h1 {
+    font-size: 1.15rem;
+
+}
+
+.module-info h2 {
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
+.module-info p {
+    font-size: 0.75rem;
+    color: gray;
+}
+
+
+.module .button-container {
+    display: flex;
 }

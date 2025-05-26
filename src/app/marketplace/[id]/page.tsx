@@ -43,7 +43,7 @@ export default function ModulePage({ params }: PageProps) {
                             {
                                 moduleInfo.image
                                     ? <img
-                                        src={'data:image/png;base64,' + moduleInfo.image}
+                                        src={moduleInfo.image}
                                         alt="Module Icon"
                                         style={{ width: 'auto', height: '128px' }}
                                     />
@@ -57,7 +57,7 @@ export default function ModulePage({ params }: PageProps) {
                             <p>{moduleInfo?.description}</p>
                             <br />
                             <p>By {moduleInfo?.author}</p>
-                            <p style={{ color: "gray" }}><span >{moduleInfo?.id}</span><span> (v{moduleInfo?.version})</span></p>
+                            <p style={{ color: "gray" }}><span >{moduleInfo?.["module-id"]}</span><span> (v{moduleInfo?.version})</span></p>
 
                         </div>
 

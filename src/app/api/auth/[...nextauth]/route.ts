@@ -6,7 +6,7 @@ import User from "../User";
 
 
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
     providers: [
         credentials({
             name: "Credentials",

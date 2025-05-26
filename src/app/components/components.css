@@ -1,6 +1,0 @@
-.component-nexus-logo {
-    mask-size: cover;
-    mask-image: url("../assets/logo-no-background.svg");
-    mask-position: center;
-    background-color: var(--accent-color);
-}

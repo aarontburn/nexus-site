@@ -1,0 +1,228 @@
+import styles from "./account.module.css"
+
+
+import { SessionContextValue } from "next-auth/react";
+import { Ref, useEffect, useRef, useState } from "react";
+import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Components";
+import { imageToBase64, readUploadedText } from "../../utils/utils";
+import { ModuleInfo, editRemoteModule, insertModule } from "../NexusDatabase";
+import { getGitHubModuleInfo, Response } from "./GitHubHandler";
+
+interface EditModuleScreenProps {
+    session: SessionContextValue;
+    editTarget: ModuleInfo | null;
+    editModule: (moduleInfo: ModuleInfo | null | undefined) => void
+}
+
+
+export default function EditModuleScreen({ session, editTarget, editModule }: EditModuleScreenProps) {
+    const githubRepoInputRef: Ref<HTMLInputElement> = useRef(null);
+    const imageUploadRef: Ref<HTMLInputElement> = useRef(null);
+    const readmeTextRef: Ref<HTMLTextAreaElement> = useRef(null);
+    const readmeUploadRef: Ref<HTMLInputElement> = useRef(null);
+
+
+    const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
+    const [uploadedReadme, setUploadedReadme] = useState<File | undefined>(undefined);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [remoteModuleInfo, setRemoteModuleInfo] = useState<(ModuleInfo & { id: string, "author-id": string }) | undefined>(undefined);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(true);
+
+    const isNewModule = editTarget === null;
+
+    useEffect(() => {
+        if (editTarget) {
+            checkGitHubRepo(editTarget.repository)
+        }
+    }, [])
+
+    const checkGitHubRepo = (repoLink: string | undefined) => {
+        if (repoLink) {
+            setIsLoading(true);
+            getGitHubModuleInfo(repoLink)
+                .then((response: Response) => {
+                    setIsLoading(false);
+
+                    if (response.type === "success") {
+                        setErrorMessage('');
+
+                        if (response.body["author-id"] === undefined) {
+                            setErrorMessage("module-info.json doesn't contain 'author-id'. Make sure this is set to your user ID in the latest release.");
+                        } else if (response.body["author-id"] !== session.data?.user.id) {
+                            setErrorMessage("Mismatched author-id; If this is your module, ensure the 'author-id' field of your latest release's module-info.json is correctly set to your user ID.")
+                        } else {
+                            setRemoteModuleInfo(response.body);
+                        }
+
+                    } else {
+                        setRemoteModuleInfo(undefined);
+                        setErrorMessage(response.body.message)
+                    }
+
+                })
+        } else {
+            setErrorMessage("Provide a valid link to your GitHub repository (e.g. https://github.com/aarontburn/nexus-debug-console).")
+        }
+    }
+
+    const onPublishPressed = async () => {
+        if (!remoteModuleInfo) {
+            return;
+        }
+
+        const base64Image: string | undefined = imageUploadRef.current?.files?.[0] ? await imageToBase64(imageUploadRef.current?.files?.[0]) : undefined;
+
+        const readme: string | undefined = await (async () => {
+            if (useReadmeUpload) {
+                return readmeUploadRef.current?.files?.[0] ? await readUploadedText(readmeUploadRef.current?.files?.[0]) : undefined;
+            } else {
+                return readmeTextRef.current?.value ?? undefined
+            }
+        })();
+
+
+        // author-id should be added in server-side
+        const moduleInfo: Omit<ModuleInfo, "_id" | "author-id"> = {
+            name: remoteModuleInfo.name,
+            "module-id": remoteModuleInfo["id"],
+            author: remoteModuleInfo.author,
+            version: remoteModuleInfo.version,
+            description: remoteModuleInfo.description,
+            readme: readme,
+            image: base64Image,
+            platforms: remoteModuleInfo.platforms,
+            repository: githubRepoInputRef.current?.value
+        }
+        if (isNewModule) {
+
+            insertModule(moduleInfo).then((result: string | undefined) => {
+                if (result === undefined) { // success
+
+                    editModule(undefined);
+                } else {
+                    setErrorMessage(result)
+                }
+            })
+        } else {
+
+            editRemoteModule(moduleInfo).then((result: string | undefined) => {
+                if (result === undefined) { // success
+
+                    editModule(undefined);
+                } else {
+                    setErrorMessage(result)
+                }
+            })
+        }
+
+    }
+
+    return <div className={styles["edit-screen"]}>
+        <button onClick={() => editModule(undefined)}>
+            {'<'} Back
+        </button>
+        <div className={styles["edit-fields"]}>
+
+            <VerticalSpacer size={"1rem"} />
+
+            <div className={styles['edit-field']}>
+                <label>GitHub Repository</label>
+                <input ref={githubRepoInputRef} type="text" defaultValue={editTarget?.repository ?? ''} />
+            </div>
+
+            <button onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
+
+            <VerticalSpacer size={"1rem"} />
+            {isLoading && <Spinner />}
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+            {remoteModuleInfo && <>
+                <p>Successfully retrieved module-info.json from the GitHub repository.</p>
+                <VerticalSpacer size={"1rem"} />
+
+                <h1>{remoteModuleInfo.name}</h1>
+
+                <p>{remoteModuleInfo.author}</p>
+                <p style={{ color: "gray" }}>{remoteModuleInfo.id} (v{remoteModuleInfo.version})</p>
+
+                <p>{remoteModuleInfo.description}</p>
+                <p>{remoteModuleInfo.platforms ?? []}</p>
+
+                <VerticalSpacer size={"1rem"} />
+
+
+                <p><span style={{ color: "gray" }}>(Optional)</span> Upload an image for your module.</p>
+                <VerticalSpacer size={"0.25rem"} />
+
+                <input
+                    ref={imageUploadRef}
+                    type='file'
+                    style={{ display: "none" }}
+                    onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
+                />
+
+                <div className={styles["aligned"]}>
+                    <button onClick={() => { imageUploadRef.current?.click() }}>
+                        Upload
+                    </button>
+                    <HorizontalSpacer size={"1rem"} />
+                    <span style={{ color: "gray" }}>{uploadedImage ? `(${uploadedImage.name})` : ''}</span>
+                </div>
+
+
+                <VerticalSpacer size={"1.25rem"} />
+
+                <p><span style={{ color: "gray" }}>(Optional)</span> Upload or type a README.</p>
+                <VerticalSpacer size={"0.25rem"} />
+
+                <p className={styles["upload-or-text"]}>
+                    <span style={{ color: !useReadmeUpload ? "" : "var(--accent-color)" }} onClick={() => setUseReadmeUpload(true)}>Upload</span>
+                    |
+                    <span style={{ color: !useReadmeUpload ? "var(--accent-color)" : "" }} onClick={() => setUseReadmeUpload(false)}>Text</span>
+                </p>
+                <VerticalSpacer size={"0.5rem"} />
+
+                {
+                    useReadmeUpload
+                        ? <>
+                            <input
+                                ref={readmeUploadRef}
+                                type='file'
+                                style={{ display: "none" }}
+                                onChange={(event) => setUploadedReadme((event.target.files ?? [])[0])}
+
+                            />
+
+                            <div className={styles["aligned"]}>
+                                <button onClick={() => { readmeUploadRef.current?.click() }}>
+                                    Upload
+                                </button>
+                                <HorizontalSpacer size={"1rem"} />
+                                <span style={{ color: "gray" }}>{uploadedReadme ? `(${uploadedReadme.name})` : ''}</span>
+                            </div>
+
+
+
+                        </>
+                        : <>
+                            <textarea ref={readmeTextRef}></textarea>
+                        </>
+                }
+
+                <VerticalSpacer size={"2rem"} />
+
+                <button onClick={onPublishPressed}>
+                    Publish
+                </button>
+
+                <VerticalSpacer size={"2rem"} />
+
+            </>}
+
+        </div>
+
+
+    </div >
+}

@@ -9,21 +9,24 @@ export default function MarketplaceHeader() {
     const router = useRouter();
 
     return <div className="mp-header">
-        <VerticalSpacer size={"4.9rem"} />
+        <VerticalSpacer size={"calc(5rem - 1px)"} />
 
         <div className="mp-header-content">
 
             <h2 className="clickable" onClick={() => router.push("/marketplace")}>Nexus Marketplace</h2>
             <HorizontalSpacer />
-            {session.status === "authenticated"
-                ? <a href="/marketplace/account">Account</a>
-                : <a href="/marketplace/login">Login/Register</a>
+            {
+                session.status === "authenticated"
+                    ? <a href="/marketplace/account">Account</a>
+                    : <a href="/marketplace/login">Login/Register</a>
             }
 
-            {session.status === "authenticated" && <>
-                <HorizontalSpacer size="1rem" />
-                <p className="clickable" onClick={() => signOut()}>Sign Out</p>
-            </>}
+            {
+                session.status === "authenticated" && <>
+                    <HorizontalSpacer size="1rem" />
+                    <p className="clickable" onClick={() => signOut()}>Sign Out</p>
+                </>
+            }
 
 
         </div>

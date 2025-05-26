@@ -48,12 +48,12 @@ export default function NexusMarket() {
 
 function Module({ info }: { info: ModuleInfo }) {
     const router: AppRouterInstance = useRouter();
-    const onClick = () => router.push(`/marketplace/${info.id}`);
+    const onClick = () => router.push(`/marketplace/${info["module-id"]}`);
 
     return <div className="module">
         <div className="module-image-container clickable" onClick={onClick}>
             {info.image
-                ? <img src={'data:image/png;base64,' + info.image} alt="icon" />
+                ? <img src={info.image} alt="icon" />
                 : <p className="module-abbreviation">{getAbbreviation(info.name)}</p>}
 
         </div>
