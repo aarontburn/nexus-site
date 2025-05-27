@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from "path";
 
 
-const DOC_PATH: string = process.cwd() + "/public/docs/";
+const DOC_PATH: string = path.join(process.cwd(), "public", "docs");
 
 
 export type FileTree = {
