@@ -1,8 +1,8 @@
 "use client";
 
-import { Ref, useCallback, useEffect, useRef, useState } from "react";
+import { Ref, useEffect, useRef, useState } from "react";
 import { VerticalSpacer } from "../../components/Components";
-import "./styles.css";
+import styles from "./styles.module.css";
 import "./markdown.css"
 import { FileTree, getAllDocuments, getMarkdown } from "./markdown-accessor";
 import Markdown from "react-markdown";
@@ -128,53 +128,63 @@ export default function DevelopPage() {
         });
     }, []);
 
-    return <div style={{ height: "calc(100% - 7rem)" }}>
+
+
+    return <div style={{ height: "calc(100% - var(--header-size) - 1.15rem)" }}>
         <VerticalSpacer size="1rem" />
-        <div className="develop-page">
-            <div className="sidebar">
+        <div className={styles["develop-page"]}>
+            <div className={styles["sidebar"]}>
                 <FileTreeView onClick={onSectionPressed} tree={sections} />
             </div>
 
-            <div className="markdown-body" ref={markdownRef}>
-                <Markdown
-                    components={{
-                        a: ({ href, children }) => (
-                            <a
-                                href={href}
-                                target={href?.startsWith("https") ? "_blank" : '_self'}
-                                onClick={(e) => {
-                                    if (!href?.startsWith("https")) {
-                                        onSectionPressed((href ?? "").replaceAll("%20", " "));
-                                        e.preventDefault();
-                                    }
-                                }}
-                            >
-                                {children}
-                            </a>
-                        ),
-                    }}
 
-                    urlTransform={(url) => {
-                        if (url.includes("/assets/")) {
-                            return `/docs/assets/` + url.split("/").at(-1)
-                        }
+            <div className={styles["markdown-container"]}>
+                <div className={"markdown-body"} ref={markdownRef}>
+                    <DocMarkdown markdown={markdown} onSectionPressed={onSectionPressed} />
 
-                        return url.startsWith("https") ? url : url.split("/").at(-1)
-                    }}
-
-                    rehypePlugins={[rehypeRaw]}
-                >
-                    {markdown}
-                </Markdown>
-
-
-                <VerticalSpacer size="3rem" />
-
+                </div>
+                <VerticalSpacer size="5rem" />
             </div>
+
 
 
         </div>
 
 
     </div>
+}
+
+
+
+function DocMarkdown({ markdown, onSectionPressed }: { markdown: string, onSectionPressed: (s: string) => void }) {
+    return <Markdown
+        components={{
+            a: ({ href, children }) => (
+                <a
+                    href={href}
+                    target={href?.startsWith("https") ? "_blank" : '_self'}
+                    onClick={(e) => {
+                        if (!href?.startsWith("https")) {
+                            onSectionPressed((href ?? "").replaceAll("%20", " "));
+                            e.preventDefault();
+                        }
+                    }}
+                >
+                    {children}
+                </a>
+            ),
+        }}
+
+        urlTransform={(url) => {
+            if (url.includes("/assets/")) {
+                return `/docs/assets/` + url.split("/").at(-1)
+            }
+
+            return url.startsWith("https") ? url : url.split("/").at(-1)
+        }}
+
+        rehypePlugins={[rehypeRaw]}
+    >
+        {markdown}
+    </Markdown>
 }

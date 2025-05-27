@@ -3,6 +3,7 @@
 import "./header.css"
 import { useRouter } from "next/navigation";
 import { NexusLogo, HorizontalSpacer } from "../components/Components";
+import { useState } from "react";
 
 const FONT_SIZE: string = '1.25rem';
 
@@ -12,6 +13,7 @@ function NavButton({ displayText, callback, fontSize, width }: { displayText: st
 
 export function Header() {
     const router = useRouter();
+
     return <>
         <div id='header'>
             <HorizontalSpacer size="2rem" />

@@ -1,3 +1,7 @@
+.markdown-body {
+    width: 100%
+}
+
 .markdown-body>*:first-child {
     margin-top: 0 !important
 }

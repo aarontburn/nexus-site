@@ -71,6 +71,7 @@ export default function Home() {
         </div>
 
         <div className="container second">
+
             <div className="background-image"></div>
             <h1 ref={aboutRef}>What is {<NexusText />}?</h1>
             <p>
@@ -80,9 +81,9 @@ export default function Home() {
             </p>
         </div>
 
+        <VerticalSpacer size="5rem" />
 
         <div className="container third">
-            <VerticalSpacer size="7rem" />
 
             <h2 style={{ fontSize: "1.5em" }}>
                 Install community-made <span style={{ color: "var(--accent-color)" }}>modules</span> that serve any purpose for any user.
@@ -130,14 +131,16 @@ export default function Home() {
 
                 <VerticalSpacer size="1rem" />
                 <h1>One application. Infinite uses.</h1>
-                <VerticalSpacer size="5rem" />
+
 
             </div>
+            <a className="main-clickable" href="/marketplace">
+                Explore Modules
+            </a>
         </div>
 
 
         <div className="container fourth">
-            <VerticalSpacer size="7rem" />
             <h1>Or are you a developer?</h1>
             <p>Nexus modules have the tools to create powerful, interconnected applications that can be managed within a single window.</p>
 
@@ -189,7 +192,6 @@ export default function Home() {
                 Start Developing
             </a>
         </div>
-        <VerticalSpacer size="10rem" />
 
     </div>
 
