@@ -37,6 +37,7 @@ function buildFileTree(paths: string[]): FileTree {
 }
 
 export async function getAllDocuments(): Promise<[string[], FileTree]> {
+    console.log("Retrieving all documents")
     let files: string[] = await fs.promises.readdir(DOC_PATH, { recursive: true });
     files = files.filter(p => p.endsWith(".md"));
     return [files, buildFileTree(files)];

@@ -83,7 +83,7 @@ export default function DevelopPage() {
     const [markdown, setMarkdown] = useState<string>('');
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
 
-    const onSectionPressed = useCallback((p: string) => {
+    const onSectionPressed = (p: string) => {
         if (filePaths[p] === undefined) {
             return;
         }
@@ -91,7 +91,7 @@ export default function DevelopPage() {
         getMarkdown(filePaths[p]).then((markdown) => {
             setMarkdown(markdown)
         });
-    }, [filePaths])
+    }
 
     useEffect(() => {
         markdownRef.current?.scroll({
