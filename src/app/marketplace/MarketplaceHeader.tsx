@@ -9,7 +9,7 @@ export default function MarketplaceHeader() {
     const router = useRouter();
 
     return <div className={styles["mp-header"]}>
-        <VerticalSpacer size={"calc(5rem - 1px)"} />
+        <VerticalSpacer size={"-2px"} />
 
         <div className={styles["mp-header-content"]}>
 

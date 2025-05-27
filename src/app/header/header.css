@@ -1,13 +1,5 @@
-@media (max-width: 768px) {
-    .right {
-        display: none !important; 
-    }
-
-}
-
-
 #header {
-    height: 5rem;
+    height: var(--header-size);
     width: 100%;
 
     border-bottom: 1px solid var(--background-light);
@@ -19,6 +11,11 @@
     z-index: 1000;
 }
 
+.header-button-container {
+    display: flex;
+    width: 100%;
+}
+
 .header-logo-container {
     display: flex;
     align-items: center;
@@ -26,16 +23,20 @@
     cursor: pointer;
 }
 
-.header-logo-container:hover > .nav-button {
+.header-spacer {
+    margin-right: auto;
+}
+
+.header-logo-container:hover>.nav-button {
     color: var(--accent-color)
 }
 
-.header-logo-container > .component-nexus-logo {
+.header-logo-container>.component-nexus-logo {
     background-color: var(--foreground);
     transition: 0.2s;
 }
 
-.header-logo-container:hover > .component-nexus-logo {
+.header-logo-container:hover>.component-nexus-logo {
     background-color: var(--accent-color);
 }
 
@@ -54,4 +55,24 @@
 
 .nav-button:hover {
     color: var(--accent-color);
+}
+
+
+@media (max-width: 768px) {
+    #header {
+        flex-direction: column;
+        align-items: center;
+        padding-left: 1rem;
+        justify-content: center;
+    }
+
+    .header-button-container {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .header-spacer {
+        display: none;
+    }
+
 }

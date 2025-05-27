@@ -25,14 +25,17 @@ export function Header() {
             </div>
 
 
-            <HorizontalSpacer size="5rem" />
+                <div className="header-spacer"></div>
 
-            <NavButton displayText="Download" callback={() => router.push('/download')} fontSize={FONT_SIZE} />
-            <NavButton displayText="Marketplace" callback={() => router.push('/marketplace')} fontSize={FONT_SIZE} />
 
-            <HorizontalSpacer size="auto" />
+            <div className="header-button-container">
+                <NavButton displayText="Download" callback={() => router.push('/download')} fontSize={FONT_SIZE} />
+                <NavButton displayText="Marketplace" callback={() => router.push('/marketplace')} fontSize={FONT_SIZE} />
+                <div className="header-spacer"></div>
+                <NavButton displayText="Develop" callback={() => router.push('/develop/1 - Introduction.md')} fontSize={FONT_SIZE} />
 
-            <NavButton displayText="Develop" callback={() => router.push('/develop/1 - Introduction.md')} fontSize={FONT_SIZE} />
+            </div>
+
 
         </div>
 

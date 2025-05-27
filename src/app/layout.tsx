@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { Header } from "./header/Header";
+import { VerticalSpacer } from "./components/Components";
 
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -11,6 +12,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body>
                 <SessionProvider>
                     <Header />
+                    <VerticalSpacer size={"var(--header-size)"} />
+                    
                     {children}
                 </SessionProvider>
 

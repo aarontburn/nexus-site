@@ -247,7 +247,7 @@
 
 @media (max-width: 768px) {
     .right {
-        display: none;
+        display: none !important;
     }
 
     .feature-grid {

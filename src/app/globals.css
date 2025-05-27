@@ -4,6 +4,9 @@
 }
 
 :root {
+    --header-size: 5rem;
+
+
     --foreground: #171717;
     --foreground-light: rgb(36, 36, 36);
 
@@ -12,6 +15,13 @@
     --background-light-2: #ededed;
 
     --accent-color: #2290B5;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-size: 7rem;
+    }
+
 }
 
 

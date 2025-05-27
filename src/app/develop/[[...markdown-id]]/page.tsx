@@ -129,7 +129,7 @@ export default function DevelopPage() {
     }, []);
 
     return <div style={{ height: "calc(100% - 7rem)" }}>
-        <VerticalSpacer size="6rem" />
+        <VerticalSpacer size="1rem" />
         <div className="develop-page">
             <div className="sidebar">
                 <FileTreeView onClick={onSectionPressed} tree={sections} />

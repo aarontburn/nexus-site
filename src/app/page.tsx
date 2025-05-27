@@ -32,7 +32,6 @@ export default function Home() {
 
 
     return <div>
-        <VerticalSpacer size="5rem" />
 
         <div className="container first">
             <div className="left">
