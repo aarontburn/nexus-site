@@ -13,24 +13,24 @@ export const getAbbreviation = (moduleName: string) => {
 }
 
 
-export function imageToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
+export function imageToBase64(file: File): Promise<string | undefined> {
+    return new Promise((resolve) => {
         var fr = new FileReader();
         fr.onload = () => {
             resolve(fr.result as string);
         };
-        fr.onerror = reject;
+        fr.onerror = () => resolve(undefined);
         fr.readAsDataURL(file);
     });
 }
 
-export function readUploadedText(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
+export function readUploadedText(file: File): Promise<string | undefined> {
+        return new Promise((resolve) => {
         var fr = new FileReader();
         fr.onload = () => {
             resolve(fr.result as string);
         };
-        fr.onerror = reject;
+        fr.onerror = () => resolve(undefined);
         fr.readAsText(file);
     });
 }

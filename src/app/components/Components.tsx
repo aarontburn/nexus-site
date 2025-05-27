@@ -1,13 +1,12 @@
 import styles from "./components.module.css"
 
-
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties } from "react";
 
 export const HorizontalSpacer = ({ size = "auto" }) => {
     return <div style={{ marginRight: size }}></div>;
 }
 
-export const VerticalSpacer = ({ size = "auto" }: { size?: string | number }) => {
+export const VerticalSpacer = ({ size = "auto" }: { size?: string }) => {
     return <div style={{ marginTop: size, height: "1px" }}></div>;
 }
 
@@ -33,7 +32,7 @@ export interface NexusLogoProps {
 }
 
 export function NexusLogo(props: NexusLogoProps) {
-    return <div className={styles["component-nexus-logo "] + (props.className ?? "")} style={{ ...props.style, ...{ width: props.width, height: props.height } }}></div>
+    return <div className={styles["component-nexus-logo"] + " " + (props.className ?? "")} style={{ ...props.style, ...{ width: props.width, height: props.height } }}></div>
 }
 
 

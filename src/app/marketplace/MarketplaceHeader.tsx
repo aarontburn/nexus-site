@@ -1,4 +1,4 @@
-import "./marketplace.css"
+import styles from "./marketplace.module.css"
 
 import { signOut, useSession } from "next-auth/react";
 import { VerticalSpacer, HorizontalSpacer } from "../components/Components";
@@ -8,23 +8,23 @@ export default function MarketplaceHeader() {
     const session = useSession();
     const router = useRouter();
 
-    return <div className="mp-header">
+    return <div className={styles["mp-header"]}>
         <VerticalSpacer size={"calc(5rem - 1px)"} />
 
-        <div className="mp-header-content">
+        <div className={styles["mp-header-content"]}>
 
-            <h2 className="clickable" onClick={() => router.push("/marketplace")}>Nexus Marketplace</h2>
+            <h2 className={styles["clickable"]} onClick={() => router.push("/marketplace")}>Nexus Marketplace</h2>
             <HorizontalSpacer />
             {
                 session.status === "authenticated"
-                    ? <a href="/marketplace/account">Account</a>
+                    ? <a href="/marketplace/account">Modules</a>
                     : <a href="/marketplace/login">Login/Register</a>
             }
 
             {
                 session.status === "authenticated" && <>
                     <HorizontalSpacer size="1rem" />
-                    <p className="clickable" onClick={() => signOut()}>Sign Out</p>
+                    <p className={styles["clickable"]} onClick={() => signOut()}>Sign Out</p>
                 </>
             }
 

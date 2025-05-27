@@ -1,7 +1,8 @@
 "use server"
 import { getServerSession, Session } from 'next-auth'
-import { Collection, Db, MongoClient, WithId } from "mongodb";
+import mongodb, { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
 import { authOptions } from '../api/auth/[...nextauth]/route';
+
 
 export interface ModuleInfo {
     _id: string;
@@ -58,7 +59,6 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
     }
 
     return [Array.from(moduleCache.values()), new Promise(async (resolve) => {
-
         const result: WithId<ModuleInfo>[] | undefined = await moduleCollection?.find({}).toArray();
         result?.forEach(info => {
             info._id = `${info._id}`;
@@ -70,21 +70,26 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
 
 }
 
-export async function getModule(moduleID: string): Promise<ModuleInfo | undefined> {
-    if (moduleCache.has(moduleID)) {
-        return moduleCache.get(moduleID);
-    }
-
+export async function getModule(_id: string): Promise<[ModuleInfo | undefined, Promise<ModuleInfo | undefined>]> {
     if (!client) {
         await connectToDatabase();
     }
-    const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne({ "module-id": moduleID }) ?? undefined
-    if (!result) {
-        return undefined;
-    }
-    result._id = `${result._id}`;
-    moduleCache.set(moduleID, result);
-    return result
+
+
+    return [moduleCache.get(_id), new Promise(async (resolve) => {
+        const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne({ _id: new ObjectId(_id) as any }) ?? undefined;
+        if (!result) {
+            return undefined;
+        }
+        result._id = `${result._id}`;
+        moduleCache.set(_id, result);
+        resolve(result)
+    })]
+
+
+
+
+
 }
 
 
@@ -107,7 +112,46 @@ export async function getModulesFromUser(userID: string): Promise<ModuleInfo[] |
     return result;
 }
 
-export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "author-id">) {
+export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id">) {
+    if (!client) {
+        await connectToDatabase();
+    }
+
+
+    const session: Session | null = await getServerSession(authOptions);
+    if (!session?.user.id) {
+        return "Not authorized."
+    }
+
+    const userID: string = session.user.id;
+    const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne(
+        {
+            "author-id": userID,
+            "module-id": moduleInfo['module-id']
+        }
+    ) ?? undefined;
+
+    if (!result) {
+        return `Error editing module; no module found from user ${session.user.email} with id ${moduleInfo['module-id']}`;
+    }
+
+    try {
+        await moduleCollection?.replaceOne({
+            "author-id": userID,
+            "module-id": moduleInfo['module-id']
+        }, {
+            ...moduleInfo,
+            "author-id": userID,
+        } as any)
+        return undefined;
+    } catch (err) {
+        console.error("Error inserting module:", err);
+    }
+    return "An error occurred while inserting the module.";
+}
+
+
+export async function deleteRemoteModule(moduleInfo: ModuleInfo) {
     if (!client) {
         await connectToDatabase();
     }
@@ -126,12 +170,19 @@ export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "author-id">
     ) ?? undefined;
 
     if (!result) {
-        return `Error editing module; no module found from user ${session.user.email} with id ${session.user.id}`;
+        return `Error deleting module; no module found from user ${session.user.email} with id ${moduleInfo['module-id']}`;
     }
 
-    await moduleCollection?.replaceOne({ _id: moduleInfo._id})
-
-
+    try {
+        await moduleCollection?.deleteOne({
+            "author-id": userID,
+            "module-id": moduleInfo['module-id']
+        })
+        return undefined;
+    } catch (err) {
+        console.error("Error inserting module:", err);
+    }
+    return "An error occurred while inserting the module.";
 }
 
 export async function insertModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id">) {

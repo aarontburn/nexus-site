@@ -11,77 +11,93 @@ import { getGitHubModuleInfo, Response } from "./GitHubHandler";
 interface EditModuleScreenProps {
     session: SessionContextValue;
     editTarget: ModuleInfo | null;
-    editModule: (moduleInfo: ModuleInfo | null | undefined) => void
+    editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
+    setNotificationText: (message: string) => void;
 }
 
 
-export default function EditModuleScreen({ session, editTarget, editModule }: EditModuleScreenProps) {
+export type RemoteModuleInfoJSON =
+    Omit<ModuleInfo, "module-id" | "repo" | "image" | "readme">
+    & {
+        "id": string,
+    }
+
+
+export default function EditModuleScreen({ session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
+    const isNewModule: boolean = editTarget === null;
+
+    /* Refs */
     const githubRepoInputRef: Ref<HTMLInputElement> = useRef(null);
     const imageUploadRef: Ref<HTMLInputElement> = useRef(null);
     const readmeTextRef: Ref<HTMLTextAreaElement> = useRef(null);
     const readmeUploadRef: Ref<HTMLInputElement> = useRef(null);
 
-
+    /* State */
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
     const [uploadedReadme, setUploadedReadme] = useState<File | undefined>(undefined);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [remoteModuleInfo, setRemoteModuleInfo] = useState<(ModuleInfo & { id: string, "author-id": string }) | undefined>(undefined);
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(true);
-
-    const isNewModule = editTarget === null;
-
-    useEffect(() => {
-        if (editTarget) {
-            checkGitHubRepo(editTarget.repository)
-        }
-    }, [])
+    const [remoteModuleInfo, setRemoteModuleInfo] = useState<RemoteModuleInfoJSON | undefined>(undefined);
+    const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(isNewModule);
+    const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
     const checkGitHubRepo = (repoLink: string | undefined) => {
         if (repoLink) {
             setIsLoading(true);
             getGitHubModuleInfo(repoLink)
-                .then((response: Response) => {
-                    setIsLoading(false);
+                .then((response: Response<RemoteModuleInfoJSON, { code: number, message: string }>) => {
 
+                    setIsLoading(false);
                     if (response.type === "success") {
-                        setErrorMessage('');
 
                         if (response.body["author-id"] === undefined) {
-                            setErrorMessage("module-info.json doesn't contain 'author-id'. Make sure this is set to your user ID in the latest release.");
+                            setNotificationText("module-info.json doesn't contain 'author-id'. Make sure this is set to your user ID in the latest release.");
                         } else if (response.body["author-id"] !== session.data?.user.id) {
-                            setErrorMessage("Mismatched author-id; If this is your module, ensure the 'author-id' field of your latest release's module-info.json is correctly set to your user ID.")
+                            setNotificationText("Mismatched author-id; If this is your module, ensure the 'author-id' field of your latest release's module-info.json is correctly set to your user ID.")
                         } else {
+                            setNotificationText("Successfully retrieved module-info.json from the GitHub repository.")
                             setRemoteModuleInfo(response.body);
                         }
 
                     } else {
                         setRemoteModuleInfo(undefined);
-                        setErrorMessage(response.body.message)
+                        setNotificationText(response.body.code + " " + response.body.message)
                     }
 
                 })
         } else {
-            setErrorMessage("Provide a valid link to your GitHub repository (e.g. https://github.com/aarontburn/nexus-debug-console).")
+            setNotificationText("Provide a valid link to your GitHub repository (e.g. https://github.com/aarontburn/nexus-debug-console).")
         }
     }
 
     const onPublishPressed = async () => {
         if (!remoteModuleInfo) {
+            console.error("Remote module info is undefined.")
             return;
         }
 
-        const base64Image: string | undefined = imageUploadRef.current?.files?.[0] ? await imageToBase64(imageUploadRef.current?.files?.[0]) : undefined;
+        setIsPublishing(true);
+
+        const base64Image: string | undefined = await (async () => {
+            const uploadedImage: File | undefined = imageUploadRef.current?.files?.[0];
+            if (uploadedImage === undefined) { // no image uploaded
+                return editTarget?.image; // return the remote image, can be undefined
+            }
+            return await imageToBase64(uploadedImage);
+        })();
+
 
         const readme: string | undefined = await (async () => {
             if (useReadmeUpload) {
-                return readmeUploadRef.current?.files?.[0] ? await readUploadedText(readmeUploadRef.current?.files?.[0]) : undefined;
+                const uploadedReadme: File | undefined = readmeUploadRef.current?.files?.[0];
+                if (uploadedReadme) {
+                    return await readUploadedText(uploadedReadme);
+                }
+                return editTarget?.image;
+
             } else {
-                return readmeTextRef.current?.value ?? undefined
+                return readmeTextRef.current?.value ?? undefined;
             }
         })();
-
 
         // author-id should be added in server-side
         const moduleInfo: Omit<ModuleInfo, "_id" | "author-id"> = {
@@ -96,50 +112,91 @@ export default function EditModuleScreen({ session, editTarget, editModule }: Ed
             repository: githubRepoInputRef.current?.value
         }
         if (isNewModule) {
-
             insertModule(moduleInfo).then((result: string | undefined) => {
                 if (result === undefined) { // success
-
+                    setNotificationText(`Successfully published ${moduleInfo["module-id"]}`)
                     editModule(undefined);
                 } else {
-                    setErrorMessage(result)
+                    setNotificationText("Error: " + result);
                 }
             })
         } else {
-
             editRemoteModule(moduleInfo).then((result: string | undefined) => {
                 if (result === undefined) { // success
-
+                    setNotificationText("Successfully edited module.")
                     editModule(undefined);
                 } else {
-                    setErrorMessage(result)
+                    setNotificationText("Error: " + result);
                 }
             })
         }
-
+        setIsPublishing(false);
     }
 
+    useEffect(() => {
+        if (editTarget) {
+            checkGitHubRepo(editTarget.repository)
+        }
+    }, []);
+
     return <div className={styles["edit-screen"]}>
-        <button onClick={() => editModule(undefined)}>
-            {'<'} Back
-        </button>
+
+        <div className={styles["aligned"]}>
+            <button onClick={() => editModule(undefined)}>
+                {'<'} Back
+            </button>
+
+            < HorizontalSpacer size="2rem" />
+
+            <p>User ID: <span
+                className={styles["user-id"]}
+                onClick={() => {
+                    if (session.data?.user?.id) {
+                        navigator.clipboard.writeText(session.data.user.id);
+                    }
+                    setNotificationText("Copied user ID to clipboard.");
+                }}
+            >
+                {session.data?.user.id}
+            </span>
+            </p>
+
+            < HorizontalSpacer />
+
+            <a
+                style={{ backgroundColor: "transparent" }}
+                className={styles["help-link"]}
+                href="/develop/Publishing your Module on the Marketplace.md"
+                target="_blank"
+            >
+                Help
+            </a>
+
+
+        </div>
+
+
+
+
+
         <div className={styles["edit-fields"]}>
 
             <VerticalSpacer size={"1rem"} />
 
             <div className={styles['edit-field']}>
                 <label>GitHub Repository</label>
-                <input ref={githubRepoInputRef} type="text" defaultValue={editTarget?.repository ?? ''} />
+                <VerticalSpacer size="0.25rem" />
+                <input ref={githubRepoInputRef} type="text" disabled={!isNewModule} defaultValue={editTarget?.repository ?? ''} />
             </div>
+            <VerticalSpacer size="1rem" />
 
             <button onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
 
             <VerticalSpacer size={"1rem"} />
             {isLoading && <Spinner />}
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
             {remoteModuleInfo && <>
-                <p>Successfully retrieved module-info.json from the GitHub repository.</p>
+
                 <VerticalSpacer size={"1rem"} />
 
                 <h1>{remoteModuleInfo.name}</h1>
@@ -156,14 +213,16 @@ export default function EditModuleScreen({ session, editTarget, editModule }: Ed
                 <p><span style={{ color: "gray" }}>(Optional)</span> Upload an image for your module.</p>
                 <VerticalSpacer size={"0.25rem"} />
 
-                <input
-                    ref={imageUploadRef}
-                    type='file'
-                    style={{ display: "none" }}
-                    onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
-                />
+
 
                 <div className={styles["aligned"]}>
+                    <input
+                        ref={imageUploadRef}
+                        type='file'
+                        style={{ display: "none" }}
+                        onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
+                    />
+
                     <button onClick={() => { imageUploadRef.current?.click() }}>
                         Upload
                     </button>
@@ -202,20 +261,21 @@ export default function EditModuleScreen({ session, editTarget, editModule }: Ed
                                 <HorizontalSpacer size={"1rem"} />
                                 <span style={{ color: "gray" }}>{uploadedReadme ? `(${uploadedReadme.name})` : ''}</span>
                             </div>
-
-
-
                         </>
                         : <>
-                            <textarea ref={readmeTextRef}></textarea>
+                            <textarea ref={readmeTextRef} defaultValue={editTarget?.readme}></textarea>
                         </>
                 }
-
                 <VerticalSpacer size={"2rem"} />
 
-                <button onClick={onPublishPressed}>
-                    Publish
-                </button>
+                {isPublishing ? <Spinner /> :
+                    <button onClick={() => {
+                        onPublishPressed();
+                    }}
+                        disabled={isPublishing} >
+                        Publish
+                    </button>
+                }
 
                 <VerticalSpacer size={"2rem"} />
 

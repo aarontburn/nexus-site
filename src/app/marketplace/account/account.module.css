@@ -1,8 +1,50 @@
+.user-id {
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        color: var(--accent-color);
+    }
+}
+
+.notification-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+
+.notification {
+    background-color: rgb(83, 83, 83);
+    width: fit-content;
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    border-radius: 10px;
+    transition: 0.35s;
+    color: white
+}
+
+
 .spinner-container {
     display: flex;
     justify-content: center;
     margin-top: 5rem;
 }
+
+.spinner-container-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+
 
 .aligned {
     display: flex;
@@ -22,20 +64,11 @@
     align-items: center;
 }
 
-.edit-fields {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.edit-screen {
+    width: calc(100% - 1rem);
 }
 
-.edit-fields label {
-    margin-right: 1rem;
-}
 
-.edit-field {
-    margin-bottom: 1rem;
-    width: 100%;
-}
 
 .edit-field * {
     font-size: 1rem;
@@ -45,7 +78,7 @@
     outline: none;
     padding: 0.25rem;
     width: 100%;
-    
+
     background-color: var(--background-light-2);
     border: 1px solid var(--background-light);
     transition: 0.2s;
@@ -115,7 +148,7 @@
 
 .right {
     padding-left: 1rem;
-    width: calc(100% - 20rem);
+    width: 100%;
     overflow-y: auto;
     height: 100%;
 }
@@ -140,6 +173,7 @@
     border: 1px solid var(--background-light-2);
     border-radius: 5px;
     width: 22.5rem;
+    min-height: 8rem;
 }
 
 
@@ -147,6 +181,9 @@
     width: 64px;
     height: 64px;
     margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .image p {
@@ -179,4 +216,9 @@
 
 .module .button-container {
     display: flex;
+}
+
+.help-link {
+    background-color: none !important; 
+    color: var(--accent-color)
 }

@@ -1,20 +1,27 @@
 "use server";
 
 import JSZip from 'jszip';
-import { ModuleInfo } from '../NexusDatabase';
+import { RemoteModuleInfoJSON } from './EditModule';
 
 
 
-export interface Response {
-    type: "success" | "failure";
-    body: any;
+export type Response<TSuccess, TFailure> = SuccessResponse<TSuccess> | FailureResponse<TFailure>
+
+export interface SuccessResponse<T = any> {
+    type: "success";
+    body: T;
+}
+
+export interface FailureResponse<T = any> {
+    type: "failure";
+    body: T;
 }
 
 
 
 
 
-export async function getGitHubModuleInfo(githubURL: string): Promise<Response> {
+export async function getGitHubModuleInfo(githubURL: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
     try {
         const apiGitHubURL: string = githubURL.replace("github.com", "api.github.com/repos");
         const response = await fetch(apiGitHubURL + "/releases/latest");
@@ -36,7 +43,7 @@ export async function getGitHubModuleInfo(githubURL: string): Promise<Response> 
 
 }
 
-async function downloadAndReadModuleInfo(downloadURL: string): Promise<Response> {
+async function downloadAndReadModuleInfo(downloadURL: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
     const response = await fetch(downloadURL);
     const arrayBuffer = await response.arrayBuffer();
     const zip: JSZip = await JSZip.loadAsync(arrayBuffer);
@@ -51,7 +58,7 @@ async function downloadAndReadModuleInfo(downloadURL: string): Promise<Response>
 
     const text = await file.async('text');
     try {
-        const json = JSON.parse(text);
+        const json: RemoteModuleInfoJSON = JSON.parse(text);
         return { type: "success", body: json };
     } catch (err) {
         return {

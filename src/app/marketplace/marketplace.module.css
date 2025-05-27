@@ -1,0 +1,144 @@
+.page {
+    height: calc(100% - 10rem - 1px);
+}
+
+.centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+}
+
+.body {
+    padding: 0 1rem;
+    display: flex;
+    height: 100%;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+}
+
+.left {
+    width: 20rem;
+    border-right: 1px solid var(--background-light-2);
+    height: 100%;
+}
+
+.right {
+    padding-left: 1rem;
+    width: calc(100% - 20rem);
+
+}
+
+.right button {
+    min-width: 5rem;
+    max-width: fit-content;
+    height: 1.5rem;
+    font-size: 0.95rem;
+    background-color: var(--background-light-2);
+    border: none;
+    border-radius: 5px;
+    transition: 0.2s;
+    cursor: pointer;
+    padding: 0 0.5rem;
+
+    &:hover {
+        background-color: var(--accent-color);
+    }
+}
+
+
+.right input {
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+    border-radius: 5px;
+    border: 1px solid var(--background-light-2);
+    background-color: var(--background-light);
+    padding: 0.5rem 1rem;
+    margin-top: 0.25rem;
+    width: 20rem;
+
+    &:focus {
+        border: 1px solid var(--accent-color);
+    }
+}
+
+
+.mp-header-content {
+    background-color: var(--background-light);
+    height: calc(4rem + 1px);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+
+.mp-header-content h2,
+.mp-header-content p,
+.mp-header-content a {
+    transition: 0.2s;
+    &:hover {
+        color: var(--accent-color)
+    }
+}
+
+
+.main>input {
+    width: 100%;
+}
+
+#module-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.module {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-bottom: 1px solid var(--foreground);
+
+}
+
+.module-image-container {
+    margin: 1em;
+    width: 64px;
+    height: 64px;
+}
+
+
+.module-info-name {
+    transition: 0.2s;
+}
+
+.module:hover .module-info-name {
+    color: var(--accent-color);
+}
+
+
+.module-image-container>img {
+    width: 100%;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.module-info-container h4 {
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.module-abbreviation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 2rem;
+}
