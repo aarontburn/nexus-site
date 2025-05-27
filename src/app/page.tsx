@@ -24,7 +24,7 @@ function Link({ url, text }: { text: string, url: string }) {
 }
 
 export default function Home() {
-    const aboutRef: Ref<HTMLHeadingElement | null> = useRef(null);
+    const aboutRef: Ref<HTMLHeadingElement> = useRef(null);
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -36,6 +36,8 @@ export default function Home() {
 
         <div className="container first">
             <div className="left">
+                <VerticalSpacer size="5rem" />
+
                 <NexusLogo width={"10rem"} height={"10rem"} />
 
                 <div className="title">
@@ -63,13 +65,9 @@ export default function Home() {
             </div>
 
             <div className="right">
-
                 <img className="home-image layer-1" src={googleCalendarImage.src} />
                 <img className="home-image layer-2" src={debugConsoleImage.src} />
                 <img className="home-image layer-3" src={spotifyMonkeyImage.src} />
-
-
-
             </div>
         </div>
 
@@ -192,6 +190,7 @@ export default function Home() {
                 Start Developing
             </a>
         </div>
+        <VerticalSpacer size="10rem" />
 
     </div>
 

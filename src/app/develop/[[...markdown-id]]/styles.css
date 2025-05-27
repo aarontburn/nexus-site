@@ -43,5 +43,5 @@
     overflow-y: auto;
     padding-left: 1rem;
     padding-right: 1rem;
-    width: 80%;
+    width: calc(100% - 20rem)
 }

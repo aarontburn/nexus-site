@@ -1,3 +1,11 @@
+@media (max-width: 768px) {
+    .right {
+        display: none !important; 
+    }
+
+}
+
+
 #header {
     height: 5rem;
     width: 100%;

@@ -84,8 +84,6 @@ export default function DevelopPage() {
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
 
     const onSectionPressed = (p: string) => {
-        console.log(filePaths);
-        console.log(p);
         if (filePaths[p] === undefined) {
             return;
         }
