@@ -1,7 +1,7 @@
 "use server"
 import { getServerSession, Session } from 'next-auth'
 import mongodb, { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '../api/authOptions';
 
 
 export interface ModuleInfo {
