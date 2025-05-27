@@ -18,7 +18,7 @@ interface AlertProps {
 
 }
 
-export function Alert(props: AlertProps) {
+function Alert(props: AlertProps) {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
