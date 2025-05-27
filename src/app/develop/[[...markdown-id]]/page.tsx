@@ -115,9 +115,16 @@ export default function DevelopPage() {
             setSections(tree);
 
             const paths: { [shortPath: string]: string } = {};
-            for (const p of filePaths) {
-                paths[p.split("\\").at(-1) as string] = p;
+
+            if (filePaths.length > 0) {
+                const delimiter: "\\" | "/" = filePaths[0].includes("/") ? "/" : "\\"
+
+                for (const p of filePaths) {
+                    paths[p.split(delimiter).at(-1) as string] = p;
+                }
             }
+
+
 
             setFilePaths(paths);
         });
@@ -150,13 +157,13 @@ export default function DevelopPage() {
                     }}
 
                     urlTransform={(url) => {
-                        if (url.includes("/assets/")){
+                        if (url.includes("/assets/")) {
                             return `/docs/assets/` + url.split("/").at(-1)
                         }
 
                         return url.startsWith("https") ? url : url.split("/").at(-1)
                     }}
-                    
+
                     rehypePlugins={[rehypeRaw]}
                 >
                     {markdown}
