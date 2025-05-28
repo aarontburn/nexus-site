@@ -2,7 +2,7 @@
 
 import { Ref, useEffect, useRef, useState } from "react";
 import styles from "./marketplace.module.css"
-import { getAllRemoteModules, ModuleInfo } from "./NexusDatabase";
+import { getAllRemoteModules, ModuleInfo } from "./module-database";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { getAbbreviation } from "../utils/utils";
@@ -15,7 +15,6 @@ export default function NexusMarket() {
     const searchBarRef: Ref<HTMLInputElement> = useRef(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [searchQuery, setSearchQuery] = useState<string>()
     const [databaseModules, setDatabaseModules] = useState<ModuleInfo[]>([]);
     const [displayedModules, setDisplayedModules] = useState<ModuleInfo[]>([]);
 
@@ -67,15 +66,14 @@ export default function NexusMarket() {
 
     return <div className={styles["page"]}>
         <MarketplaceHeader />
-        <VerticalSpacer size={"5rem"} />
+        <br />
+        <VerticalSpacer size="4rem" />
+
 
         {
             isLoading ? <div className={styles["centered"]}><Spinner /></div> :
+            
                 <div className={styles["body"]}>
-                    <div className={styles["left"]}>
-                        <h2>Filters</h2>
-
-                    </div>
 
                     <div className={styles["right"]}>
                         <h2>All Modules</h2>
@@ -88,7 +86,7 @@ export default function NexusMarket() {
                                     onKeyDown={({ key }) => key === "Enter" && searchForModule()}
                                 />
                                 <VerticalSpacer size={"0.25rem"} />
-                                <p style={{fontSize: "0.75rem"}}>Search by name, module ID, or author</p>
+                                <p style={{ fontSize: "0.75rem" }}>Search by name, module ID, or author</p>
 
                             </div>
 
@@ -102,7 +100,7 @@ export default function NexusMarket() {
                         <div id={styles["module-container"]}>
                             {displayedModules.map((moduleInfo, index) => <Module key={index} moduleInfo={moduleInfo} />)}
 
-           
+
 
                         </div>
                     </div>

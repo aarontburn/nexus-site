@@ -1,7 +1,7 @@
 import styles from "./marketplace.module.css"
 
 import { signOut, useSession } from "next-auth/react";
-import { VerticalSpacer, HorizontalSpacer } from "../components/Components";
+import { HorizontalSpacer } from "../components/Components";
 import { useRouter } from "next/navigation";
 
 export default function MarketplaceHeader() {
@@ -9,8 +9,6 @@ export default function MarketplaceHeader() {
     const router = useRouter();
 
     return <div className={styles["mp-header"]}>
-        <VerticalSpacer size={"-2px"} />
-
         <div className={styles["mp-header-content"]}>
 
             <h2 className={styles["clickable"]} onClick={() => router.push("/marketplace")}>Nexus Marketplace</h2>

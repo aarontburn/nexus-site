@@ -386,12 +386,12 @@
 
 .markdown-body code,
 .markdown-body tt {
-    padding: .2em .4em;
+    padding: .2em .4em !important;
     margin: 0;
     font-size: 85%;
     white-space: break-spaces;
-    background-color: #3d3d3d;
-    border-radius: 6px
+    background-color: var(--background-light-2);
+    border-radius: 5px;
 }
 
 .markdown-body code br,
@@ -446,7 +446,7 @@
 
 .markdown-body pre code,
 .markdown-body pre tt {
-    color: white;
+    color: var(--foreground);
     display: inline;
     max-width: auto;
     padding: 0;

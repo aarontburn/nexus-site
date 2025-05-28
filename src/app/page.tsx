@@ -1,6 +1,6 @@
 "use client"
 
-import { NexusLogo, NexusText, VerticalSpacer } from "./components/Components";
+import { NexusLogo, NexusText, VerticalSpacer, WhiteSpaceVerticalSpacer } from "./components/Components";
 import "./styles.css";
 
 import googleCalendarImage from "./assets/google-calendar.png";
@@ -31,7 +31,7 @@ export default function Home() {
     }, [])
 
 
-    return <div>
+    return <div style={{ height: "fit-content" }}>
 
         <div className="container first">
             <div className="left">

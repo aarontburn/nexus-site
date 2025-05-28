@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 
@@ -59,10 +59,6 @@
 }
 
 
-.desc-box
-
-
-
 
 .title-text {
     font-size: 5rem;
@@ -75,7 +71,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    height: calc(100vh - 5rem);
+    min-height: calc(100vh - 5rem);
 }
 
 .first .left {
@@ -235,11 +231,14 @@
 .container.second h1 {
     font-size: 4rem;
     width: 100%;
+    color: #ededed;
 }
 
 .container.second p {
     font-size: 1.75rem;
     max-width: 75vw;
+    color: #ededed;
+
 }
 
 .container.fourth>p {
@@ -272,5 +271,11 @@
     .feature-grid {
         flex-wrap: nowrap;
         flex-direction: column;
+        align-items: center;
+
+    }
+
+    .feature-card {
+        width: 75%;
     }
 }

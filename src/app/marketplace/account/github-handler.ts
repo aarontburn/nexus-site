@@ -23,8 +23,11 @@ export interface FailureResponse<T = any> {
 
 export async function getGitHubModuleInfo(githubURL: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
     try {
+        const moduleZipURL: string = githubURL + "/releases/latest/releases"
+
         const apiGitHubURL: string = githubURL.replace("github.com", "api.github.com/repos");
         const response = await fetch(apiGitHubURL + "/releases/latest");
+        
 
         if (!response.ok) {
             return { type: "failure", body: { code: response.status, message: response.statusText } };

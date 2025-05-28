@@ -5,8 +5,8 @@ import { SessionContextValue } from "next-auth/react";
 import { Ref, useEffect, useRef, useState } from "react";
 import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Components";
 import { imageToBase64, readUploadedText } from "../../utils/utils";
-import { ModuleInfo, editRemoteModule, insertModule } from "../NexusDatabase";
-import { getGitHubModuleInfo, Response } from "./GitHubHandler";
+import { ModuleInfo, editRemoteModule, insertModule } from "../module-database";
+import { getGitHubModuleInfo, Response } from "./github-handler";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;

@@ -6,7 +6,7 @@ import MarketplaceHeader from "../MarketplaceHeader";
 import styles from "./account.module.css"
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { deleteRemoteModule, getModulesFromUser, ModuleInfo } from "../NexusDatabase";
+import { deleteRemoteModule, getModulesFromUser, ModuleInfo } from "../module-database";
 import React from "react";
 import { getAbbreviation } from "../../utils/utils";
 import EditModuleScreen from "./EditModule";

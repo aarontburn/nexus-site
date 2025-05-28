@@ -1,3 +1,35 @@
+
+
+.mbody {
+    display: flex;
+}
+
+.left {
+    order: 0;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.right {
+    order: 2;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+.main {
+    padding-top: 2rem;
+    order: 1;
+    width: 75%;
+    min-width: 50%;
+    background-color: var(--background-light);
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    height: fit-content;
+}
+
+
+
+
 .spinner-container {
     display: flex;
     align-items: center;
@@ -41,7 +73,7 @@
 
 .module-link {
     height: 2em;
-    width: 13rem;
+    width: 33%;
     font-size: 1.25rem;
     margin-top: 0.5rem;
     display: flex;
@@ -109,4 +141,28 @@
 .skeleton-box {
     background-color: gray;
     border-radius: 5px;
+}
+
+
+
+@media (max-width: 768px) {
+    #button-container {
+        flex-direction: column;
+    }
+
+    .module-link {
+        width: 100%;
+    }
+
+
+    .left {
+        display: none;
+    }
+    .right {
+        display: none;
+    }
+    .main {
+        width: 100%;
+    }
+
 }

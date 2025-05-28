@@ -7,7 +7,11 @@ export const HorizontalSpacer = ({ size = "auto" }) => {
 }
 
 export const VerticalSpacer = ({ size = "auto" }: { size?: string }) => {
-    return <div style={{ marginTop: size, height: "1px" }}></div>;
+    return <div style={{ marginTop: size, minHeight: "1px" }}></div>;
+}
+
+export const WhiteSpaceVerticalSpacer = ({ size = "auto" }: { size?: string }) => {
+    return <div style={{ marginTop: size, minHeight: "1px" }}>&nbsp;</div>;
 }
 
 

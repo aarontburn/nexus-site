@@ -60,3 +60,9 @@
 .no-account {
     font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+    .container {
+        height: calc(100% - var(--header-size));
+    }
+}

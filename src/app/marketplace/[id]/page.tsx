@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getModule, ModuleInfo } from '../NexusDatabase';
+import { getModule, ModuleInfo } from '../module-database';
 import "./styles.css";
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
 import { getAbbreviation } from '../../utils/utils';
-import "../../page.css"
 import { VerticalSpacer } from '../../components/Components';
 import MarketplaceHeader from '../MarketplaceHeader';
 
@@ -139,31 +138,37 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
         </div>
 
         <div id='button-container'>
-            <button className='module-link' style={{ width: "50%", backgroundColor: "#2d4677" }}>
+            <a
+                href={`nexus-app://install_${moduleInfo.repository?.replace("https://", '')}/releases/latest/download/${moduleInfo['module-id']}.zip`}
+                className='module-link'
+                style={{ backgroundColor: "#2d4677" }}
+            >
                 <div className='nexus-logo logo'></div>
                 <p>Install to Nexus</p>
-            </button>
+            </a>
 
 
-            <button className='module-link' style={{ width: "50%" }}>
+            <a
+                href={`${moduleInfo.repository}/releases/latest/download/${moduleInfo['module-id']}.zip`}
+                className='module-link'
+            >
                 <div className='download-logo logo'></div>
                 <p>Manual Download</p>
-            </button>
+            </a>
 
-
+            <a className='module-link' href={moduleInfo?.repository} target='_blank'>
+                {moduleInfo?.repository?.startsWith("https://github") ? <>
+                    <div className='git-logo logo'></div>
+                    <p>GitHub</p>
+                </>
+                    : <>
+                        <p>Link</p>
+                    </>
+                }
+            </a>
         </div>
 
-        <a className='module-link' href={moduleInfo?.link} target='_blank'>
-            {moduleInfo?.link?.startsWith("https://github") ? <>
-                <div className='git-logo logo'></div>
-                <p>GitHub</p>
-            </>
-                : <>
-                    <p>Link</p>
-                </>
-            }
-        </a>
-        <br />
+        <VerticalSpacer size='1rem' />
 
         {moduleInfo.readme &&
             <div className='readme'>
@@ -172,8 +177,8 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <br />
                 <div className='markdown-body'>
                     <Markdown>{moduleInfo.readme}</Markdown>
-
                 </div>
+                <VerticalSpacer size='5rem' />
             </div>
         }
 
