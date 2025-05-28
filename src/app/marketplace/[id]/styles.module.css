@@ -1,5 +1,3 @@
-
-
 .mbody {
     display: flex;
 }
@@ -15,6 +13,7 @@
     flex-grow: 1;
     flex-basis: 0;
 }
+
 .main {
     padding-top: 2rem;
     order: 1;
@@ -46,7 +45,7 @@
     border-radius: 5px;
 }
 
-.readme > * {
+.readme>* {
     width: 100%;
 }
 
@@ -72,7 +71,7 @@
 }
 
 .module-link {
-    height: 2em;
+    height: 2.5rem;
     width: 33%;
     font-size: 1.25rem;
     margin-top: 0.5rem;
@@ -87,13 +86,14 @@
     color: white;
     font-weight: 400;
     cursor: pointer;
+
+    &:hover {
+        border-color: var(--accent-color);
+    }
 }
 
 
 
-.module-link:hover {
-    border-color: var(--accent-color);
-}
 
 .logo {
     mask-size: cover;
@@ -158,9 +158,11 @@
     .left {
         display: none;
     }
+
     .right {
         display: none;
     }
+
     .main {
         width: 100%;
     }

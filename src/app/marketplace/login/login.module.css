@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: calc(100% - var(--header-size));
 }
 
 .login-container {
@@ -61,8 +61,3 @@
     font-size: 1rem;
 }
 
-@media (max-width: 768px) {
-    .container {
-        height: calc(100% - var(--header-size));
-    }
-}

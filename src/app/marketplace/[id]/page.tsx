@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { getModule, ModuleInfo } from '../module-database';
-import "./styles.css";
+import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
 import { getAbbreviation } from '../../utils/utils';
-import { VerticalSpacer } from '../../components/Components';
+import { HorizontalSpacer, NexusLogo, VerticalSpacer } from '../../components/Components';
 import MarketplaceHeader from '../MarketplaceHeader';
+import { imageOptimizer } from 'next/dist/server/image-optimizer';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -34,37 +35,32 @@ export default function ModulePage({ params }: PageProps) {
         <MarketplaceHeader />
         <VerticalSpacer size={"4rem"} />
 
-        <div className="page">
-
-            <div className={"body mbody"}>
-                <div className="left"></div>
-                <div className="right"></div>
-                <div className="main">
-                    {
-                        !moduleInfo
-                            ? <ModuleInfoBodySkeleton />
-                            : <ModuleInfoBody moduleInfo={moduleInfo} />
-                    }
-
-                </div>
-
-
+        <div className={styles["mbody"]}>
+            <div className={styles["left"]}></div>
+            <div className={styles["right"]}></div>
+            <div className={styles["main"]}>
+                {
+                    !moduleInfo
+                        ? <ModuleInfoBodySkeleton />
+                        : <ModuleInfoBody moduleInfo={moduleInfo} />
+                }
 
             </div>
+
         </div>
 
     </>
 }
 
 function SkeletonBox({ width, height }: { width: string, height: string }) {
-    return <div className='shimmer skeleton-box' style={{ height: height, width: width }}></div>
+    return <div className={`${styles["shimmer"]} ${styles["skeleton-box"]}`} style={{ height: height, width: width }}></div>
 }
 
 function ModuleInfoBodySkeleton() {
     return <>
-        <div className='shimmer' style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+        <div className={styles['shimmer']} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 
-            <div className='image-container'>
+            <div className={styles['image-container']}>
                 <SkeletonBox width='128px' height='128px' />
             </div>
 
@@ -77,26 +73,14 @@ function ModuleInfoBodySkeleton() {
         </div>
         <VerticalSpacer size={"0.75rem"} />
 
-        <div id='button-container'>
-            <button className='module-link' style={{ width: "50%", backgroundColor: "#2d4677" }}>
-                <div className='nexus-logo logo'></div>
-                <p>Install to Nexus</p>
-            </button>
-
-
-            <button className='module-link' style={{ width: "50%" }}>
-                <div className='download-logo logo'></div>
-                <p>Manual Download</p>
-            </button>
+        <div id={styles['button-container']}>
+            <SkeletonBox width='100%' height='2.5rem' />
         </div>
 
-        <VerticalSpacer size={"0.5rem"} />
-        <SkeletonBox width='13rem' height='2.5rem' />
+        <VerticalSpacer size={"1rem"} />
 
 
-        <br />
-
-        <div className='readme'>
+        <div className={styles['readme']}>
             <h2>README</h2>
             <hr />
             <br />
@@ -113,7 +97,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
     return <>
         <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 
-            <div className='image-container'>
+            <div className={styles['image-container']}>
                 {
                     moduleInfo.image
                         ? <img
@@ -137,28 +121,28 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
 
         </div>
 
-        <div id='button-container'>
+        <div id={styles['button-container']}>
             <a
                 href={`nexus-app://install_${moduleInfo.repository?.replace("https://", '')}/releases/latest/download/${moduleInfo['module-id']}.zip`}
-                className='module-link'
+                className={styles['module-link']}
                 style={{ backgroundColor: "#2d4677" }}
             >
-                <div className='nexus-logo logo'></div>
+                <NexusLogo className={styles['logo']} style={{ backgroundColor: "white" }} width={"1em"} height={"1em"} />
                 <p>Install to Nexus</p>
             </a>
 
 
             <a
                 href={`${moduleInfo.repository}/releases/latest/download/${moduleInfo['module-id']}.zip`}
-                className='module-link'
+                className={styles['module-link']}
             >
-                <div className='download-logo logo'></div>
+                <div className={`${styles["download-logo"]} ${styles['logo']}`}></div>
                 <p>Manual Download</p>
             </a>
 
-            <a className='module-link' href={moduleInfo?.repository} target='_blank'>
+            <a className={styles['module-link']} href={moduleInfo?.repository} target='_blank'>
                 {moduleInfo?.repository?.startsWith("https://github") ? <>
-                    <div className='git-logo logo'></div>
+                    <div className={`${styles["git-logo"]} ${styles['logo']}`}></div>
                     <p>GitHub</p>
                 </>
                     : <>
@@ -171,11 +155,11 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
         <VerticalSpacer size='1rem' />
 
         {moduleInfo.readme &&
-            <div className='readme'>
+            <div className={styles['readme']}>
                 <h2>README</h2>
                 <hr />
                 <br />
-                <div className='markdown-body'>
+                <div className={'markdown-body'}>
                     <Markdown>{moduleInfo.readme}</Markdown>
                 </div>
                 <VerticalSpacer size='5rem' />

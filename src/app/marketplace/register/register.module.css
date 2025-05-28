@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: calc(100% - var(--header-size));
 }
 
 .login-container {
@@ -38,8 +38,8 @@
     }
 }
 
-.login-container > button {
-    width:  10rem;
+.login-container>button {
+    width: 10rem;
     height: 2.25rem;
     font-size: 1.15rem;
     transition: 0.2s;
@@ -59,10 +59,4 @@
 
 .no-account {
     font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-    .container {
-        height: calc(100% - var(--header-size));
-    }
 }
