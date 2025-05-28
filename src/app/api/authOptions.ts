@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 await connectDB();
-
+                
                 const user = await User.findOne({
                     email: credentials?.email,
                 }).select("+password");
@@ -43,6 +43,7 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async session({ session }): Promise<Session> {
+            await connectDB();
             const databaseUser = await User.findOne({ email: session.user.email });
             session.user.id = `${databaseUser._id}`;
             return session;
