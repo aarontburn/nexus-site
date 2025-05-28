@@ -27,6 +27,7 @@ const UserSchema = new Schema<UserDocument>({
 },
     {
         timestamps: true,
+        bufferCommands: false,
     }
 );
 const User = mongoose.models?.User || model<UserDocument>('User', UserSchema);
