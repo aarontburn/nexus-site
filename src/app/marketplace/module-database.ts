@@ -113,14 +113,12 @@ export async function getModulesFromUser(userID: string): Promise<ModuleInfo[] |
 }
 
 export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id">) {
-    console.log("Editing module.")
     if (!client) {
         await connectToDatabase();
     }
 
 
     const session: Session | null = await getServerSession(authOptions);
-    console.log(session)
 
 
     if (!session?.user.id) {

@@ -43,7 +43,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
     const checkGitHubRepo = (repoLink: string | undefined) => {
         if (repoLink) {
             setIsLoading(true);
-            getGitHubModuleInfo(repoLink)
+            getGitHubModuleInfo(repoLink, editTarget?.["module-id"])
                 .then((response: Response<RemoteModuleInfoJSON, { code: number, message: string }>) => {
 
                     setIsLoading(false);

@@ -19,15 +19,12 @@ export interface FailureResponse<T = any> {
 
 
 
-
-
-export async function getGitHubModuleInfo(githubURL: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
+export async function getGitHubReleaseInfo(githubURL: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
     try {
-        const moduleZipURL: string = githubURL + "/releases/latest/releases"
 
-        const apiGitHubURL: string = githubURL.replace("github.com", "api.github.com/repos");
-        const response = await fetch(apiGitHubURL + "/releases/latest");
-        
+        const apiGitHubURL: string = githubURL.replace("github.com", "api.github.com/repos") + "/releases/latest";
+        const response = await fetch(apiGitHubURL);
+
 
         if (!response.ok) {
             return { type: "failure", body: { code: response.status, message: response.statusText } };
@@ -43,6 +40,14 @@ export async function getGitHubModuleInfo(githubURL: string): Promise<Response<R
     } catch (err) {
         return { type: "failure", body: { code: 400, message: "Bad URL." } };
     }
+}
+
+
+export async function getGitHubModuleInfo(githubURL: string, moduleID?: string): Promise<Response<RemoteModuleInfoJSON, { code: number, message: string }>> {
+    if (moduleID) {
+        return downloadAndReadModuleInfo(`${githubURL}/releases/latest/download/${moduleID}.zip`)
+    }
+    return getGitHubReleaseInfo(githubURL)
 
 }
 
