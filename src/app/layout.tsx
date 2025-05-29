@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         title: "Nexus",
         description: 'A cross-platform application loader.',
         siteName: "Nexus",
-        images: ['https://nexus-app.net/images/image.png']
+        images: ['https://www.nexus-app.net/images/image.png']
 
     }
 };
