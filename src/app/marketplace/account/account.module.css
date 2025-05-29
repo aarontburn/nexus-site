@@ -16,6 +16,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    pointer-events: none;
 }
 
 
@@ -53,6 +54,7 @@
 
 .account-body {
     padding: 1rem;
+    padding-bottom: 0;
     padding-right: 0;
     height: calc(100% - 9rem - 1px);
     width: 100%;
