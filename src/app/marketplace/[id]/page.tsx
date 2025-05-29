@@ -6,9 +6,9 @@ import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
 import { getAbbreviation } from '../../utils/utils';
-import { HorizontalSpacer, NexusLogo, VerticalSpacer } from '../../components/Components';
+import { NexusLogo, VerticalSpacer } from '../../components/Components';
 import MarketplaceHeader from '../MarketplaceHeader';
-import { imageOptimizer } from 'next/dist/server/image-optimizer';
+import rehypeRaw from 'rehype-raw';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -160,7 +160,11 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <hr />
                 <br />
                 <div className={'markdown-body'}>
-                    <Markdown>{moduleInfo.readme}</Markdown>
+                    <Markdown
+                        rehypePlugins={[rehypeRaw]}
+                    >
+                        {moduleInfo.readme}
+                    </Markdown>
                 </div>
                 <VerticalSpacer size='5rem' />
             </div>
