@@ -9,6 +9,16 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Nexus',
     description: 'A cross-platform application loader.',
+    metadataBase: new URL("https://nexus-app.net"),
+    openGraph: {
+        type: "website",
+        url: "https://nexus-app.net",
+        title: "Nexus",
+        description: 'A cross-platform application loader.',
+        siteName: "Nexus",
+        images: ['https://nexus-app.app/images/og-image.png']
+
+    }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
