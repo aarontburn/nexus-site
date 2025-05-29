@@ -1,6 +1,6 @@
 "use server"
 import { getServerSession, Session } from 'next-auth'
-import mongodb, { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
+import { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
 import { authOptions } from '../api/authOptions';
 
 
@@ -21,6 +21,8 @@ export interface ModuleInfo {
     platforms?: string[] | undefined;
     image?: string | undefined;
     readme?: string | undefined;
+
+    tags?: string[] | undefined;
 }
 
 
@@ -144,6 +146,7 @@ export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "aut
         }, {
             ...moduleInfo,
             "author-id": userID,
+            "author": session.user.name
         } as any)
         return undefined;
     } catch (err) {
@@ -213,6 +216,7 @@ export async function insertModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-
         await moduleCollection?.insertOne({
             ...moduleInfo,
             "author-id": userID,
+            "author": session.user.name
         } as any);
 
 

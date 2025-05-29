@@ -14,6 +14,7 @@ export default function NexusMarket() {
 
     const searchBarRef: Ref<HTMLInputElement> = useRef(null);
 
+    const [query, setQuery] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [databaseModules, setDatabaseModules] = useState<ModuleInfo[]>([]);
     const [displayedModules, setDisplayedModules] = useState<ModuleInfo[]>([]);
@@ -38,6 +39,7 @@ export default function NexusMarket() {
         })
     }, []);
 
+
     const searchForModule = () => {
         if (!searchBarRef.current) {
             return
@@ -51,10 +53,18 @@ export default function NexusMarket() {
 
 
         setDisplayedModules(databaseModules.filter(moduleInfo => {
+            const normalizedQuery: string = query.trim().toLowerCase();
+
+            // search through name, module-id, author, and tags
             const includedFields: (keyof ModuleInfo)[] = ["name", "module-id", "author"];
 
             for (const field of includedFields) {
-                if (typeof moduleInfo[field] === "string" && moduleInfo[field].toLowerCase().includes(query)) {
+                if (typeof moduleInfo[field] === "string" && moduleInfo[field].toLowerCase().trim().includes(normalizedQuery)) {
+                    return true;
+                }
+            }
+            for (const tag of moduleInfo.tags ?? []) {
+                if (tag.toLowerCase().trim().includes(normalizedQuery)) {
                     return true;
                 }
             }
@@ -63,6 +73,13 @@ export default function NexusMarket() {
 
 
     }
+    useEffect(() => {
+        if (searchBarRef.current) {
+            searchBarRef.current.value = query;
+        }
+        searchForModule();
+    }, [query])
+
 
     return <div className={styles["page"]}>
         <MarketplaceHeader />
@@ -72,7 +89,7 @@ export default function NexusMarket() {
 
         {
             isLoading ? <div className={styles["centered"]}><Spinner /></div> :
-            
+
                 <div className={styles["body"]}>
 
                     <div className={styles["right"]}>
@@ -98,12 +115,17 @@ export default function NexusMarket() {
 
 
                         <div id={styles["module-container"]}>
-                            {displayedModules.map((moduleInfo, index) => <Module key={index} moduleInfo={moduleInfo} />)}
-
-
+                            {displayedModules.map((moduleInfo, index) =>
+                                <Module
+                                    key={index}
+                                    setQuery={setQuery}
+                                    moduleInfo={moduleInfo} />)}
 
                         </div>
+                        <VerticalSpacer size="4rem" />
+
                     </div>
+
                 </div>
         }
 
@@ -115,7 +137,7 @@ export default function NexusMarket() {
 
 
 
-function Module({ moduleInfo }: { moduleInfo: ModuleInfo }) {
+function Module({ moduleInfo, setQuery }: { moduleInfo: ModuleInfo, setQuery: (s: string) => void }) {
     const router: AppRouterInstance = useRouter();
     const onClick = () => router.push(`/marketplace/${moduleInfo["_id"]}`);
 
@@ -127,9 +149,13 @@ function Module({ moduleInfo }: { moduleInfo: ModuleInfo }) {
 
         </div>
         <div className={styles["module-info-container"]}>
-            <h3 onClick={onClick} className={`${styles["module-info-name"]} ${styles["clickable"]}`}>{moduleInfo.name}</h3>
-            <h4 onClick={() => {/* Set filter to be just the author*/ }}>{moduleInfo.author}</h4>
-            {moduleInfo.description && <h4>{moduleInfo.description}</h4>}
+            <h3 onClick={onClick} className={`${styles["module-info-name"]} ${styles["clickable-text"]}`}>{moduleInfo.name}</h3>
+            <h4 className={styles["clickable-text"]} onClick={() => setQuery(moduleInfo.author)}>{moduleInfo.author}</h4>
+            {moduleInfo.description && <h4 className={styles['desc']}>{moduleInfo.description}</h4>}
+
+            <div className={styles["tag-container"]}>
+                {moduleInfo.tags && moduleInfo.tags.slice(0, 3).map(tag => <p onClick={() => setQuery(tag)} className={styles["clickable-text"]} key={tag}>{tag}</p>)}
+            </div>
         </div>
 
     </div>

@@ -23,6 +23,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
+    "react-tag-input": "^6.10.6",
     "rehype-raw": "^7.0.0",
     "simple-oauth2": "^5.1.0"
   },

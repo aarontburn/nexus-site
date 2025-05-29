@@ -124,7 +124,7 @@ function ModuleListScreen({ session, editModule, setNotificationText }: ModuleLi
         <div className={styles.header}>
             <h1>Your Modules</h1>
             <HorizontalSpacer />
-            <button onClick={() => editModule(null)}>
+            <button className={styles["button"]} onClick={() => editModule(null)}>
                 + Upload Module
             </button>
             <HorizontalSpacer size="1rem" />
@@ -153,7 +153,10 @@ function ModuleListScreen({ session, editModule, setNotificationText }: ModuleLi
                                 <p>No modules found.</p>
                             </>
                         }
+
                     </div>
+                    <VerticalSpacer size={"1rem"} />
+
                 </>
 
         }
@@ -200,14 +203,19 @@ function Module({ moduleInfo, editModule, deleteModule }: ModuleProps) {
                     <div className={styles["title"]}>
                         <div className={styles["image"]}>
                             {moduleInfo.image
-                                ? <img src={moduleInfo.image} alt="icon" />
+                                ? <img src={moduleInfo.image} alt="Module Icon" />
                                 : <p className="module-abbreviation">{getAbbreviation(moduleInfo.name)}</p>}
 
                         </div>
                         <div className={styles["module-info"]}>
                             <h1>{moduleInfo.name}</h1>
                             <h2>{moduleInfo["module-id"]}</h2>
+                            <div className={styles["tag-box"]}>
+                                {moduleInfo.tags?.slice(0, 3).map(tag => <p key={tag} className={styles["tag"]}>{tag}</p>)}
+
+                            </div>
                         </div>
+
                     </div>
 
                     <VerticalSpacer size={"1rem"} />
@@ -217,17 +225,18 @@ function Module({ moduleInfo, editModule, deleteModule }: ModuleProps) {
                             View
                         </a>
                         <HorizontalSpacer size="1rem" />
-                        <button onClick={() => editModule(moduleInfo)}>
+                        <button className={styles["button"]} onClick={() => editModule(moduleInfo)}>
                             Edit
                         </button>
 
                         <HorizontalSpacer />
 
-                        <button style={{ backgroundColor: deleteButtonPressCount > 0 ? "red" : "" }} onClick={() => setDeleteButtonPressCount(prev => prev + 1)}>
+                        <button className={styles["button"]} style={{ backgroundColor: deleteButtonPressCount > 0 ? "red" : "" }} onClick={() => setDeleteButtonPressCount(prev => prev + 1)}>
                             {deleteButtonPressCount > 0 ? "Confirm Delete" : "Delete"}
                         </button>
 
                     </div>
+
 
                 </>
         }

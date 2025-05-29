@@ -1,5 +1,6 @@
 import styles from "./account.module.css"
 
+import "./tag.css"
 
 import { SessionContextValue } from "next-auth/react";
 import { Ref, useEffect, useRef, useState } from "react";
@@ -7,6 +8,7 @@ import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Comp
 import { imageToBase64, readUploadedText } from "../../utils/utils";
 import { ModuleInfo, editRemoteModule, insertModule } from "../module-database";
 import { getGitHubModuleInfo, Response } from "./github-handler";
+import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;
@@ -33,12 +35,14 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
     const readmeUploadRef: Ref<HTMLInputElement> = useRef(null);
 
     /* State */
+    const [tags, setTags] = useState<Tag[]>(editTarget?.tags?.map(tag => ({ id: tag, className: '', text: tag })) ?? []);
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
     const [uploadedReadme, setUploadedReadme] = useState<File | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [remoteModuleInfo, setRemoteModuleInfo] = useState<RemoteModuleInfoJSON | undefined>(undefined);
     const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(isNewModule);
     const [isPublishing, setIsPublishing] = useState<boolean>(false);
+
 
     const checkGitHubRepo = (repoLink: string | undefined) => {
         if (repoLink) {
@@ -109,7 +113,8 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
             readme: readme,
             image: base64Image,
             platforms: remoteModuleInfo.platforms,
-            repository: githubRepoInputRef.current?.value
+            repository: githubRepoInputRef.current?.value,
+            tags: tags.map(tag => tag.text)
         }
         if (isNewModule) {
             insertModule(moduleInfo).then((result: string | undefined) => {
@@ -142,7 +147,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
     return <div className={styles["edit-screen"]}>
 
         <div className={styles["aligned"]}>
-            <button onClick={() => editModule(undefined)}>
+            <button className={styles["button"]} onClick={() => editModule(undefined)}>
                 {'<'} Back
             </button>
 
@@ -190,7 +195,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
             </div>
             <VerticalSpacer size="1rem" />
 
-            <button onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
+            <button className={styles["button"]} onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
 
             <VerticalSpacer size={"1rem"} />
             {isLoading && <Spinner />}
@@ -209,6 +214,42 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
                 <VerticalSpacer size={"1rem"} />
 
+                <p><span style={{ color: "gray" }}>(Optional)</span> Add up to 10 tags (comma-separated). The first three will appear on the preview.</p>
+                <VerticalSpacer size={"0.25rem"} />
+
+                <ReactTags
+                    placeholder="Enter tags that describe your module."
+                    tags={tags}
+                    inputFieldPosition="top"
+                    maxTags={10}
+                    maxLength={25}
+                    separators={[SEPARATORS.ENTER, SEPARATORS.COMMA]}
+                    handleDelete={(index: number) => setTags(tags.filter((_, i) => i !== index))}
+                    handleAddition={(tag: Tag) => {
+                        tag.text = tag.text.toLowerCase();
+                        setTags((prevTags) => {
+                            return [...prevTags, tag];
+                        });
+                    }}
+                    handleDrag={(tag: Tag, currPos: number, newPos: number) => {
+                        const newTags = tags.slice();
+
+                        newTags.splice(currPos, 1);
+                        newTags.splice(newPos, 0, tag);
+
+                        // re-render
+                        setTags(newTags);
+                    }}
+                    handleTagClick={(index: number) => {
+                        console.log("The tag at index " + index + " was clicked");
+                    }}
+                    allowAdditionFromPaste={false}
+                    clearAll
+                    onClearAll={() => setTags([])}
+
+                />
+                <VerticalSpacer size="1rem" />
+
 
                 <p><span style={{ color: "gray" }}>(Optional)</span> Upload an image for your module.</p>
                 <VerticalSpacer size={"0.25rem"} />
@@ -223,7 +264,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                         onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
                     />
 
-                    <button onClick={() => { imageUploadRef.current?.click() }}>
+                    <button className={styles["button"]} onClick={() => { imageUploadRef.current?.click() }}>
                         Upload
                     </button>
                     <HorizontalSpacer size={"1rem"} />
@@ -255,7 +296,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                             />
 
                             <div className={styles["aligned"]}>
-                                <button onClick={() => { readmeUploadRef.current?.click() }}>
+                                <button className={styles["button"]} onClick={() => { readmeUploadRef.current?.click() }}>
                                     Upload
                                 </button>
                                 <HorizontalSpacer size={"1rem"} />
@@ -269,7 +310,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                 <VerticalSpacer size={"2rem"} />
 
                 {isPublishing ? <Spinner /> :
-                    <button onClick={() => {
+                    <button className={styles["button"]} onClick={() => {
                         onPublishPressed();
                     }}
                         disabled={isPublishing} >

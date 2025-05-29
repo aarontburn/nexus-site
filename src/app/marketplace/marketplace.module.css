@@ -29,7 +29,7 @@
 
 .right {
     padding: 0 1rem;
-    
+
     /* width: calc(100% - 20rem); */
     width: 100%;
 
@@ -99,14 +99,35 @@
 #module-container {
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
 }
 
 .module {
     display: flex;
-    width: 100%;
     align-items: center;
-    border-bottom: 1px solid var(--background-light-2);
+    border: 1px solid var(--background-light-2);
+    border-radius: 5px;
+    flex: 0 0 30rem;
 
+    height: 7rem;
+    width: 30rem;
+}
+
+.module .tag-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.tag-container p {
+    background-color: var(--background-light-1);
+    border-radius: 5px;
+    padding: 0.075rem 0.5rem;
+    font-size: 0.85rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .module-image-container {
@@ -120,11 +141,7 @@
 
 
 .module-info-name {
-    transition: 0.2s;
-}
 
-.module:hover .module-info-name {
-    color: var(--accent-color);
 }
 
 
@@ -136,9 +153,33 @@
     cursor: pointer;
 }
 
+.clickable-text {
+    cursor: pointer;
+    transition: 0.2s;
+    width: fit-content;
+
+
+    &:hover {
+        color: var(--accent-color);
+    }
+}
+
+.module-info-container {
+    width: calc(100% - 64px - 1em - 2rem);
+}
+
 .module-info-container h4 {
     font-weight: 400;
     font-size: 0.9rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+}
+
+.module-info-container .desc {
+    font-size: 0.8rem;
+    color: var(--foreground-light)
 }
 
 .module-abbreviation {
@@ -154,5 +195,9 @@
         min-width: 48px;
         width: 48px;
         height: 48px;
+    }
+
+    .module-info-container {
+        width: calc(100% - 48px - 1em - 2rem);
     }
 }
