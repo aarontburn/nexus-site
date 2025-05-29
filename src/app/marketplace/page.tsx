@@ -97,13 +97,17 @@ export default function NexusMarket() {
 
                         <div className={styles["inline"]}>
                             <div>
-                                <input
-                                    ref={searchBarRef}
-                                    type="text"
-                                    onKeyDown={({ key }) => key === "Enter" && searchForModule()}
-                                />
+                                <div className={styles["searchbar"]}>
+                                    <input
+                                        ref={searchBarRef}
+                                        type="text"
+                                        onKeyDown={({ key }) => key === "Enter" && searchForModule()}
+                                    />
+                                    <p onClick={() => setQuery('')} className={styles["clear-search"]}>x</p>
+                                </div>
+
                                 <VerticalSpacer size={"0.25rem"} />
-                                <p style={{ fontSize: "0.75rem" }}>Search by name, module ID, or author</p>
+                                <p style={{ fontSize: "0.75rem" }}>Search by tag, name, module ID, or author</p>
 
                             </div>
 
@@ -113,7 +117,6 @@ export default function NexusMarket() {
 
                         <VerticalSpacer size={"0.5rem"} />
 
-
                         <div id={styles["module-container"]}>
                             {displayedModules.map((moduleInfo, index) =>
                                 <Module
@@ -122,6 +125,7 @@ export default function NexusMarket() {
                                     moduleInfo={moduleInfo} />)}
 
                         </div>
+
                         <VerticalSpacer size="4rem" />
 
                     </div>

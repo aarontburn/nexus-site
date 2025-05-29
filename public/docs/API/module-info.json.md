@@ -76,6 +76,9 @@ The [semantic version](https://docs.npmjs.com/about-semantic-versioning) of your
 ### `author: string`
 The name of the developer or organization.
 
+### `author-id: string`
+Your user ID from the official [Nexus Marketplace](https://www.nexus-app.net/). This must be set in order to release your module on the marketplace (read more [here](../Guides/Publishing%20your%20Module%20on%20the%20Marketplace.md)).
+
 ### `description: string`
 A short description about your module.
 

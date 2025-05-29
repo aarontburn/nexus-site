@@ -5,6 +5,8 @@ Some of the internal modules expose an API that may be useful.
 
 Each response is wrapped in a [`DataResponse`](./Helpers/DataResponse.md) object.
 
+<br/>
+
 ## `nexus.Settings`
 This is the main setting handler.
 
@@ -183,3 +185,31 @@ Swaps the current visible module to the caller module.
 > **Returns**  
 > `200 OK` and the absolute path of the icon. If no icon is set, this will be `undefined`.   
 > `404 NOT FOUND` if the target module isn't valid.
+
+
+<br />
+
+## `nexus.Notification_Manager`
+This module creates modal popups with custom content.
+
+```ts
+interface NotificationActionProps {
+	text: string; // Text button (e.g. "Confirm" for resolveAction, "Cancel" for rejectAction)
+	action: () => void; // Action when the button is pressed.
+}
+interface NotificationProps {
+	windowTitle: string; // Popup window title
+	markdownContentString: string; // Content of the popup as markdown.
+	resolveAction: NotificationActionProps; // Resolve (confirm, proceed, etc.) parameters
+	rejectAction?: NotificationActionProps | undefined; // Reject (cancel, etc.) parameters. If undefined, the reject button will be missing.
+	size?: { width: number, height: number } // Size of the window. If undefined, defaults to 800w by 500h
+}
+```
+
+### `open-dialog`
+Opens the dialog.
+
+Note: Closing the popup counts as `reject`.
+
+> **Parameters**  
+> `props: NotificationProps` → The parameters of your popup.

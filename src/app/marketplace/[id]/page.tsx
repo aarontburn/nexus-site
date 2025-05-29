@@ -65,8 +65,9 @@ function ModuleInfoBodySkeleton() {
             </div>
 
             <div>
-                <SkeletonBox width='10rem' height='3rem' />
-                <br />
+                <SkeletonBox width='10rem' height='5rem' />
+                <VerticalSpacer size='0.5rem' />
+
                 <SkeletonBox width='10rem' height='2rem' />
             </div>
 
@@ -113,7 +114,10 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
             <div>
                 <h1>{moduleInfo?.name}</h1>
                 <p>{moduleInfo?.description}</p>
-                <br />
+                <div className={styles['tag-container']}>
+                    {moduleInfo.tags?.map(tag => <p key={tag}>{tag}</p>)}
+                    </div>
+                <VerticalSpacer size='0.5rem' />
                 <p>By {moduleInfo?.author}</p>
                 <p style={{ color: "gray" }}>{moduleInfo?.["module-id"]}</p>
 

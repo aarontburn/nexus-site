@@ -128,6 +128,8 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    color: gray
+
 }
 
 .module-image-container {
@@ -137,7 +139,23 @@
     height: 64px;
 }
 
+.searchbar {
+    position: relative;
+}
 
+.clear-search {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 50%;
+    transform: translateY(50%);
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 0.25rem;
+
+    &:hover {
+        color: var(--accent-color);
+    }
+}
 
 
 .module-info-name {

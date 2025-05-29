@@ -27,6 +27,23 @@
 }
 
 
+.tag-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tag-container p {
+    background-color: var(--background-light-2);
+    border-radius: 5px;
+    padding: 0.075rem 0.5rem;
+    font-size: 0.85rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 0.5rem;
+    height: 1.2rem;
+}
+
 
 
 .spinner-container {

@@ -53,7 +53,8 @@ In order to publish to the marketplace, you will need a **public** GitHub reposi
 
 7. Press the `Check` button. After successfully loading, your module information (from your `module-info.json`) should be displayed.
    - (Optional) Upload an image. If no image is uploaded, it will default to an acronym to the first three letters of your module (e.g. Sample Nexus Module => SNM).
-   - (Optional) Upload or type a README.md. Supports markdown. 
+   - (Optional) Upload or type a README.md. Supports markdown.
+   - (Optional) Add descriptive tags for your module. You can have a maximum of 10 tags, each being a max of 25 characters long. All tags must be unique and lowercase. They are orderable; the first three tags will be displayed on your module preview. 
 
 8. After verifying your information is correct, press the `Publish` button. If no errors occur, you will get a confirmation message.
 
@@ -64,4 +65,5 @@ Your module is now public on the module marketplace! You are able to freely dele
    
 ## Notes
 1. Due to a restriction on unauthorized GitHub API calls, you will only able to use the `Check` button 60 times per hour (read more [here](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28)) before you start getting rate limited.
+    - This does not limit the editing process.
 2. For any images or assets in your README markdown, you will need to use absolute paths to a URL. Upload the images to your GitHub repository and directly link your images there.
