@@ -3,8 +3,6 @@
 import { Ref, useEffect, useRef, useState } from "react";
 import styles from "./marketplace.module.css"
 import { getAllRemoteModules, ModuleInfo } from "./module-database";
-import { useRouter } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { getAbbreviation } from "../utils/utils";
 import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Components";
 import MarketplaceHeader from "./MarketplaceHeader";
@@ -115,7 +113,7 @@ export default function NexusMarket() {
                             <button onClick={() => searchForModule()}>Search</button>
                         </div>
 
-                        <VerticalSpacer size={"0.5rem"} />
+                        <VerticalSpacer size={"1rem"} />
 
                         <div id={styles["module-container"]}>
                             {displayedModules.map((moduleInfo, index) =>
@@ -142,18 +140,16 @@ export default function NexusMarket() {
 
 
 function Module({ moduleInfo, setQuery }: { moduleInfo: ModuleInfo, setQuery: (s: string) => void }) {
-    const router: AppRouterInstance = useRouter();
-    const onClick = () => router.push(`/marketplace/${moduleInfo["_id"]}`);
-
+    const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`
     return <div className={styles["module"]}>
-        <div className={styles["module-image-container"] + " " + styles["clickable"]} onClick={onClick}>
+        <div className={styles["module-image-container"] + " " + styles["clickable"]}>
             {moduleInfo.image
-                ? <img src={moduleInfo.image} alt="icon" />
-                : <p className={styles["module-abbreviation"]}>{getAbbreviation(moduleInfo.name)}</p>}
-
+                ? <a href={modulePageLink}><img src={moduleInfo.image} alt="icon" /></a>
+                : <a href={modulePageLink} className={styles["module-abbreviation"]}>{getAbbreviation(moduleInfo.name)}</a>}
         </div>
+
         <div className={styles["module-info-container"]}>
-            <h3 onClick={onClick} className={`${styles["module-info-name"]} ${styles["clickable-text"]}`}>{moduleInfo.name}</h3>
+            <h3 className={`${styles["module-info-name"]} ${styles["clickable-text"]}`}><a href={modulePageLink}>{moduleInfo.name}</a></h3>
             <h4 className={styles["clickable-text"]} onClick={() => setQuery(moduleInfo.author)}>{moduleInfo.author}</h4>
             {moduleInfo.description && <h4 className={styles['desc']}>{moduleInfo.description}</h4>}
 
