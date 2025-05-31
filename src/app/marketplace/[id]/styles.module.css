@@ -26,6 +26,19 @@
     height: fit-content;
 }
 
+.extra-info {
+    width: 100%;
+    font-size: 1rem;
+    color: gray
+
+}
+
+.extra-info span {
+    margin-right: 1rem;
+    width: 10rem;
+    display: inline-block;
+}
+
 
 .tag-container {
     display: flex;

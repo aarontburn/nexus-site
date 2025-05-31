@@ -46,20 +46,19 @@ export default function DevelopPage() {
     }, [markdown, markdownRef])
 
     useEffect(() => {
-        if (!selectedMarkdownID || !filePaths[selectedMarkdownID]) {
+        const markdownID: string = selectedMarkdownID ?? "1 - Introduction.md";
+        if (!filePaths[markdownID]) {
             return;
         }
-        getMarkdown(filePaths[selectedMarkdownID]).then(setMarkdown);
-        window.history.replaceState({}, '', `/develop/${selectedMarkdownID}`);
+        getMarkdown(filePaths[markdownID]).then(setMarkdown);
+        window.history.replaceState({}, '', `/develop/${markdownID}`);
     }, [filePaths]);
 
 
     useEffect(() => {
         getAllDocuments().then(([filePaths, tree]) => {
             setSections(tree);
-
             const paths: { [shortPath: string]: string } = {};
-
             if (filePaths.length > 0) {
                 const delimiter: "\\" | "/" = filePaths[0].includes("/") ? "/" : "\\"
 
@@ -67,8 +66,6 @@ export default function DevelopPage() {
                     paths[p.split(delimiter).at(-1) as string] = p;
                 }
             }
-
-
 
             setFilePaths(paths);
         });

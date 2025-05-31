@@ -1,30 +1,9 @@
 "use server"
 import { getServerSession, Session } from 'next-auth'
 import { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
-import { authOptions } from '../api/authOptions';
+import { authOptions } from '../../api/authOptions';
+import { ModuleInfo, ModuleInfoWithoutServerSideProperties } from '../types';
 
-// module info stored in MongoDB
-export interface ModuleInfo {
-    _id: string;
-    name: string;
-    "module-id": string;
-
-    author: string;
-    "author-id": string;
-
-    version: string;
-    description?: string | undefined;
-    link?: string | undefined;
-    repository?: string | undefined;
-
-    platforms?: string[] | undefined;
-    image?: string | undefined;
-    readme?: string | undefined;
-
-    tags?: string[] | undefined;
-    "date-uploaded"?: Date ;
-    "date-modified"?: Date;
-}
 
 
 
@@ -65,9 +44,9 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
         })
         resolve(result);
     })];
-
-
 }
+
+
 
 export async function getModule(_id: string): Promise<[ModuleInfo | undefined, Promise<ModuleInfo | undefined>]> {
     if (!client) {
@@ -104,7 +83,7 @@ export async function getModulesFromUser(userID: string): Promise<ModuleInfo[] |
     return result;
 }
 
-export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id" | "date-modified">) {
+export async function editRemoteModule(moduleInfo: ModuleInfoWithoutServerSideProperties) {
     if (!client) {
         await connectToDatabase();
     }
@@ -135,8 +114,11 @@ export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "aut
             ...moduleInfo,
             "author-id": userID,
             "author": session.user.name,
-            ...(moduleInfo["date-uploaded"] ? {} : { "date-uploaded": new Date() }),
-            "date-modified": new Date()
+            metadata: {
+                ...moduleInfo.metadata,
+                "date-modified": new Date(),
+                ...(moduleInfo.metadata["date-uploaded"] ? {} : { "date-uploaded": new Date() }),
+            }
         } as any);
 
         return undefined;
@@ -181,7 +163,7 @@ export async function deleteRemoteModule(moduleInfo: ModuleInfo) {
     return "An error occurred while inserting the module.";
 }
 
-export async function insertModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id">) {
+export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProperties) {
     if (!client) {
         await connectToDatabase();
     }
@@ -208,8 +190,15 @@ export async function insertModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-
             ...moduleInfo,
             "author-id": userID,
             "author": session.user.name,
-            "date-uploaded": new Date(),
-            "date-modified": new Date()
+            metadata: {
+                ...moduleInfo.metadata,
+                "date-uploaded": new Date(),
+                "date-modified": new Date(),
+                "download-count": 0,
+                "rating-count": 0,
+                "rating-sum": 0
+            }
+
         } as any);
 
 

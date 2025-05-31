@@ -2,10 +2,11 @@
 
 import { Ref, useEffect, useRef, useState } from "react";
 import styles from "./marketplace.module.css"
-import { getAllRemoteModules, ModuleInfo } from "./module-database";
+import { getAllRemoteModules } from "./server/module-database";
 import { getAbbreviation } from "../utils/utils";
 import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Components";
 import MarketplaceHeader from "./MarketplaceHeader";
+import { ModuleInfo } from "./types";
 
 const SORT_OPTIONS: { [value: string]: string } = {
     "name-descend": 'Name (A - Z)',
@@ -90,10 +91,6 @@ export default function NexusMarket() {
         searchForModule();
     }, [query, queryKey]);
 
-    useEffect(() => {
-        console.log(selectedSort)
-    }, [selectedSort]);
-
 
     return <div className={styles["page"]}>
         <MarketplaceHeader />
@@ -111,23 +108,26 @@ export default function NexusMarket() {
 
                     <h2>All Modules</h2>
 
-                    <div className={styles["inline"]}>
-                        <div className={styles["searchbar"]}>
-                            <input
-                                ref={searchBarRef}
-                                type="text"
-                                onKeyDown={({ key }) => key === "Enter" && searchForModule()}
-                            />
-                            <p key={queryKey} onClick={() => { setQuery(''); setQueryKey(prev => prev + 1) }} className={styles["clear-search"]}>x</p>
+                    <div className={styles["search-container"]}>
+                        <div className={styles['searchbar']}>
+                            <div style={{ position: "relative" }}>
+                                <input
+                                    ref={searchBarRef}
+                                    type="text"
+                                    onKeyDown={({ key }) => key === "Enter" && searchForModule()}
+                                />
+                                <p key={queryKey} onClick={() => { setQuery(''); setQueryKey(prev => prev + 1) }} className={styles["clear-search"]}>x</p>
+
+                            </div>
+
+                            <HorizontalSpacer size="1rem" />
+                            <button onClick={() => searchForModule()}>Search</button>
                         </div>
 
-
-                        <HorizontalSpacer size="1rem" />
-                        <button onClick={() => searchForModule()}>Search</button>
-
-                        <HorizontalSpacer size="auto" />
+                        <div className={styles["remove-mobile"]} style={{ marginRight: "auto" }}></div>
                         <div className={styles["sort-container"]}>
                             <p>Sort By:</p>
+
                             <HorizontalSpacer size="0.5rem" />
 
                             <select value={selectedSort} onChange={(event) => setSelectedSort(event.target.value)}>
@@ -143,14 +143,14 @@ export default function NexusMarket() {
 
                     <VerticalSpacer size={"1rem"} />
 
-                    <div id={styles["module-container"]}>
+                    <div className={styles["module-container"]}>
                         {displayedModules.sort((a: ModuleInfo, b: ModuleInfo) => {
-                            if (!a["date-modified"] || !a["date-uploaded"]) {
+                            if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
                                 console.warn(`${a["module-id"]} has no date set.`);
                                 return 0;
                             }
 
-                            if (!b["date-modified"] || !b["date-uploaded"]) {
+                            if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
                                 console.warn(`${b["module-id"]} has no date set.`)
                                 return 1;
                             }
@@ -163,32 +163,32 @@ export default function NexusMarket() {
                                     return b.name.localeCompare(a.name);
                                 }
                                 case "upload-descend": {
-                                    if (a["date-uploaded"]?.getTime() === b["date-uploaded"]?.getTime()) {
+                                    if (a.metadata["date-uploaded"]?.getTime() === a.metadata["date-uploaded"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a["date-uploaded"] < b["date-uploaded"] ? 1 : -1;
+                                    return a.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
                                 }
                                 case "upload-ascend": {
-                                    if (a["date-uploaded"]?.getTime() === b["date-uploaded"]?.getTime()) {
+                                    if (a.metadata["date-uploaded"]?.getTime() === a.metadata["date-uploaded"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return b["date-uploaded"] < a["date-uploaded"] ? 1 : -1;
+                                    return a.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
                                 }
                                 case "modified-descend": {
-                                    if (a["date-modified"]?.getTime() === b["date-modified"]?.getTime()) {
+                                    if (a.metadata["date-modified"]?.getTime() === a.metadata["date-modified"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a["date-modified"] < b["date-modified"] ? 1 : -1;
+                                    return a.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
                                 }
                                 case "modified-ascend": {
-                                    if (a["date-modified"]?.getTime() === b["date-modified"]?.getTime()) {
+                                    if (a.metadata["date-modified"]?.getTime() === a.metadata["date-modified"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return b["date-modified"] < a["date-modified"] ? 1 : -1;
+                                    return a.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
                                 }
                             }
                             return a.name.localeCompare(b.name);
@@ -196,6 +196,7 @@ export default function NexusMarket() {
                         }).map((moduleInfo, index) =>
                             <Module
                                 key={index}
+                                sortState={selectedSort}
                                 setQuery={setQuery}
                                 moduleInfo={moduleInfo} />)}
 
@@ -215,8 +216,13 @@ export default function NexusMarket() {
 
 
 
+interface ModuleProps {
+    moduleInfo: ModuleInfo;
+    sortState: string;
+    setQuery: (s: string) => void;
+}
 
-function Module({ moduleInfo, setQuery }: { moduleInfo: ModuleInfo, setQuery: (s: string) => void }) {
+function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
     const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`
     return <div className={styles["module"]}>
         <div className={styles["module-image-container"] + " " + styles["clickable"]}>
@@ -233,7 +239,13 @@ function Module({ moduleInfo, setQuery }: { moduleInfo: ModuleInfo, setQuery: (s
             <div className={styles["tag-container"]}>
                 {moduleInfo.tags && moduleInfo.tags.slice(0, 3).map(tag => <p onClick={() => setQuery(tag)} className={styles["clickable-text"]} key={tag}>{tag}</p>)}
             </div>
-            {/* Maybe show the date if the filter is on date-upload or date-modified? */}
+
+            <VerticalSpacer size="0.25rem" />
+
+            <div className={styles["extra-info-container"]}>
+                {sortState.startsWith("upload") && <p>Uploaded {moduleInfo.metadata["date-uploaded"]?.toLocaleString()}</p>}
+                {sortState.startsWith("modified") && <p>Modified {moduleInfo.metadata["date-modified"]?.toLocaleString()}</p>}
+            </div>
         </div>
 
     </div>

@@ -6,10 +6,11 @@ import MarketplaceHeader from "../MarketplaceHeader";
 import styles from "./account.module.css"
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { deleteRemoteModule, getModulesFromUser, ModuleInfo } from "../module-database";
+import { deleteRemoteModule, getModulesFromUser } from "../server/module-database";
 import React from "react";
 import { getAbbreviation } from "../../utils/utils";
 import EditModuleScreen from "./EditModule";
+import { ModuleInfo } from "../types";
 
 const ALERT_CLEAR_SEC: number = 2;
 
@@ -53,6 +54,7 @@ export default function AccountPage() {
             router.push("/marketplace/login");
         },
     });
+    session.data?.user
 
 
     const [notificationText, setNotificationText] = useState<{ text: string, id: number }>({ text: '', id: 0 });

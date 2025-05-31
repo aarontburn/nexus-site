@@ -2,16 +2,16 @@ import styles from "./marketplace.module.css"
 
 import { signOut, useSession } from "next-auth/react";
 import { HorizontalSpacer } from "../components/Components";
-import { useRouter } from "next/navigation";
 
 export default function MarketplaceHeader() {
     const session = useSession();
-    const router = useRouter();
 
     return <div className={styles["mp-header"]}>
         <div className={styles["mp-header-content"]}>
 
-            <h2 className={styles["clickable"]} onClick={() => router.push("/marketplace")}>Nexus Marketplace</h2>
+            <h2 className={styles["clickable"]}>
+                <a href="/marketplace">Nexus Marketplace</a>
+            </h2>
             <HorizontalSpacer />
             {
                 session.status === "authenticated"

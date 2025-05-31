@@ -1,7 +1,7 @@
 "use server";
 
 import JSZip from 'jszip';
-import { RemoteModuleInfoJSON } from './EditModule';
+import { RemoteModuleInfoJSON } from '../types';
 
 
 

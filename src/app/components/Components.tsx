@@ -36,7 +36,10 @@ export interface NexusLogoProps {
 }
 
 export function NexusLogo(props: NexusLogoProps) {
-    return <div className={styles["component-nexus-logo"] + " " + (props.className ?? "")} style={{ ...props.style, ...{ width: props.width, height: props.height } }}></div>
+    return <div
+        className={styles["component-nexus-logo"] + " " + (props.className ?? "")}
+        style={{ ...props.style, ...{ width: props.width, height: props.height } }}>
+    </div>
 }
 
 

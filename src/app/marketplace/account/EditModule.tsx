@@ -3,12 +3,13 @@ import styles from "./account.module.css"
 import "./tag.css"
 
 import { SessionContextValue } from "next-auth/react";
-import { Ref, useEffect, useRef, useState } from "react";
+import { Ref, RefObject, useEffect, useRef, useState } from "react";
 import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Components";
 import { imageToBase64, readUploadedText } from "../../utils/utils";
-import { ModuleInfo, editRemoteModule, insertModule } from "../module-database";
 import { getGitHubModuleInfo, Response } from "./github-handler";
 import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
+import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../types";
+import { insertModule, editRemoteModule } from "../server/module-database";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;
@@ -18,11 +19,6 @@ interface EditModuleScreenProps {
 }
 
 
-export type RemoteModuleInfoJSON =
-    Omit<ModuleInfo, "module-id" | "repo" | "image" | "readme" | "date-modified" | "date-uploaded">
-    & {
-        "id": string,
-    }
 
 
 export default function EditModuleScreen({ session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
@@ -73,16 +69,27 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
         }
     }
 
+
     const onPublishPressed = async () => {
         if (!remoteModuleInfo) {
             console.error("Remote module info is undefined.")
             return;
         }
 
+        // refs that are always active
+        const refs: RefObject<HTMLElement | null>[] = [
+            imageUploadRef,
+            githubRepoInputRef,
+        ];
+
+        if (refs.some(ref => !ref || !ref.current)) {
+            return;
+        }
+
         setIsPublishing(true);
 
         const base64Image: string | undefined = await (async () => {
-            const uploadedImage: File | undefined = imageUploadRef.current?.files?.[0];
+            const uploadedImage: File | undefined = imageUploadRef.current!.files?.[0];
             if (uploadedImage === undefined) { // no image uploaded
                 return editTarget?.image; // return the remote image, can be undefined
             }
@@ -92,7 +99,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
         const readme: string | undefined = await (async () => {
             if (useReadmeUpload) {
-                const uploadedReadme: File | undefined = readmeUploadRef.current?.files?.[0];
+                const uploadedReadme: File | undefined = readmeUploadRef.current!.files?.[0];
                 if (uploadedReadme) {
                     return await readUploadedText(uploadedReadme);
                 }
@@ -104,19 +111,24 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
         })();
 
         // author-id should be added in server-side
-        const moduleInfo: Omit<ModuleInfo, "_id" | "author-id"> = {
+        const moduleInfo: ModuleInfoWithoutServerSideProperties = {
             name: remoteModuleInfo.name,
             "module-id": remoteModuleInfo["id"],
-            author: remoteModuleInfo.author,
             version: remoteModuleInfo.version,
             description: remoteModuleInfo.description,
             readme: readme,
             image: base64Image,
-            platforms: remoteModuleInfo.platforms,
-            repository: githubRepoInputRef.current?.value,
+            repository: githubRepoInputRef.current!.value,
             tags: tags.map(tag => tag.text),
-            "date-uploaded": editTarget?.["date-uploaded"],
-            "date-modified": editTarget?.["date-modified"]
+
+            metadata: {
+                platforms: remoteModuleInfo.platforms,
+                "date-uploaded": editTarget?.metadata["date-uploaded"],
+                "date-modified": editTarget?.metadata["date-modified"],
+                "download-count": editTarget?.metadata["download-count"],
+                "rating-count": editTarget?.metadata["rating-count"],
+                "rating-sum": editTarget?.metadata["rating-sum"]
+            }
         }
         if (isNewModule) {
             insertModule(moduleInfo).then((result: string | undefined) => {
@@ -326,3 +338,5 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
     </div >
 }
+
+

@@ -1,6 +1,6 @@
 "use client"
 
-import { NexusLogo, NexusText, VerticalSpacer, WhiteSpaceVerticalSpacer } from "./components/Components";
+import { NexusLogo, NexusText, VerticalSpacer } from "./components/Components";
 import "./styles.css";
 
 import googleCalendarImage from "./assets/google-calendar.png";
@@ -37,29 +37,32 @@ export default function Home() {
             <div className="left">
                 <VerticalSpacer size="5rem" />
 
-                <NexusLogo width={"10rem"} height={"10rem"} />
 
-                <div className="title">
-                    <h1 className="title-text">NEXUS</h1>
-                </div>
+                <NexusLogo className={"nexus-logo-home"} width={"10rem"} height={"10rem"} />
+
+                <h1 className="title-text">NEXUS</h1>
 
                 <VerticalSpacer size="2rem" />
 
-                <p style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
+                <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
 
-                <a className="main-clickable" href="/download">
-                    Download Now
-                </a>
 
-                <button
-                    onClick={() => aboutRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    })}
-                    className="main-clickable"
-                    style={{ backgroundColor: "var(--accent-color)" }}>
-                    Learn More
-                </button>
+                <div className="home-buttons">
+                    <a className="main-clickable" href="/download">
+                        Download Now
+                    </a>
+
+                    <button
+                        onClick={() => aboutRef.current?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        })}
+                        className="main-clickable"
+                        style={{ backgroundColor: "var(--accent-color)" }}>
+                        Learn More
+                    </button>
+                </div>
+
 
             </div>
 
@@ -95,37 +98,61 @@ export default function Home() {
                 <div className="feature-grid">
                     <Card>
                         <h3>🎨 Artist or Designer?</h3>
-                        <p>Use the <Link url="" text="Color Picker" /> module for quick access to a color palette and eyedropper.</p>
+                        <p>
+                            Use the <Link url="marketplace/68342fbea2fbe5b2c6a76cf1" text="Color Picker" /> module
+                            for quick access to a color palette and eyedropper.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3>🤖 AI Enthusiast?</h3>
-                        <p>The <Link url="" text="ChatGPT" /> module gives you instant access to the AI chatbot inside Nexus.</p>
+                        <p>
+                            The <Link url="marketplace/68351c5ceacf2ce8680778ee" text="ChatGPT" /> module gives you instant
+                            access to the AI chatbot inside Nexus.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3>📬 Emailaholic?</h3>
-                        <p>Install the <Link url="" text="Outlook" /> or <Link url="" text="Gmail" /> module for one-click inbox and calendar access.</p>
+                        <p>
+                            Install the <Link url="marketplace/6837a73f382d9ca237cba6ec" text="Outlook" />
+                            or <Link url="marketplace/6837a678382d9ca237cba6e5" text="Gmail" /> module for one-click inbox and calendar access.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3 >🎮 Gamer?</h3>
-                        <p>Embed tools like <Link url="" text="Medal" />, <Link url="" text="Steam" />, or <Link url="" text="tactics.tools" /> for quick access.</p>
+                        <p>
+                            Embed tools like <Link url="marketplace/6837a709382d9ca237cba6e9" text="Medal" />
+                            , <Link url="marketplace/6837aa9f382d9ca237cba6fd" text="Steam" />,
+                            or <Link url="marketplace/6837aae8382d9ca237cba6ff" text="tactics.tools" /> for while you're gaming.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3>💬 Messenger?</h3>
-                        <p>Try modules that embed <Link url="" text="Discord" />, <Link url="" text="Instagram" />, and <Link url="" text="Slack" /> to keep all your chat apps in one place.</p>
+                        <p>
+                            Try modules that embed <Link url="marketplace/68379fdd4e3ad55b4a193abd" text="Discord" />
+                            , <Link url="marketplace/6837a6cf382d9ca237cba6e7" text="Instagram" />,
+                            and <Link url="marketplace/6837a9b7382d9ca237cba6f9" text="Slack" /> to keep all your chat apps in one place.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3>⌨️ Coder?</h3>
-                        <p>Modules like an embedded <Link url="" text="GitHub Desktop" /> and a <Link url="" text="Debug Console" /> keep your workspace clutter free.</p>
+                        <p>
+                            Modules like an embedded <Link url="marketplace/6837a535382d9ca237cba6e1" text="GitHub Desktop" /> and
+                            a <Link url="marketplace/68342d1da2fbe5b2c6a76ce6" text="Debug Console" /> keep your coding workspace clutter free.
+                        </p>
                     </Card>
 
                     <Card>
                         <h3>🎶 Audiophile?</h3>
-                        <p>Keep <Link url="" text="Spotify" /> or a <Link url="" text="Volume Controller" /> handy in your workspace by embedding it as a module.</p>
+                        <p>
+                            Keep <Link url="marketplace/6837aa21382d9ca237cba6fb" text="Spotify" /> or
+                            a <Link url="marketplace/6837ab14382d9ca237cba701" text="Volume Controller" /> handy
+                            in your workspace by embedding it as a module.
+                        </p>
                     </Card>
                 </div>
 

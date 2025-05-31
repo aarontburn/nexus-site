@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getModule, ModuleInfo } from '../module-database';
+import { getModule } from '../server/module-database';
 import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
-import { getAbbreviation } from '../../utils/utils';
+import { getAbbreviation, platformToDisplayText } from '../../utils/utils';
 import { NexusLogo, VerticalSpacer } from '../../components/Components';
 import MarketplaceHeader from '../MarketplaceHeader';
 import rehypeRaw from 'rehype-raw';
+import { ModuleInfo } from '../types';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -61,7 +62,7 @@ function ModuleInfoBodySkeleton() {
         <div className={styles['shimmer']} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 
             <div className={styles['image-container']}>
-                <SkeletonBox width='128px' height='128px' />
+                <SkeletonBox width='7.5rem' height='7.5rem' />
             </div>
 
             <div>
@@ -72,7 +73,7 @@ function ModuleInfoBodySkeleton() {
             </div>
 
         </div>
-        <VerticalSpacer size={"0.75rem"} />
+        <VerticalSpacer size={"1rem"} />
 
         <div id={styles['button-container']}>
             <SkeletonBox width='100%' height='2.5rem' />
@@ -80,6 +81,9 @@ function ModuleInfoBodySkeleton() {
 
         <VerticalSpacer size={"1rem"} />
 
+        <SkeletonBox width='15rem' height='3rem' />
+
+        <VerticalSpacer size={"1rem"} />
 
         <div className={styles['readme']}>
             <h2>README</h2>
@@ -104,26 +108,26 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                         ? <img
                             src={moduleInfo.image}
                             alt="Module Icon"
-                            style={{ width: 'auto', height: '128px' }}
+                            style={{ width: 'auto', height: '7.5rem' }}
                         />
                         : <p>{getAbbreviation(moduleInfo.name)}</p>
 
                 }
 
             </div>
-            <div>
+            <div className={styles['module-info']}>
                 <h1>{moduleInfo?.name}</h1>
                 <p>{moduleInfo?.description}</p>
                 <div className={styles['tag-container']}>
                     {moduleInfo.tags?.map(tag => <p key={tag}>{tag}</p>)}
-                    </div>
+                </div>
                 <VerticalSpacer size='0.5rem' />
                 <p>By {moduleInfo?.author}</p>
-                <p style={{ color: "gray" }}>{moduleInfo?.["module-id"]}</p>
-
+                <p style={{ color: "gray" }}>{moduleInfo["module-id"]}</p>
             </div>
-
         </div>
+
+
 
         <div id={styles['button-container']}>
             <a
@@ -145,15 +149,19 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
             </a>
 
             <a className={styles['module-link']} href={moduleInfo?.repository} target='_blank'>
-                {moduleInfo?.repository?.startsWith("https://github") ? <>
-                    <div className={`${styles["git-logo"]} ${styles['logo']}`}></div>
-                    <p>GitHub</p>
-                </>
-                    : <>
-                        <p>Link</p>
-                    </>
-                }
+                <div className={`${styles["git-logo"]} ${styles['logo']}`}></div>
+                <p>GitHub</p>
             </a>
+        </div>
+        <VerticalSpacer size='1rem' />
+
+        <div className={styles["extra-info"]}>
+            <p><span>Uploaded Date:</span> {moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
+            {
+                moduleInfo.metadata['date-uploaded']?.getTime() !== moduleInfo.metadata['date-modified']?.getTime() &&
+                <p><span>Modified Date:</span> {moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
+            }
+            <p><span>Platforms:</span> {moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText) : "No platform information found."}</p>
         </div>
 
         <VerticalSpacer size='1rem' />

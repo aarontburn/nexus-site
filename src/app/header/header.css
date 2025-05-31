@@ -27,19 +27,6 @@
     margin-right: auto;
 }
 
-.header-logo-container:hover>.nav-button {
-    color: var(--accent-color)
-}
-
-.header-logo-container>.component-nexus-logo {
-    background-color: var(--foreground);
-    transition: 0.2s;
-}
-
-.header-logo-container:hover>.component-nexus-logo {
-    background-color: var(--accent-color);
-}
-
 
 
 .nav-button {
@@ -50,6 +37,8 @@
     cursor: pointer;
     border-radius: 5px;
     white-space: nowrap;
+    font-weight: 500;
+    font-size: 1.25rem;
 }
 
 .nav-button:hover {
@@ -69,9 +58,13 @@
         display: flex;
         justify-content: center;
     }
+
+    .remove-mobile {
+        display: none;
+    }
     
     .header-spacer {
-        display: none;
+        margin-right: 2rem;
     }
 
     .nav-button {

@@ -12,6 +12,15 @@ export const getAbbreviation = (moduleName: string) => {
     return out.join("");
 }
 
+export function platformToDisplayText(platform: string): string { 
+    switch (platform) {
+        case "win32": return "Windows";
+        case "linux": return "Linux";
+        case "darwin": return "MaxOS";
+        default: return '';
+    }
+}
+
 
 export function imageToBase64(file: File): Promise<string | undefined> {
     return new Promise((resolve) => {
