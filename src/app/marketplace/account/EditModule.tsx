@@ -19,7 +19,7 @@ interface EditModuleScreenProps {
 
 
 export type RemoteModuleInfoJSON =
-    Omit<ModuleInfo, "module-id" | "repo" | "image" | "readme">
+    Omit<ModuleInfo, "module-id" | "repo" | "image" | "readme" | "date-modified" | "date-uploaded">
     & {
         "id": string,
     }
@@ -114,7 +114,9 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
             image: base64Image,
             platforms: remoteModuleInfo.platforms,
             repository: githubRepoInputRef.current?.value,
-            tags: tags.map(tag => tag.text)
+            tags: tags.map(tag => tag.text),
+            "date-uploaded": editTarget?.["date-uploaded"],
+            "date-modified": editTarget?.["date-modified"]
         }
         if (isNewModule) {
             insertModule(moduleInfo).then((result: string | undefined) => {
@@ -239,9 +241,6 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
                         // re-render
                         setTags(newTags);
-                    }}
-                    handleTagClick={(index: number) => {
-                        console.log("The tag at index " + index + " was clicked");
                     }}
                     allowAdditionFromPaste={false}
                     clearAll

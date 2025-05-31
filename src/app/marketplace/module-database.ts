@@ -3,7 +3,7 @@ import { getServerSession, Session } from 'next-auth'
 import { Collection, Db, MongoClient, ObjectId, WithId } from "mongodb";
 import { authOptions } from '../api/authOptions';
 
-
+// module info stored in MongoDB
 export interface ModuleInfo {
     _id: string;
     name: string;
@@ -11,7 +11,6 @@ export interface ModuleInfo {
 
     author: string;
     "author-id": string;
-
 
     version: string;
     description?: string | undefined;
@@ -23,6 +22,8 @@ export interface ModuleInfo {
     readme?: string | undefined;
 
     tags?: string[] | undefined;
+    "date-uploaded"?: Date ;
+    "date-modified"?: Date;
 }
 
 
@@ -47,10 +48,6 @@ async function connectToDatabase() {
     database = client.db(DATABASE_NAME);
     moduleCollection = database.collection<ModuleInfo>(COLLECTION_NAME);
 }
-
-
-
-
 
 
 
@@ -86,15 +83,8 @@ export async function getModule(_id: string): Promise<[ModuleInfo | undefined, P
         result._id = `${result._id}`;
         moduleCache.set(_id, result);
         resolve(result)
-    })]
-
-
-
-
-
+    })];
 }
-
-
 
 
 
@@ -114,14 +104,12 @@ export async function getModulesFromUser(userID: string): Promise<ModuleInfo[] |
     return result;
 }
 
-export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id">) {
+export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-id" | "date-modified">) {
     if (!client) {
         await connectToDatabase();
     }
 
-
     const session: Session | null = await getServerSession(authOptions);
-
 
     if (!session?.user.id) {
         return "Not authorized."
@@ -146,8 +134,11 @@ export async function editRemoteModule(moduleInfo: Omit<ModuleInfo, "_id" | "aut
         }, {
             ...moduleInfo,
             "author-id": userID,
-            "author": session.user.name
-        } as any)
+            "author": session.user.name,
+            ...(moduleInfo["date-uploaded"] ? {} : { "date-uploaded": new Date() }),
+            "date-modified": new Date()
+        } as any);
+
         return undefined;
     } catch (err) {
         console.error("Error inserting module:", err);
@@ -216,7 +207,9 @@ export async function insertModule(moduleInfo: Omit<ModuleInfo, "_id" | "author-
         await moduleCollection?.insertOne({
             ...moduleInfo,
             "author-id": userID,
-            "author": session.user.name
+            "author": session.user.name,
+            "date-uploaded": new Date(),
+            "date-modified": new Date()
         } as any);
 
 

@@ -7,12 +7,24 @@ import { getAbbreviation } from "../utils/utils";
 import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Components";
 import MarketplaceHeader from "./MarketplaceHeader";
 
+const SORT_OPTIONS: { [value: string]: string } = {
+    "name-descend": 'Name (A - Z)',
+    "name-ascend": 'Name (Z  - A)',
+    "upload-descend": 'Date Uploaded (New - Old)',
+    "upload-ascend": 'Date Uploaded (Old - New)',
+    "modified-descend": 'Date Modified (New - Old)',
+    "modified-ascend": 'Date Modified (Old - New)',
+}
+
 
 export default function NexusMarket() {
 
     const searchBarRef: Ref<HTMLInputElement> = useRef(null);
 
     const [query, setQuery] = useState<string>('');
+    const [queryKey, setQueryKey] = useState<number>(0);
+    const [selectedSort, setSelectedSort] = useState<string>(Object.keys(SORT_OPTIONS)[0]);
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [databaseModules, setDatabaseModules] = useState<ModuleInfo[]>([]);
     const [displayedModules, setDisplayedModules] = useState<ModuleInfo[]>([]);
@@ -76,7 +88,11 @@ export default function NexusMarket() {
             searchBarRef.current.value = query;
         }
         searchForModule();
-    }, [query])
+    }, [query, queryKey]);
+
+    useEffect(() => {
+        console.log(selectedSort)
+    }, [selectedSort]);
 
 
     return <div className={styles["page"]}>
@@ -90,43 +106,103 @@ export default function NexusMarket() {
 
                 <div className={styles["body"]}>
 
-                    <div className={styles["right"]}>
-                        <h2>All Modules</h2>
 
-                        <div className={styles["inline"]}>
-                            <div>
-                                <div className={styles["searchbar"]}>
-                                    <input
-                                        ref={searchBarRef}
-                                        type="text"
-                                        onKeyDown={({ key }) => key === "Enter" && searchForModule()}
-                                    />
-                                    <p onClick={() => setQuery('')} className={styles["clear-search"]}>x</p>
-                                </div>
 
-                                <VerticalSpacer size={"0.25rem"} />
-                                <p style={{ fontSize: "0.75rem" }}>Search by tag, name, module ID, or author</p>
 
-                            </div>
+                    <h2>All Modules</h2>
 
-                            <HorizontalSpacer size="1rem" />
-                            <button onClick={() => searchForModule()}>Search</button>
+                    <div className={styles["inline"]}>
+                        <div className={styles["searchbar"]}>
+                            <input
+                                ref={searchBarRef}
+                                type="text"
+                                onKeyDown={({ key }) => key === "Enter" && searchForModule()}
+                            />
+                            <p key={queryKey} onClick={() => { setQuery(''); setQueryKey(prev => prev + 1) }} className={styles["clear-search"]}>x</p>
                         </div>
 
-                        <VerticalSpacer size={"1rem"} />
 
-                        <div id={styles["module-container"]}>
-                            {displayedModules.map((moduleInfo, index) =>
-                                <Module
-                                    key={index}
-                                    setQuery={setQuery}
-                                    moduleInfo={moduleInfo} />)}
+                        <HorizontalSpacer size="1rem" />
+                        <button onClick={() => searchForModule()}>Search</button>
 
+                        <HorizontalSpacer size="auto" />
+                        <div className={styles["sort-container"]}>
+                            <p>Sort By:</p>
+                            <HorizontalSpacer size="0.5rem" />
+
+                            <select value={selectedSort} onChange={(event) => setSelectedSort(event.target.value)}>
+                                {Object.keys(SORT_OPTIONS).map(value =>
+                                    <option key={value} value={value}>{SORT_OPTIONS[value]}</option>
+                                )}
+                            </select>
                         </div>
-
-                        <VerticalSpacer size="4rem" />
 
                     </div>
+                    <VerticalSpacer size={"0.25rem"} />
+                    <p style={{ fontSize: "0.75rem" }}>Search by tag, name, module ID, or author</p>
+
+                    <VerticalSpacer size={"1rem"} />
+
+                    <div id={styles["module-container"]}>
+                        {displayedModules.sort((a: ModuleInfo, b: ModuleInfo) => {
+                            if (!a["date-modified"] || !a["date-uploaded"]) {
+                                console.warn(`${a["module-id"]} has no date set.`);
+                                return 0;
+                            }
+
+                            if (!b["date-modified"] || !b["date-uploaded"]) {
+                                console.warn(`${b["module-id"]} has no date set.`)
+                                return 1;
+                            }
+
+                            switch (selectedSort) {
+                                case "name-descend": {
+                                    return a.name.localeCompare(b.name);
+                                }
+                                case "name-ascend": {
+                                    return b.name.localeCompare(a.name);
+                                }
+                                case "upload-descend": {
+                                    if (a["date-uploaded"]?.getTime() === b["date-uploaded"]?.getTime()) {
+                                        return 0;
+                                    }
+
+                                    return a["date-uploaded"] < b["date-uploaded"] ? 1 : -1;
+                                }
+                                case "upload-ascend": {
+                                    if (a["date-uploaded"]?.getTime() === b["date-uploaded"]?.getTime()) {
+                                        return 0;
+                                    }
+
+                                    return b["date-uploaded"] < a["date-uploaded"] ? 1 : -1;
+                                }
+                                case "modified-descend": {
+                                    if (a["date-modified"]?.getTime() === b["date-modified"]?.getTime()) {
+                                        return 0;
+                                    }
+
+                                    return a["date-modified"] < b["date-modified"] ? 1 : -1;
+                                }
+                                case "modified-ascend": {
+                                    if (a["date-modified"]?.getTime() === b["date-modified"]?.getTime()) {
+                                        return 0;
+                                    }
+
+                                    return b["date-modified"] < a["date-modified"] ? 1 : -1;
+                                }
+                            }
+                            return a.name.localeCompare(b.name);
+
+                        }).map((moduleInfo, index) =>
+                            <Module
+                                key={index}
+                                setQuery={setQuery}
+                                moduleInfo={moduleInfo} />)}
+
+                    </div>
+
+                    <VerticalSpacer size="4rem" />
+
 
                 </div>
         }
@@ -135,6 +211,7 @@ export default function NexusMarket() {
     </div>
 
 }
+
 
 
 
@@ -156,6 +233,7 @@ function Module({ moduleInfo, setQuery }: { moduleInfo: ModuleInfo, setQuery: (s
             <div className={styles["tag-container"]}>
                 {moduleInfo.tags && moduleInfo.tags.slice(0, 3).map(tag => <p onClick={() => setQuery(tag)} className={styles["clickable-text"]} key={tag}>{tag}</p>)}
             </div>
+            {/* Maybe show the date if the filter is on date-upload or date-modified? */}
         </div>
 
     </div>

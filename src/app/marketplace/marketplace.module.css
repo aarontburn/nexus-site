@@ -12,7 +12,6 @@
 
 .body {
     padding: 0 1rem;
-    display: flex;
     height: 100%;
 }
 
@@ -21,21 +20,9 @@
     align-items: center;
 }
 
-.left {
-    width: 20rem;
-    border-right: 1px solid var(--background-light-2);
-    height: 100%;
-}
 
-.right {
-    padding: 0 1rem;
 
-    /* width: calc(100% - 20rem); */
-    width: 100%;
-
-}
-
-.right button {
+.body button {
     min-width: 5rem;
     max-width: fit-content;
     height: 1.5rem;
@@ -53,7 +40,7 @@
 }
 
 
-.right input {
+.body input {
     font-size: 1rem;
     outline: none;
     transition: 0.2s;
@@ -67,6 +54,30 @@
     &:focus {
         border: 1px solid var(--accent-color);
     }
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+}
+
+.body select {
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+    border-radius: 5px;
+    border: 1px solid var(--background-light-2);
+    background-color: var(--background-light);
+    padding: 0.25rem 0.5rem;
+    width: 20rem;
+
+    &:focus {
+        border: 1px solid var(--accent-color);
+    }
+}
+
+.body option {
+    font-size: 1rem;
 }
 
 
@@ -129,8 +140,8 @@
     overflow: hidden;
     white-space: nowrap;
     color: gray
-
 }
+
 
 .module-image-container {
     margin: 1em;
