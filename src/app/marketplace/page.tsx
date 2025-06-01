@@ -163,32 +163,32 @@ export default function NexusMarket() {
                                     return b.name.localeCompare(a.name);
                                 }
                                 case "upload-descend": {
-                                    if (a.metadata["date-uploaded"]?.getTime() === a.metadata["date-uploaded"]?.getTime()) {
+                                    if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
+                                    return a.metadata["date-uploaded"] < b.metadata["date-uploaded"] ? 1 : -1;
                                 }
                                 case "upload-ascend": {
-                                    if (a.metadata["date-uploaded"]?.getTime() === a.metadata["date-uploaded"]?.getTime()) {
+                                    if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
+                                    return b.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
                                 }
                                 case "modified-descend": {
-                                    if (a.metadata["date-modified"]?.getTime() === a.metadata["date-modified"]?.getTime()) {
+                                    if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
+                                    return a.metadata["date-modified"] < b.metadata["date-modified"] ? 1 : -1;
                                 }
                                 case "modified-ascend": {
-                                    if (a.metadata["date-modified"]?.getTime() === a.metadata["date-modified"]?.getTime()) {
+                                    if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
                                         return 0;
                                     }
 
-                                    return a.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
+                                    return b.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
                                 }
                             }
                             return a.name.localeCompare(b.name);
