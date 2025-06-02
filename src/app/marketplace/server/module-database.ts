@@ -46,7 +46,62 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
     })];
 }
 
+export async function onModuleDownloaded(_id: string) {
+    if (!client) {
+        await connectToDatabase();
+    }
 
+    const result: WithId<ModuleInfo> | undefined = await moduleCollection?.findOne({ _id: new ObjectId(_id) as any }) ?? undefined;
+
+    if (!result) {
+        console.error("Couldn't find module to increment download count: " + _id);
+        return;
+    }
+
+    try {
+        await moduleCollection?.updateOne(
+            { _id: new ObjectId(_id) as any },
+            {
+                $inc: {
+                    "metadata.download-count": 1
+                }
+            }
+        );
+    } catch (e) {
+        console.log(e)
+    }
+
+
+
+}
+
+
+export async function db() {
+    if (!client) {
+        await connectToDatabase();
+    }
+
+    // const result: WithId<ModuleInfo>[] | undefined = await moduleCollection?.find({}).toArray();
+
+    // for (const moduleInfo of result ?? []) {
+    //     await moduleCollection?.updateOne(
+    //         { _id: new ObjectId(moduleInfo._id) as any },
+    //         {
+    //             $set: {
+    //                 "metadata.like-count": 0
+    //             },
+    //             $unset: {
+    //                 "metadata.rating-count": "",
+    //                 "metadata.rating-sum": ""
+    //             }
+    //         }
+    //     );
+    // }
+
+
+
+
+}
 
 export async function getModule(_id: string): Promise<[ModuleInfo | undefined, Promise<ModuleInfo | undefined>]> {
     if (!client) {
@@ -195,8 +250,7 @@ export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProper
                 "date-uploaded": new Date(),
                 "date-modified": new Date(),
                 "download-count": 0,
-                "rating-count": 0,
-                "rating-sum": 0
+                "like-count": 0,
             }
 
         } as any);

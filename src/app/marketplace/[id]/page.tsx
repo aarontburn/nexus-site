@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getModule } from '../server/module-database';
+import { getModule, onModuleDownloaded } from '../server/module-database';
 import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
@@ -81,7 +81,7 @@ function ModuleInfoBodySkeleton() {
 
         <VerticalSpacer size={"1rem"} />
 
-        <SkeletonBox width='15rem' height='3rem' />
+        <SkeletonBox width='15rem' height='5rem' />
 
         <VerticalSpacer size={"1rem"} />
 
@@ -134,6 +134,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 href={`nexus-app://install_${moduleInfo.repository?.replace("https://", '')}/releases/latest/download/${moduleInfo['module-id']}.zip`}
                 className={styles['module-link']}
                 style={{ backgroundColor: "#2d4677" }}
+                onClick={() => onModuleDownloaded(moduleInfo._id)}
             >
                 <NexusLogo className={styles['logo']} style={{ backgroundColor: "white" }} width={"1em"} height={"1em"} />
                 <p>Install to Nexus</p>
@@ -143,6 +144,8 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
             <a
                 href={`${moduleInfo.repository}/releases/latest/download/${moduleInfo['module-id']}.zip`}
                 className={styles['module-link']}
+                target='_blank'
+                onClick={() => onModuleDownloaded(moduleInfo._id)}
             >
                 <div className={`${styles["download-logo"]} ${styles['logo']}`}></div>
                 <p>Manual Download</p>
@@ -156,12 +159,11 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
         <VerticalSpacer size='1rem' />
 
         <div className={styles["extra-info"]}>
-            <p><span>Uploaded Date:</span> {moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
-            {
-                moduleInfo.metadata['date-uploaded']?.getTime() !== moduleInfo.metadata['date-modified']?.getTime() &&
-                <p><span>Modified Date:</span> {moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
-            }
-            <p><span>Platforms:</span> {moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText) : "No platform information found."}</p>
+            <p><span>Likes:</span>{moduleInfo.metadata['like-count']} <span className={styles['like-button']}>Like <span className={`${styles['logo']} ${styles['like-logo']}`}></span>  </span></p>
+            <p><span>Downloads:</span>{moduleInfo.metadata['download-count']}</p>
+            <p><span>Uploaded Date:</span>{moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
+            <p><span>Modified Date:</span>{moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
+            <p><span>Platforms:</span>{moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText) : "No platform information found."}</p>
         </div>
 
         <VerticalSpacer size='1rem' />

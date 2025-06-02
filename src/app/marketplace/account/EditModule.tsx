@@ -6,10 +6,10 @@ import { SessionContextValue } from "next-auth/react";
 import { Ref, RefObject, useEffect, useRef, useState } from "react";
 import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Components";
 import { imageToBase64, readUploadedText } from "../../utils/utils";
-import { getGitHubModuleInfo, Response } from "./github-handler";
+import { getGitHubModuleInfo, Response } from "../server/github-handler";
 import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../types";
-import { insertModule, editRemoteModule } from "../server/module-database";
+import { insertModule, editRemoteModule, db } from "../server/module-database";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;
@@ -17,6 +17,7 @@ interface EditModuleScreenProps {
     editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
     setNotificationText: (message: string) => void;
 }
+
 
 
 
@@ -126,8 +127,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                 "date-uploaded": editTarget?.metadata["date-uploaded"],
                 "date-modified": editTarget?.metadata["date-modified"],
                 "download-count": editTarget?.metadata["download-count"],
-                "rating-count": editTarget?.metadata["rating-count"],
-                "rating-sum": editTarget?.metadata["rating-sum"]
+                "like-count": editTarget?.metadata["like-count"]
             }
         }
         if (isNewModule) {

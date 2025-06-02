@@ -30,12 +30,33 @@
     width: 100%;
     font-size: 1rem;
     color: gray
-
 }
 
-.extra-info span {
+
+
+.extra-info>span {
     margin-right: 1rem;
     width: 10rem;
+    display: inline-block;
+}
+
+.like-button {
+    margin: 0;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    
+    &:hover {
+        color: var(--accent-color);
+    }
+}
+
+.like-logo {
+    height: 1rem;
+    width: 1rem;
+    margin: 0;
+    mask-image: url("../../assets/thumbs-up.svg");
     display: inline-block;
 }
 
@@ -146,6 +167,8 @@
 .download-logo {
     mask-image: url("../../assets/download-icon.png");
 }
+
+
 
 #button-container {
     display: flex;

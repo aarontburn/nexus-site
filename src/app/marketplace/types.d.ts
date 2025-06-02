@@ -25,9 +25,7 @@ export interface ModuleInfoMetadata {
     "date-uploaded": Date;
     "date-modified": Date;
     "download-count": number;
-
-    "rating-count": number;
-    "rating-sum": number;
+    "like-count"; number;
 }
 
 /**
