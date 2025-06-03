@@ -62,13 +62,13 @@ export default function RegisterPage() {
         }
 
         const response: any = await register({
-            email: emailRef.current?.value,
-            password: passwordRef.current?.value,
-            name: nameRef.current?.value
+            email: emailRef.current?.value.trim(),
+            password: passwordRef.current?.value.trim(),
+            name: nameRef.current?.value.trim()
         });
 
-        if (response?.message) {
-            setError(response.message);
+        if (response?.error) {
+            setError(response.error);
             return;
         } else {
             router.push("/marketplace/login");

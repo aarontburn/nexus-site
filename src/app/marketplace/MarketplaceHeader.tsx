@@ -13,9 +13,13 @@ export default function MarketplaceHeader() {
                 <a href="/marketplace">Nexus Marketplace</a>
             </h2>
             <HorizontalSpacer />
+
             {
                 session.status === "authenticated"
-                    ? <a href="/marketplace/account">Modules</a>
+                    ? <>
+                        <p className={styles["username"]}>Signed in as {session.data.user.name}</p>
+                        <a href="/marketplace/account">Modules</a>
+                    </>
                     : <a href="/marketplace/login">Login/Register</a>
             }
 

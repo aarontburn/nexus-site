@@ -34,7 +34,7 @@
 
 
 
-.extra-info>span {
+.extra-info > p > span {
     margin-right: 1rem;
     width: 10rem;
     display: inline-block;
@@ -46,18 +46,36 @@
     cursor: pointer;
     transition: 0.2s;
     display: flex;
-    
+    align-items: center;
+    border-radius: 5px;
+    padding: 0;
+    justify-content: center;
+    width: 5rem;
+    background-color: #2d4677;
+    color: white;
+
     &:hover {
         color: var(--accent-color);
     }
 }
 
+.like-container > span {
+    margin-right: 1rem;
+    width: 10rem;
+}
+.like-button > p {
+    margin-right: 0.5rem;
+}
+
+.like-container {
+    display: flex;
+}
+
 .like-logo {
-    height: 1rem;
-    width: 1rem;
-    margin: 0;
+    margin: 0 !important;
     mask-image: url("../../assets/thumbs-up.svg");
     display: inline-block;
+    padding: 0;
 }
 
 

@@ -220,7 +220,12 @@ function Module({ moduleInfo, editModule, deleteModule }: ModuleProps) {
 
                     </div>
 
-                    <VerticalSpacer size={"1rem"} />
+                    <VerticalSpacer size={"0.5rem"} />
+                    <div className={styles['metadata-container']}>
+                        <p className={styles["likes"]}><span></span>{moduleInfo.metadata["like-count"]}</p>
+                        <p className={styles["downloads"]}><span></span>{moduleInfo.metadata["download-count"]}</p>
+                    </div>
+                    <VerticalSpacer size={"0.5rem"} />
 
                     <div className={styles["button-container"]}>
                         <a href={`/marketplace/${moduleInfo["_id"]}`}>

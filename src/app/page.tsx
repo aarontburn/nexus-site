@@ -44,7 +44,7 @@ export default function Home() {
 
                 <VerticalSpacer size="2rem" />
 
-                <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
+                <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform<span style={{ color: "gray" }}>*</span> application loader.</p>
 
 
                 <div className="home-buttons">

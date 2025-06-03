@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getModule, onModuleDownloaded } from '../server/module-database';
+import { getModule, getNumberOfLikesForModule, isModuleLiked, onModuleDownloaded, onModuleLiked, onModuleRemoveLiked } from '../server/module-database';
 import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
@@ -10,6 +10,8 @@ import { NexusLogo, VerticalSpacer } from '../../components/Components';
 import MarketplaceHeader from '../MarketplaceHeader';
 import rehypeRaw from 'rehype-raw';
 import { ModuleInfo } from '../types';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -20,6 +22,7 @@ interface PageProps {
 
 export default function ModulePage({ params }: PageProps) {
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | undefined>();
+
     useEffect(() => {
         (async () => {
             const _id: string = (await params).id;
@@ -31,6 +34,7 @@ export default function ModulePage({ params }: PageProps) {
             resolvingModule.then(moduleInfo => moduleInfo && setModuleInfo(moduleInfo));
         })();
     }, []);
+
 
     return <>
         <MarketplaceHeader />
@@ -58,6 +62,7 @@ function SkeletonBox({ width, height }: { width: string, height: string }) {
 }
 
 function ModuleInfoBodySkeleton() {
+
     return <>
         <div className={styles['shimmer']} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 
@@ -99,6 +104,17 @@ function ModuleInfoBodySkeleton() {
 
 
 function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
+    const [isModuleLikedStatus, setIsModuleLiked] = useState<boolean>(false);
+    const [likeCount, setLikeCount] = useState<number>(moduleInfo.metadata['like-count']);
+
+    const session = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        isModuleLiked(moduleInfo._id).then(result => setIsModuleLiked(result));
+    }, []);
+
+
     return <>
         <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 
@@ -159,10 +175,43 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
         <VerticalSpacer size='1rem' />
 
         <div className={styles["extra-info"]}>
-            <p><span>Likes:</span>{moduleInfo.metadata['like-count']} <span className={styles['like-button']}>Like <span className={`${styles['logo']} ${styles['like-logo']}`}></span>  </span></p>
+            <div className={styles['like-container']}>
+                <span>Likes:</span>
+                {likeCount}
+
+                <div className={styles['like-button']} onClick={() => {
+                    if (session.status === "authenticated") {
+                        if (isModuleLikedStatus) {
+
+                            onModuleRemoveLiked(moduleInfo._id)
+                                .then(result => {
+                                    if (result === undefined) {
+                                        setIsModuleLiked(false);
+                                        setLikeCount(prev => prev - 1);
+                                    }
+                                })
+                        } else {
+                            onModuleLiked(moduleInfo._id)
+                                .then(result => {
+                                    if (result === undefined) {
+                                        setIsModuleLiked(true);
+                                        setLikeCount(prev => prev + 1);
+                                    }
+                                })
+                        }
+                    } else if (session.status === "unauthenticated") {
+                        router.push("/marketplace/login");
+                    }
+
+                }}>
+                    <p>{!isModuleLikedStatus ? "Like" : "Liked"}</p>
+                    <span className={`${styles['logo']} ${styles['like-logo']}`}></span>
+                </div>
+            </div>
+
             <p><span>Downloads:</span>{moduleInfo.metadata['download-count']}</p>
-            <p><span>Uploaded Date:</span>{moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
-            <p><span>Modified Date:</span>{moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
+            <p><span>Upload Date:</span>{moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
+            <p><span>Modify Date:</span>{moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
             <p><span>Platforms:</span>{moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText) : "No platform information found."}</p>
         </div>
 
@@ -176,6 +225,17 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <div className={'markdown-body'}>
                     <Markdown
                         rehypePlugins={[rehypeRaw]}
+                        components={{
+                            a: ({ href, children }) => (
+                                <a
+                                    href={href}
+                                    target={"_blank"}
+                                >
+                                    {children}
+                                </a>
+                            ),
+                        }}
+
                     >
                         {moduleInfo.readme}
                     </Markdown>

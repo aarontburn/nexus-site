@@ -18,16 +18,24 @@ export const register = async (values: RegisterProps) => {
         const userFound = await User.findOne({ email });
         if (userFound) {
             return {
-                error: 'Email already exists!'
+                error: 'Email already exists.'
             }
         }
+        const usernameTaken = await User.findOne({ name });
+        if (usernameTaken) {
+            return {
+                error: 'Username already taken.'
+            };
+        }
+
         const hashedPassword: string = await bcrypt.hash(password, 10);
         const user = new User({
             name,
             email,
             password: hashedPassword,
         });
-        const savedUser = await user.save();
+
+        await user.save();
 
     } catch (e) {
         console.log(e);

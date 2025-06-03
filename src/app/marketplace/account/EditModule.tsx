@@ -158,6 +158,16 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
         }
     }, []);
 
+    useEffect(() => {
+        if (uploadedReadme) {
+            setUseReadmeUpload(false);
+            readUploadedText(uploadedReadme).then(text => {
+                if (readmeTextRef.current) readmeTextRef.current.value = `${text}` 
+            })
+        }
+
+    }, [uploadedReadme])
+
     return <div className={styles["edit-screen"]}>
 
         <div className={styles["aligned"]}>
@@ -264,8 +274,6 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
                 <p><span style={{ color: "gray" }}>(Optional)</span> Upload an image for your module.</p>
                 <VerticalSpacer size={"0.25rem"} />
-
-
 
                 <div className={styles["aligned"]}>
                     <input

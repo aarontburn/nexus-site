@@ -25,7 +25,7 @@ export interface ModuleInfoMetadata {
     "date-uploaded": Date;
     "date-modified": Date;
     "download-count": number;
-    "like-count"; number;
+    "like-count": number;
 }
 
 /**
@@ -65,3 +65,21 @@ export interface RemoteModuleInfoJSON {
         }[] | undefined
     }
 }
+
+
+export interface UserLikedInfo {
+    _id: ObjectId;
+    "user-id": string;
+    "module-id": string;
+    "liked-at": Date;
+}
+
+
+
+export interface UserBookmarkInfo {
+    _id: ObjectId;
+    "user-id": string;
+    "module-id": string;
+    "bookmarked-at": Date;
+}
+

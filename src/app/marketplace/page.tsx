@@ -15,6 +15,89 @@ const SORT_OPTIONS: { [value: string]: string } = {
     "upload-ascend": 'Date Uploaded (Old - New)',
     "modified-descend": 'Date Modified (New - Old)',
     "modified-ascend": 'Date Modified (Old - New)',
+    "like-descend": 'Like Count (Most - Least)',
+    "like-ascend": 'Like Count (Least - Most)',
+    "downloads-descend": 'Download Count (Most - Least)',
+    "downloads-ascend": 'Download Count (Least - Most)',
+}
+
+const sortFunction = (selectedSort: string, a: ModuleInfo, b: ModuleInfo) => {
+    if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
+        console.warn(`${a["module-id"]} has no date set.`);
+        return 0;
+    }
+
+    if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
+        console.warn(`${b["module-id"]} has no date set.`)
+        return 1;
+    }
+
+    switch (selectedSort) {
+        case "name-descend": {
+            return a.name.localeCompare(b.name);
+        }
+        case "name-ascend": {
+            return b.name.localeCompare(a.name);
+        }
+        case "upload-descend": {
+            if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
+                return a.name.localeCompare(b.name);
+            }
+
+            return a.metadata["date-uploaded"] < b.metadata["date-uploaded"] ? 1 : -1;
+        }
+        case "upload-ascend": {
+            if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
+                return a.name.localeCompare(b.name);
+            }
+
+            return b.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
+        }
+        case "modified-descend": {
+            if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
+                return a.name.localeCompare(b.name);
+            }
+
+            return a.metadata["date-modified"] < b.metadata["date-modified"] ? 1 : -1;
+        }
+        case "modified-ascend": {
+            if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
+                return a.name.localeCompare(b.name);
+            }
+
+            return b.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
+        }
+        case "like-descend": {
+            const difference = b.metadata["like-count"] - a.metadata["like-count"];
+            if (difference === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return difference;
+        }
+        case "like-ascend": {
+            const difference = a.metadata["like-count"] - b.metadata["like-count"];
+            if (difference === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return difference;
+        }
+        case "downloads-descend": {
+            const difference = b.metadata["download-count"] - a.metadata["download-count"];
+            if (difference === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return difference;
+        }
+        case "downloads-ascend": {
+            const difference = a.metadata["download-count"] - b.metadata["download-count"];
+            if (difference === 0) {
+                return a.name.localeCompare(b.name);
+            }
+            return difference;
+        }
+
+    }
+    return a.name.localeCompare(b.name);
 }
 
 
@@ -26,7 +109,7 @@ export default function NexusMarket() {
     const [queryKey, setQueryKey] = useState<number>(0);
     const [selectedSort, setSelectedSort] = useState<string>(Object.keys(SORT_OPTIONS)[0]);
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [databaseModules, setDatabaseModules] = useState<ModuleInfo[]>([]);
     const [displayedModules, setDisplayedModules] = useState<ModuleInfo[]>([]);
 
@@ -97,7 +180,6 @@ export default function NexusMarket() {
         <br />
         <VerticalSpacer size="4rem" />
 
-
         {
             isLoading ? <div className={styles["centered"]}><Spinner /></div> :
 
@@ -139,61 +221,12 @@ export default function NexusMarket() {
 
                     </div>
                     <VerticalSpacer size={"0.25rem"} />
-                    <p style={{ fontSize: "0.75rem" }}>Search by tag, name, module ID, or author</p>
+                    <p style={{ fontSize: "0.75rem", color: "gray" }}>Search by tag, name, module ID, or author.</p>
 
                     <VerticalSpacer size={"1rem"} />
 
                     <div className={styles["module-container"]}>
-                        {displayedModules.sort((a: ModuleInfo, b: ModuleInfo) => {
-                            if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
-                                console.warn(`${a["module-id"]} has no date set.`);
-                                return 0;
-                            }
-
-                            if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
-                                console.warn(`${b["module-id"]} has no date set.`)
-                                return 1;
-                            }
-
-                            switch (selectedSort) {
-                                case "name-descend": {
-                                    return a.name.localeCompare(b.name);
-                                }
-                                case "name-ascend": {
-                                    return b.name.localeCompare(a.name);
-                                }
-                                case "upload-descend": {
-                                    if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
-                                        return 0;
-                                    }
-
-                                    return a.metadata["date-uploaded"] < b.metadata["date-uploaded"] ? 1 : -1;
-                                }
-                                case "upload-ascend": {
-                                    if (a.metadata["date-uploaded"]?.getTime() === b.metadata["date-uploaded"]?.getTime()) {
-                                        return 0;
-                                    }
-
-                                    return b.metadata["date-uploaded"] < a.metadata["date-uploaded"] ? 1 : -1;
-                                }
-                                case "modified-descend": {
-                                    if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
-                                        return 0;
-                                    }
-
-                                    return a.metadata["date-modified"] < b.metadata["date-modified"] ? 1 : -1;
-                                }
-                                case "modified-ascend": {
-                                    if (a.metadata["date-modified"]?.getTime() === b.metadata["date-modified"]?.getTime()) {
-                                        return 0;
-                                    }
-
-                                    return b.metadata["date-modified"] < a.metadata["date-modified"] ? 1 : -1;
-                                }
-                            }
-                            return a.name.localeCompare(b.name);
-
-                        }).map((moduleInfo, index) =>
+                        {displayedModules.sort((a, b) => sortFunction(selectedSort, a, b)).map((moduleInfo, index) =>
                             <Module
                                 key={index}
                                 sortState={selectedSort}
@@ -232,7 +265,7 @@ function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
         </div>
 
         <div className={styles["module-info-container"]}>
-            <h3 className={`${styles["module-info-name"]} ${styles["clickable-text"]}`}><a href={modulePageLink}>{moduleInfo.name}</a></h3>
+            <h3 className={`${styles["clickable-text"]}`}><a href={modulePageLink}>{moduleInfo.name}</a></h3>
             <h4 className={styles["clickable-text"]} onClick={() => setQuery(moduleInfo.author)}>{moduleInfo.author}</h4>
             {moduleInfo.description && <h4 className={styles['desc']}>{moduleInfo.description}</h4>}
 
@@ -242,10 +275,23 @@ function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
 
             <VerticalSpacer size="0.25rem" />
 
-            <div className={styles["extra-info-container"]}>
-                {sortState.startsWith("upload") && <p>Uploaded {moduleInfo.metadata["date-uploaded"]?.toLocaleString()}</p>}
-                {sortState.startsWith("modified") && <p>Modified {moduleInfo.metadata["date-modified"]?.toLocaleString()}</p>}
+
+            <div className={styles["extra-info-wrapper"]}>
+                <div className={styles["info-left"]}>
+                    <p className={styles["likes"]}><span></span>{moduleInfo.metadata["like-count"]}</p>
+                    <p className={styles["downloads"]}><span></span>{moduleInfo.metadata["download-count"]}</p>
+                </div>
+                <div className={styles["info-right"]}>
+                    {sortState.startsWith("upload")
+                        ? <p>Uploaded {moduleInfo.metadata["date-uploaded"]?.toLocaleString()}</p>
+                        : <p>Modified {moduleInfo.metadata["date-modified"]?.toLocaleString()}</p>
+                    }
+                </div>
+
             </div>
+
+
+
         </div>
 
     </div>
