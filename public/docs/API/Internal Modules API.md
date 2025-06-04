@@ -137,6 +137,31 @@ Returns the id of the currently visible module ID.
 > **Returns**  
 > `200 OK` and the ID of the currently visible module.
 
+--- 
+
+### `get-primary-window`
+Get the client's main `BaseWindow`.
+
+> **Parameters**  
+> None  
+> **Returns**  
+> `200 OK` and the reference to the main `BaseWindow`.
+
+
+
+---
+
+
+### `get-module-window`
+Get the caller module's `WebContentView`, if applicable.
+
+> **Parameters**  
+> None  
+> **Returns**  
+> `404 NOT FOUND` if the caller module doesn't have a corresponding `WebContentView`
+> `200 OK` and the reference to the callers `WebContentView`.
+
+
 ---
 
 ### `open-dev-tools`

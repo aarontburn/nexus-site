@@ -39,11 +39,13 @@
     white-space: nowrap;
     font-weight: 500;
     font-size: 1.25rem;
+
+    &:hover {
+        color: var(--accent-color);
+
+    }
 }
 
-.nav-button:hover {
-    color: var(--accent-color);
-}
 
 
 @media (max-width: 768px) {
@@ -62,7 +64,7 @@
     .remove-mobile {
         display: none;
     }
-    
+
     .header-spacer {
         margin-right: 2rem;
     }

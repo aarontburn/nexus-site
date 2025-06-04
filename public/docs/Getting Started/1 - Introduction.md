@@ -2,7 +2,7 @@
 
 
 ## What is Nexus?
-**Nexus** is an cross-platform application environment and loader. Developers can create applications, or **modules**, that can be loaded into the Nexus environment, keeping everything in one place. 
+**Nexus** is a cross-platform application environment and loader. Developers can create applications, or **modules**, that can be loaded into the Nexus environment, keeping everything in one place. 
 
 Think of **Nexus** as a customizable toolbox — one app that can do anything that you (or the community) build into it.
 
@@ -11,12 +11,16 @@ Think of **Nexus** as a customizable toolbox — one app that can do anything th
     <img src="../assets/google-calendar.png" alt="Google Calendar Sample Image" width="1000"/>
 </p>
 
+
+Nexus is **100% free**, including browsing the [application marketplace](https://nexus-app.net/marketplace) and developing your own application.
+
+
 ## Installing Nexus
 Currently, Nexus is **Windows only**, but support for Linux and MacOS is being worked on.
 
-Download the latest release for your platform and run the installer.
+Visit the Download page and install the correct version for your operating system.
 
-### [Nexus: Latest Release](https://github.com/aarontburn/nexus-core/releases/latest)
+### [Download Now](https://www.nexus-app.net/download)
 
 
 ## What is a module?
@@ -36,20 +40,41 @@ Use ChatGPT often? Embed ChatGPT as a Nexus module for quick access.
 If you regularly check your email, embed them into Nexus.
 
 
+## Why develop with Nexus?
+You're probably wondering; what's the point of Nexus if I can just use Electron to build my own standalone application?
 
-## Developing for Nexus
+The theme of Nexus is interconnectivity and modularity; Nexus manages many parts of your application so **you** don't have to.
+
+### 1. Setting Management
+Your application might have various user preferences or settings. This involves a new UI page, along with internal setting management. Nexus manages that for you, having a dedicated module setting page for all installed modules. 
+
+
+### 2. Module Communication
+Unlike other desktop applications, Nexus provides a way for your module to communicate with other installed modules, along with expose an API that other modules can communicate with.
+
+An example use-case is integration with the [Debug Console](https://www.nexus-app.net/marketplace/68342d1da2fbe5b2c6a76ce6) module; by having this module installed, other modules can add commands easily for easy debugging.
+
+
+### 3. Automatic, In-App Module Updating
+Easily add remote updating to your module so your users have the latest release.
+
+
+### 4. Export and Distribution
+Easily package your module into a lightweight `.zip` to share with others, or on the official [Nexus Marketplace](https://nexus-app.net/marketplace); no need to worry about different build configurations for different operating systems*.
+
+### 5. Unique Build Tools
+Utilizing your module's [`module-info.json`](../API/module-info.json.md), you can specify a unique exporting procedure, including removing/including files or replacing text occurrences in any file.
+
 To begin developing a module for Nexus, visit [Building Your First Module](./2%20-%20Building%20Your%20First%20Module.md).
 
-The benefit of developing with Nexus is that any module you install can be loaded into a single application, reducing window clutter, and Nexus provides an extensive framework to allow for module interconnectivity and ease-of-development.
 
-**Application Lifecycle Handling**: Built-in and easily-modifiable functions are called during different parts of the application lifecycle, such as when your module is opened, closed, and initialized.
+## What can you make with Nexus?
+Well, *anything*. Specifically, anything you can make using the Electron API, Node.js API, and any external packages. There are no restrictions or constraints.
 
-**User Configuration Settings**: Nexus provides a simple way to create and handle settings that your module may want the user to configure. Simply provide the settings you want to expose, and Nexus will create the UI, event handling, and do the storage reading/writing for you.
+Here are some possible examples:
 
-**Storage Handling**: Built-in classes and methods make it easy to read/write from storage.
+1. **Website Embeds**: Embed any website as a native desktop application (e.g. [Google Calendar](www.nexus-app.net/marketplace/6837a62e382d9ca237cba6e3) or [Instagram](www.nexus-app.net/marketplace/6837a62e382d9ca237cba6e3)).
+2. **Custom Tooling**: Create full-fledged applications within Nexus (e.g. [Color Picker](https://www.nexus-app.net/marketplace/68342fbea2fbe5b2c6a76cf1))
+3. **Internal System Tools**: If you need a module that doesn't need a GUI, Nexus supports modules that run in the background to do anything you need it to do (this is how auto-updating and the popup modal is coded).
 
-**Module Communication**: Modules have the ability to communicate with each other and expose an API that other modules can access, which allows for interconnectivity and extensibility.
 
-**Export and Distribution**: Nexus comes pre-configured to export your module into an archive file for easy distribution without much (or any) configuration.
-
-**Remote Module Updating**: Easily set up remote updates to your module.

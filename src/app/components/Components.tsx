@@ -2,8 +2,8 @@ import styles from "./components.module.css"
 
 import { CSSProperties } from "react";
 
-export const HorizontalSpacer = ({ size = "auto" }) => {
-    return <div style={{ marginRight: size }}></div>;
+export const HorizontalSpacer = ({ size = "auto", className = "" }) => {
+    return <div className={className} style={{ marginRight: size }}></div>;
 }
 
 export const VerticalSpacer = ({ size = "auto" }: { size?: string }) => {

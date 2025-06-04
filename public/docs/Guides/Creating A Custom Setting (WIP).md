@@ -20,7 +20,7 @@ The parent class `Setting<T>` holds the behavior for the setting, while the pare
 		super(module, true);
 	}
 	```
-	For example, the built-in `ChoiceSetting` has an additional function `addOptions` to add the choices. When the constructor is called, the `setUIComponent` relies on the options that have not been created yet, which is why we must defer the call by returning `true` in the constructor.   Whenever you make a change that can influence the UI, you **must** make a call to `this.reInitUI()` to properly reinitalize the UI.
+	For example, the built-in `ChoiceSetting` has an additional function `addOptions` to add the choices. When the constructor is called, the `setUIComponent` relies on the options that have not been created yet, which is why we must defer the call by returning `true` in the constructor.   Whenever you make a change that can influence the UI, you **must** make a call to `this.reInitUI()` to properly reinitialize the UI.
 	```typescript
 	// ChoiceSetting.ts
 	public addOptions(...options: string[]): ChoiceSetting {
@@ -89,7 +89,7 @@ Creating the UI component is a bit more complex.
 
 ![Screenshot 2024-07-07 202357](https://github.com/aarontburn/modules-module-quickstart/assets/103211131/cc7bcea4-8635-454a-b222-6801b23a2d70)
 
-To create a consistant styling, by default, there is a left component and a right component. 
+To create a consistent styling, by default, there is a left component and a right component. 
 
 > The left component, highlighted in red, is small and meant for smaller input boxes, such as number or color input. 
 
