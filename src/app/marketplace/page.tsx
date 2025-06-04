@@ -2,11 +2,11 @@
 
 import { Ref, useEffect, useRef, useState } from "react";
 import styles from "./marketplace.module.css"
-import { getAllRemoteModules } from "./server/module-database";
 import { getAbbreviation } from "../utils/utils";
 import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Components";
 import MarketplaceHeader from "./MarketplaceHeader";
 import { ModuleInfo } from "./types";
+import { getAllRemoteModules } from "./server/module-database/modules";
 
 const SORT_OPTIONS: { [value: string]: string } = {
     "name-descend": 'Name (A - Z)',

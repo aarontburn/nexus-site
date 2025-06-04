@@ -6,11 +6,15 @@ import MarketplaceHeader from "../MarketplaceHeader";
 import styles from "./account.module.css"
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { deleteRemoteModule, getModulesFromUser } from "../server/module-database";
 import React from "react";
 import { getAbbreviation } from "../../utils/utils";
-import EditModuleScreen from "./EditModule";
-import { ModuleInfo } from "../types";
+import { ModuleInfo, UserBookmarkInfo, UserLikedInfo } from "../types";
+import ProfilePage from "./components/profile/ProfilePage";
+import LikedPage from "./components/likes/LikedPage";
+import BookmarksPage from "./components/bookmarks/BookmarksPage";
+import { getLikedModulesForUser } from "../server/module-database/likes";
+import { getModulesFromUser, deleteRemoteModule } from "../server/module-database/modules";
+import { getBookmarkedModules } from "../server/module-database/bookmarks";
 
 const ALERT_CLEAR_SEC: number = 2;
 
@@ -44,6 +48,14 @@ function Alert(props: AlertProps) {
 }
 
 
+
+const TABS: { [tab: string]: string } = {
+    ACCOUNT: "Account",
+    SAVED: "Saved",
+    LIKES: 'Likes',
+}
+
+
 export default function AccountPage() {
 
 
@@ -54,9 +66,30 @@ export default function AccountPage() {
             router.push("/marketplace/login");
         },
     });
-    session.data?.user
+    const notificationHelper = useCallback((message: string) => setNotificationText({ text: message, id: Date.now() }), []);
 
+    const [likedModules, setLikedModules] = useState<(ModuleInfo & { likeInfo: UserLikedInfo })[] | undefined>(undefined);
+    const [bookmarkedModules, setBookmarkedModules] = useState<(ModuleInfo & { bookmarkInfo: UserBookmarkInfo })[] | undefined>(undefined);
 
+    useEffect(() => {
+        getLikedModulesForUser().then(result => {
+            if (typeof result === "string") {
+                notificationHelper(result);
+                return;
+            }
+            setLikedModules(result);
+        });
+
+        getBookmarkedModules().then(result => {
+            if (typeof result === "string") {
+                notificationHelper(result);
+                return;
+            }
+            setBookmarkedModules(result);
+        });
+    }, [])
+
+    const [selectedTab, setSelectedTab] = useState<string>(Object.values(TABS)[0])
     const [notificationText, setNotificationText] = useState<{ text: string, id: number }>({ text: '', id: 0 });
     const [editTarget, setEditTarget] = useState<ModuleInfo | null | undefined>(undefined);
 
@@ -64,7 +97,10 @@ export default function AccountPage() {
         setEditTarget(module);
     }, [])
 
-    const notificationHelper = useCallback((message: string) => setNotificationText({ text: message, id: Date.now() }), []);
+
+    const onTabPressed = (tabName: string) => {
+        setSelectedTab(tabName);
+    }
 
     return <>
         <MarketplaceHeader />
@@ -72,11 +108,32 @@ export default function AccountPage() {
 
         <div className={styles["account-body"]}>
 
+            <div className={styles.left}>
+                {Object.keys(TABS).map(tabName =>
+                    <p
+                        style={selectedTab === TABS[tabName] ? { borderColor: "var(--accent-color)", color: "var(--accent-color)" } : {}}
+                        key={tabName}
+                        onClick={() => onTabPressed(TABS[tabName])}
+                    >
+                        {selectedTab === TABS[tabName] ? "> " : " "}{TABS[tabName]}
+                    </p>
+                )}
+            </div>
+
             <div className={styles.right}>
-                {editTarget !== undefined
+                {(() => {
+                    switch (selectedTab) {
+                        case TABS.ACCOUNT: return <ProfilePage setNotificationText={notificationHelper} session={session} />
+                        case TABS.LIKES: return <LikedPage likedModules={likedModules} setNotificationText={notificationHelper} session={session} />
+                        case TABS.SAVED: return <BookmarksPage bookmarks={bookmarkedModules} setNotificationText={notificationHelper} session={session} />
+                        default: return undefined;
+                    }
+                })()}
+
+                {/* {editTarget !== undefined
                     ? <EditModuleScreen setNotificationText={notificationHelper} editModule={editModule} editTarget={editTarget} session={session} />
                     : <ModuleListScreen setNotificationText={notificationHelper} editModule={editModule} session={session} />
-                }
+                } */}
 
             </div>
         </div>

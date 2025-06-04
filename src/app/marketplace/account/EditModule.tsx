@@ -9,7 +9,7 @@ import { imageToBase64, readUploadedText } from "../../utils/utils";
 import { getGitHubModuleInfo, Response } from "../server/github-handler";
 import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../types";
-import { insertModule, editRemoteModule, db } from "../server/module-database";
+import { insertModule, editRemoteModule } from "../server/module-database/modules";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;

@@ -1,0 +1,129 @@
+.module-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.module {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: 1px solid var(--background-light-2);
+    border-radius: 5px;
+    flex: 0 0 30rem;
+
+    height: 8rem;
+    width: 30rem;
+}
+
+.module .tag-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.tag-container p {
+    background-color: var(--background-light-1);
+    border-radius: 5px;
+    padding: 0.075rem 0.5rem;
+    font-size: 0.85rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: gray
+}
+
+.module-image-container {
+    margin: 1em;
+    min-width: 64px;
+    width: 64px;
+    height: 64px;
+}
+
+.module-image-container img {
+    width: 100%;
+}
+
+.module-info-container {
+    width: calc(100% - 64px - 1em - 2rem);
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.module-info-container h4 {
+    font-weight: 400;
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+}
+
+.module-info-container .desc {
+    font-size: 0.8rem;
+    color: var(--foreground-light)
+}
+
+.module-abbreviation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 2rem;
+}
+
+.downloads,
+.likes {
+    display: flex;
+    align-items: center;
+}
+
+.downloads>span,
+.likes>span {
+    mask-size: cover;
+    mask-position: center;
+    background-color: white;
+
+    mask-image: url(../../../../assets/thumbs-up.svg);
+    display: inline-block;
+
+    height: 0.95rem;
+    width: 0.95rem;
+    margin-right: 0.2rem;
+    background-color: gray;
+}
+
+.downloads>span {
+    mask-image: url(../../../../assets/download-icon.png);
+}
+
+.extra-info-wrapper {
+    display: flex;
+    font-size: 0.7rem;
+    color: gray;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.info-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-bottom: 0.15rem;
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.info-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding-bottom: 0.15rem;
+}

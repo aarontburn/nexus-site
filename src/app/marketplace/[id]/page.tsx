@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getModule, getNumberOfLikesForModule, isModuleLiked, onModuleDownloaded, onModuleLiked, onModuleRemoveLiked } from '../server/module-database';
 import styles from "./styles.module.css"
 import "../../develop/[[...markdown-id]]/markdown.css"
 import Markdown from 'react-markdown'
@@ -12,13 +11,13 @@ import rehypeRaw from 'rehype-raw';
 import { ModuleInfo } from '../types';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { isModuleLiked, onModuleRemoveLiked, onModuleLiked } from '../server/module-database/likes';
+import { getModule, onModuleDownloaded } from '../server/module-database/modules';
+import { bookmarkModule, isModuleBookmarked, removeBookmarkedModule } from '../server/module-database/bookmarks';
 
 interface PageProps {
     params: Promise<{ id: string }>;
 }
-
-
-
 
 export default function ModulePage({ params }: PageProps) {
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | undefined>();
@@ -57,61 +56,18 @@ export default function ModulePage({ params }: PageProps) {
     </>
 }
 
-function SkeletonBox({ width, height }: { width: string, height: string }) {
-    return <div className={`${styles["shimmer"]} ${styles["skeleton-box"]}`} style={{ height: height, width: width }}></div>
-}
-
-function ModuleInfoBodySkeleton() {
-
-    return <>
-        <div className={styles['shimmer']} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-
-            <div className={styles['image-container']}>
-                <SkeletonBox width='7.5rem' height='7.5rem' />
-            </div>
-
-            <div>
-                <SkeletonBox width='10rem' height='5rem' />
-                <VerticalSpacer size='0.5rem' />
-
-                <SkeletonBox width='10rem' height='2rem' />
-            </div>
-
-        </div>
-        <VerticalSpacer size={"1rem"} />
-
-        <div id={styles['button-container']}>
-            <SkeletonBox width='100%' height='2.5rem' />
-        </div>
-
-        <VerticalSpacer size={"1rem"} />
-
-        <SkeletonBox width='15rem' height='5rem' />
-
-        <VerticalSpacer size={"1rem"} />
-
-        <div className={styles['readme']}>
-            <h2>README</h2>
-            <hr />
-            <br />
-            <SkeletonBox width='10rem' height='2rem' />
-
-        </div>
-
-    </>
-}
-
-
 
 function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
     const [isModuleLikedStatus, setIsModuleLiked] = useState<boolean>(false);
     const [likeCount, setLikeCount] = useState<number>(moduleInfo.metadata['like-count']);
+    const [moduleIsBookmarked, setIsModuleBookmarked] = useState<boolean>(false);
 
     const session = useSession();
     const router = useRouter();
 
     useEffect(() => {
-        isModuleLiked(moduleInfo._id).then(result => setIsModuleLiked(result));
+        isModuleLiked(moduleInfo._id).then(setIsModuleLiked);
+        isModuleBookmarked(moduleInfo._id).then(setIsModuleBookmarked);
     }, []);
 
 
@@ -182,7 +138,6 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <div className={styles['like-button']} onClick={() => {
                     if (session.status === "authenticated") {
                         if (isModuleLikedStatus) {
-
                             onModuleRemoveLiked(moduleInfo._id)
                                 .then(result => {
                                     if (result === undefined) {
@@ -202,11 +157,37 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                     } else if (session.status === "unauthenticated") {
                         router.push("/marketplace/login");
                     }
-
                 }}>
                     <p>{!isModuleLikedStatus ? "Like" : "Liked"}</p>
                     <span className={`${styles['logo']} ${styles['like-logo']}`}></span>
                 </div>
+
+                <div className={styles['bookmark-button']} onClick={() => {
+                    if (session.status === "authenticated") {
+                        if (moduleIsBookmarked) {
+                            removeBookmarkedModule(moduleInfo._id)
+                                .then(result => {
+                                    if (result === undefined) {
+                                        setIsModuleBookmarked(false);
+                                    }
+                                })
+                        } else {
+                            bookmarkModule(moduleInfo._id)
+                                .then(result => {
+                                    if (result === undefined) {
+                                        setIsModuleBookmarked(true);
+                                    }
+                                })
+                        }
+                    } else if (session.status === "unauthenticated") {
+                        router.push("/marketplace/login");
+                    }
+                }}>
+                    <p>{!moduleIsBookmarked ? "Save" : "Saved"}</p>
+                    <span className={`${styles['logo']} ${styles['bookmark-logo']}`}></span>
+                </div>
+
+
             </div>
 
             <p><span>Downloads:</span>{moduleInfo.metadata['download-count']}</p>
@@ -243,6 +224,51 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <VerticalSpacer size='5rem' />
             </div>
         }
+
+    </>
+}
+
+
+function SkeletonBox({ width, height }: { width: string, height: string }) {
+    return <div className={`${styles["shimmer"]} ${styles["skeleton-box"]}`} style={{ height: height, width: width }}></div>
+}
+
+function ModuleInfoBodySkeleton() {
+
+    return <>
+        <div className={styles['shimmer']} style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+
+            <div className={styles['image-container']}>
+                <SkeletonBox width='7.5rem' height='7.5rem' />
+            </div>
+
+            <div>
+                <SkeletonBox width='10rem' height='5rem' />
+                <VerticalSpacer size='0.5rem' />
+
+                <SkeletonBox width='10rem' height='2rem' />
+            </div>
+
+        </div>
+        <VerticalSpacer size={"1rem"} />
+
+        <div id={styles['button-container']}>
+            <SkeletonBox width='100%' height='2.5rem' />
+        </div>
+
+        <VerticalSpacer size={"1rem"} />
+
+        <SkeletonBox width='15rem' height='5rem' />
+
+        <VerticalSpacer size={"1rem"} />
+
+        <div className={styles['readme']}>
+            <h2>README</h2>
+            <hr />
+            <br />
+            <SkeletonBox width='10rem' height='2rem' />
+
+        </div>
 
     </>
 }

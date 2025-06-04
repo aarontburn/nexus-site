@@ -68,7 +68,7 @@ export interface RemoteModuleInfoJSON {
 
 
 export interface UserLikedInfo {
-    _id: ObjectId;
+    _id: string;
     "user-id": string;
     "module-id": string;
     "liked-at": Date;
@@ -77,7 +77,7 @@ export interface UserLikedInfo {
 
 
 export interface UserBookmarkInfo {
-    _id: ObjectId;
+    _id: string;
     "user-id": string;
     "module-id": string;
     "bookmarked-at": Date;

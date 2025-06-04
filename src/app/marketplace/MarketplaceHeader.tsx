@@ -18,7 +18,7 @@ export default function MarketplaceHeader() {
                 session.status === "authenticated"
                     ? <>
                         <p className={styles["username"]}>Signed in as {session.data.user.name}</p>
-                        <a href="/marketplace/account">Modules</a>
+                        <a href="/marketplace/account">Account</a>
                     </>
                     : <a href="/marketplace/login">Login/Register</a>
             }

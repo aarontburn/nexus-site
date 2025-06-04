@@ -29,71 +29,93 @@
 .extra-info {
     width: 100%;
     font-size: 1rem;
-    color: gray
-}
+    color: gray;
 
-
-
-.extra-info > p > span {
-    margin-right: 1rem;
-    width: 10rem;
-    display: inline-block;
-}
-
-.like-button {
-    margin: 0;
-    margin-left: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    border-radius: 5px;
-    padding: 0;
-    justify-content: center;
-    width: 5rem;
-    background-color: #2d4677;
-    color: white;
-
-    &:hover {
-        color: var(--accent-color);
+    &>p>span {
+        margin-right: 1rem;
+        width: 10rem;
+        display: inline-block;
     }
 }
 
-.like-container > span {
-    margin-right: 1rem;
-    width: 10rem;
+
+.bookmark-button,
+.like-button {
+    margin: 0;
+    margin-left: 1rem;
+    padding: 0;
+    width: 5.5rem;
+
+    cursor: pointer;
+    transition: 0.2s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d4677;
+
+    color: white;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    &:hover {
+        border-color: var(--accent-color);
+    }
+
+    &>p {
+        margin-right: 0.5rem;
+    }
+
+    & .like-logo {
+        margin: 0 !important;
+        mask-image: url("../../assets/thumbs-up.svg");
+        display: inline-block;
+        padding: 0;
+    }
+
+    & .bookmark-logo {
+        margin: 0 !important;
+        mask-image: url("../../assets/bookmark.svg");
+        display: inline-block;
+        padding: 0;
+    }
 }
-.like-button > p {
-    margin-right: 0.5rem;
+
+
+.bookmark-button {
+    background-color: rgb(147, 60, 6);
 }
+
 
 .like-container {
     display: flex;
+
+    &>span {
+        margin-right: 1rem;
+        width: 10rem;
+    }
 }
 
-.like-logo {
-    margin: 0 !important;
-    mask-image: url("../../assets/thumbs-up.svg");
-    display: inline-block;
-    padding: 0;
-}
+
 
 
 .tag-container {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
-}
-
-.tag-container p {
-    background-color: var(--background-light-2);
-    border-radius: 5px;
-    padding: 0.075rem 0.5rem;
-    font-size: 0.85rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
     margin-top: 0.5rem;
-    height: 1.2rem;
+
+    & p {
+        background-color: var(--background-light-2);
+        border-radius: 5px;
+        padding: 0.075rem 0.5rem;
+        font-size: 0.85rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 1.2rem;
+    }
+
 }
 
 
@@ -112,12 +134,12 @@
     height: 100%;
     background-color: var(--background);
     border-radius: 5px;
-}
 
-.readme>* {
-    width: 100%;
-}
+    &>* {
+        width: 100%;
 
+    }
+}
 
 
 
@@ -129,14 +151,14 @@
     margin-left: 1em;
     margin-right: 2em;
     position: relative;
-}
 
-.image-container p {
-    width: 128px;
-    font-size: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    & p {
+        width: 128px;
+        font-size: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .module-link {
@@ -190,16 +212,18 @@
 
 #button-container {
     display: flex;
+
+    &>.module-link {
+        margin-right: 5px;
+    }
 }
 
-#button-container>.module-link {
-    margin-right: 5px;
-}
 
 .shimmer {
     color: grey;
     mask: linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/350% 100%;
     animation: shimmer 2.5s infinite;
+
 }
 
 @keyframes shimmer {
