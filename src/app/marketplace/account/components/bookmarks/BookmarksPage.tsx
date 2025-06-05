@@ -50,10 +50,6 @@ function Module({ moduleInfo }: ModuleInfoProps) {
             <h4 className={styles["clickable-text"]}>{moduleInfo.author}</h4>
             {moduleInfo.description && <h4 className={styles['desc']}>{moduleInfo.description}</h4>}
 
-            <div className={styles["tag-container"]}>
-                {moduleInfo.tags && moduleInfo.tags.slice(0, 3).map(tag => <p className={styles["clickable-text"]} key={tag}>{tag}</p>)}
-            </div>
-
             <VerticalSpacer size="0.25rem" />
 
 

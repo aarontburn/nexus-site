@@ -54,7 +54,6 @@ export async function onModuleDownloaded(_id: string) {
 export async function getModule(moduleObjectID: string): Promise<[ModuleInfo | undefined, Promise<ModuleInfo | undefined>]> {
     const collections: Collections = await connectToDatabase();
 
-
     return [moduleCache.get(moduleObjectID), new Promise(async (resolve) => {
         const result: WithId<ModuleInfo> | undefined = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(moduleObjectID) as any }) ?? undefined;
         if (!result) {
@@ -70,13 +69,17 @@ export async function getModule(moduleObjectID: string): Promise<[ModuleInfo | u
 
 
 
-export async function getModulesFromUser(userID: string): Promise<ModuleInfo[] | undefined> {
+export async function getUploadedModules(): Promise<ModuleInfo[] | string> {
+    const session: Session | null = await getServerSession(authOptions);
+
+    if (!session?.user.id) {
+        return "Not authorized.";
+    }
+
     const collections: Collections = await connectToDatabase();
 
-    const result: (WithId<ModuleInfo>[]) | undefined = await collections.MODULE_COLLECTION.find({ "author-id": userID }).toArray();
-    if (!result) {
-        return undefined;
-    }
+    const result: WithId<ModuleInfo>[] = await collections.MODULE_COLLECTION.find({ "author-id": session.user.id }).toArray();
+
     result?.forEach(info => {
         info._id = `${info._id}`;
         moduleCache.set(`${info._id}`, info);

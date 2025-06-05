@@ -37,7 +37,7 @@ interface ModuleInfoProps {
 }
 
 function Module({ moduleInfo }: ModuleInfoProps) {
-    const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`
+    const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`;
     return <div className={styles["module"]}>
         <div className={styles["module-image-container"] + " " + styles["clickable"]}>
             {moduleInfo.image
@@ -50,10 +50,6 @@ function Module({ moduleInfo }: ModuleInfoProps) {
             <h4 className={styles["clickable-text"]}>{moduleInfo.author}</h4>
             {moduleInfo.description && <h4 className={styles['desc']}>{moduleInfo.description}</h4>}
 
-            <div className={styles["tag-container"]}>
-                {moduleInfo.tags && moduleInfo.tags.slice(0, 3).map(tag => <p className={styles["clickable-text"]} key={tag}>{tag}</p>)}
-            </div>
-
             <VerticalSpacer size="0.25rem" />
 
 
@@ -65,7 +61,6 @@ function Module({ moduleInfo }: ModuleInfoProps) {
                 <div className={styles["info-right"]}>
                     <p>Liked on {moduleInfo.likeInfo["liked-at"].toLocaleString()}</p>
                 </div>
-
             </div>
 
 
