@@ -5,12 +5,13 @@ import { HorizontalSpacer, Spinner, VerticalSpacer } from "../../../../component
 import { getAbbreviation } from "../../../../utils/utils";
 import { ModuleInfo } from "../../../types";
 import styles from "./styles.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import EditModuleScreen from "./EditModule";
 
 
 
 
-interface ModuleListScreenProps {
+interface UploadsPageProps {
     session: SessionContextValue;
     uploads: ModuleInfo[] | undefined;
     setNotificationText: (message: string) => void;
@@ -21,7 +22,38 @@ const sort = (a: ModuleInfo, b: ModuleInfo) => {
 }
 
 
-export default function UploadsPage(props: ModuleListScreenProps) {
+export default function UploadsPage(props: UploadsPageProps) {
+
+
+    const [editTarget, setEditTarget] = useState<ModuleInfo | null | undefined>(undefined);
+    const editModule = useCallback((module: ModuleInfo | null | undefined) => {
+        setEditTarget(module);
+    }, [])
+
+
+    return <>
+        {editTarget !== undefined
+            ? <EditModuleScreen
+                setNotificationText={props.setNotificationText}
+                editModule={editModule} editTarget={editTarget}
+                session={props.session} />
+                
+            : <ModuleListScreen
+                uploads={props.uploads}
+                setNotificationText={props.setNotificationText}
+                editModule={editModule} />
+        }
+    </>
+}
+
+
+interface ModuleListScreenProps {
+    uploads?: ModuleInfo[] | undefined;
+    setNotificationText: (s: string) => void;
+    editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
+}
+
+function ModuleListScreen(props: ModuleListScreenProps) {
     return <>
         <div className={styles.header}>
             <h2>Your Modules</h2>
@@ -43,7 +75,7 @@ export default function UploadsPage(props: ModuleListScreenProps) {
                         {
                             props.uploads?.sort(sort).map((module, index) =>
                                 <React.Fragment key={index}>
-                                    <Module moduleInfo={module} />
+                                    <Module moduleInfo={module} editModule={props.editModule} />
                                 </React.Fragment>
                             )
                         }
@@ -57,19 +89,19 @@ export default function UploadsPage(props: ModuleListScreenProps) {
                     <VerticalSpacer size={"1rem"} />
 
                 </>
-
         }
     </>
+
 }
 
 interface ModuleProps {
     moduleInfo: ModuleInfo;
     // deleteModule: (moduleInfo: ModuleInfo) => void;
-    // editModule: (module: ModuleInfo | null | undefined) => void;
+    editModule: (module: ModuleInfo | null | undefined) => void;
 }
 
 
-function Module({ moduleInfo }: ModuleProps) {
+function Module(props: ModuleProps) {
     const [deleteButtonPressCount, setDeleteButtonPressCount] = useState<number>(0);
     const [deleteDebounce, setDeleteDebounce] = useState<NodeJS.Timeout | undefined>(undefined);
 
@@ -101,24 +133,24 @@ function Module({ moduleInfo }: ModuleProps) {
                 : <>
                     <div className={styles["title"]}>
                         <div className={styles["image"]}>
-                            {moduleInfo.image
-                                ? <img src={moduleInfo.image} alt="Module Icon" />
-                                : <p className="module-abbreviation">{getAbbreviation(moduleInfo.name)}</p>}
+                            {props.moduleInfo.image
+                                ? <img src={props.moduleInfo.image} alt="Module Icon" />
+                                : <p className="module-abbreviation">{getAbbreviation(props.moduleInfo.name)}</p>}
                         </div>
                         <div className={styles["module-info"]}>
-                            <h1>{moduleInfo.name}</h1>
-                            <h2>{moduleInfo["module-id"]}</h2>
+                            <h1>{props.moduleInfo.name}</h1>
+                            <h2>{props.moduleInfo["module-id"]}</h2>
                         </div>
                     </div>
 
-                    <VerticalSpacer size={"0.25rem"} />
+                    <VerticalSpacer size={"0.5rem"} />
 
                     <div className={styles["button-container"]}>
-                        <a className={styles["button"]} href={`/marketplace/${moduleInfo["_id"]}`}>
+                        <a className={styles["button"]} href={`/marketplace/${props.moduleInfo["_id"]}`}>
                             View
                         </a>
                         <HorizontalSpacer size="1rem" />
-                        <button className={styles["button"]} onClick={() => { }}>
+                        <button className={styles["button"]} onClick={() => props.editModule(props.moduleInfo)}>
                             Edit
                         </button>
 
@@ -132,11 +164,11 @@ function Module({ moduleInfo }: ModuleProps) {
 
                     <div className={styles["extra-info-wrapper"]}>
                         <div className={styles["info-left"]}>
-                            <p className={styles["likes"]}><span></span>{moduleInfo.metadata["like-count"]}</p>
-                            <p className={styles["downloads"]}><span></span>{moduleInfo.metadata["download-count"]}</p>
+                            <p className={styles["likes"]}><span></span>{props.moduleInfo.metadata["like-count"]}</p>
+                            <p className={styles["downloads"]}><span></span>{props.moduleInfo.metadata["download-count"]}</p>
                         </div>
                         <div className={styles["info-right"]}>
-                            <p>Modified on {moduleInfo.metadata["date-modified"].toLocaleString()}</p>
+                            <p>Modified on {props.moduleInfo.metadata["date-modified"].toLocaleString()}</p>
                         </div>
                     </div>
 

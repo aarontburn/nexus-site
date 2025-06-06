@@ -30,10 +30,6 @@
 }
 
 
-.aligned {
-    display: flex;
-    align-items: center;
-}
 
 .account-body {
     padding: 1rem;
@@ -46,61 +42,8 @@
 
 
 
-.edit-screen {
-    width: calc(100% - 1rem);
-}
 
 
-
-.edit-field * {
-    font-size: 1rem;
-}
-
-.edit-field input {
-    outline: none;
-    padding: 0.25rem;
-    width: 100%;
-
-    background-color: var(--background-light-2);
-    border: 1px solid var(--background-light);
-    transition: 0.2s;
-    border-radius: 5px;
-
-    &:focus {
-        border: 1px solid var(--accent-color);
-    }
-}
-
-.upload-or-text span:first-child {
-    margin-left: 0;
-    margin-right: 1rem;
-}
-
-.upload-or-text span {
-    margin-left: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-
-    &:hover {
-        color: var(--accent-color);
-    }
-}
-
-
-.edit-fields textarea {
-    height: 20rem;
-    width: calc(100% - 1rem);
-    outline: none;
-    transition: 0.2s;
-    border: 1px solid var(--background-light-2);
-    padding: 0.5rem;
-    background-color: var(--background-light);
-    border-radius: 5px;
-
-    &:focus {
-        border: 1px solid var(--accent-color);
-    }
-}
 
 .account-body .button {
     display: flex;

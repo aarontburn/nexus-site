@@ -1,15 +1,16 @@
-import styles from "./account.module.css"
+import styles from "./edit.module.css";
+import accountStyles from "../../account.module.css"
 
 import "./tag.css"
 
 import { SessionContextValue } from "next-auth/react";
 import { Ref, RefObject, useEffect, useRef, useState } from "react";
-import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../components/Components";
-import { imageToBase64, readUploadedText } from "../../utils/utils";
-import { getGitHubModuleInfo, Response } from "../server/github-handler";
+import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../../../components/Components";
+import { imageToBase64, readUploadedText } from "../../../../utils/utils";
+import { getGitHubModuleInfo, Response } from "../../../server/github-handler";
 import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
-import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../types";
-import { insertModule, editRemoteModule } from "../server/module-database/modules";
+import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../../../types";
+import { insertModule, editRemoteModule } from "../../../server/module-database/modules";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;
@@ -17,8 +18,6 @@ interface EditModuleScreenProps {
     editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
     setNotificationText: (message: string) => void;
 }
-
-
 
 
 
@@ -49,7 +48,6 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
 
                     setIsLoading(false);
                     if (response.type === "success") {
-
                         if (response.body["author-id"] === undefined) {
                             setNotificationText("module-info.json doesn't contain 'author-id'. Make sure this is set to your user ID in the latest release.");
                         } else if (response.body["author-id"] !== session.data?.user.id) {
@@ -171,24 +169,9 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
     return <div className={styles["edit-screen"]}>
 
         <div className={styles["aligned"]}>
-            <button className={styles["button"]} onClick={() => editModule(undefined)}>
+            <button className={accountStyles["button"]} onClick={() => editModule(undefined)}>
                 {'<'} Back
             </button>
-
-            < HorizontalSpacer size="2rem" />
-
-            <p>User ID: <span
-                className={styles["user-id"]}
-                onClick={() => {
-                    if (session.data?.user?.id) {
-                        navigator.clipboard.writeText(session.data.user.id);
-                    }
-                    setNotificationText("Copied user ID to clipboard.");
-                }}
-            >
-                {session.data?.user.id}
-            </span>
-            </p>
 
             < HorizontalSpacer />
 
@@ -219,7 +202,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
             </div>
             <VerticalSpacer size="1rem" />
 
-            <button className={styles["button"]} onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
+            <button className={accountStyles["button"]} onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
 
             <VerticalSpacer size={"1rem"} />
             {isLoading && <Spinner />}
@@ -283,7 +266,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                         onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
                     />
 
-                    <button className={styles["button"]} onClick={() => { imageUploadRef.current?.click() }}>
+                    <button className={accountStyles["button"]} onClick={() => { imageUploadRef.current?.click() }}>
                         Upload
                     </button>
                     <HorizontalSpacer size={"1rem"} />
@@ -315,7 +298,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                             />
 
                             <div className={styles["aligned"]}>
-                                <button className={styles["button"]} onClick={() => { readmeUploadRef.current?.click() }}>
+                                <button className={accountStyles["button"]} onClick={() => { readmeUploadRef.current?.click() }}>
                                     Upload
                                 </button>
                                 <HorizontalSpacer size={"1rem"} />
@@ -329,7 +312,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                 <VerticalSpacer size={"2rem"} />
 
                 {isPublishing ? <Spinner /> :
-                    <button className={styles["button"]} onClick={() => {
+                    <button className={accountStyles["button"]} onClick={() => {
                         onPublishPressed();
                     }}
                         disabled={isPublishing} >
