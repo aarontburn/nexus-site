@@ -80,10 +80,11 @@ export async function getUploadedModules(): Promise<ModuleInfo[] | string> {
 
     const result: WithId<ModuleInfo>[] = await collections.MODULE_COLLECTION.find({ "author-id": session.user.id }).toArray();
 
-    result?.forEach(info => {
-        info._id = `${info._id}`;
-        moduleCache.set(`${info._id}`, info);
-    })
+    await Promise.allSettled(result.map(async moduleInfo => {
+        moduleInfo._id = `${moduleInfo._id}`;
+        moduleInfo.metadata["like-count"] = await getNumberOfLikesForModule(`${moduleInfo._id}`);
+        moduleCache.set(`${moduleInfo._id}`, moduleInfo);
+    }));
     return result;
 }
 
