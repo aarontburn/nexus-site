@@ -132,6 +132,15 @@
 }
 
 
+@media (max-width: 768px) {
+    .username {
+        display: none;
+    }
+
+    .title-nexus {
+        display: none;
+    }
+}
 
 
 
@@ -318,7 +327,7 @@
     .module {
         width: 100% !important;
         margin-bottom: 1rem;
-        
+
     }
 
 

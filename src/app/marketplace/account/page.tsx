@@ -126,7 +126,7 @@ export default function AccountPage() {
                             key={tabName}
                             onClick={() => onTabPressed(TABS[tabName])}
                         >
-                            {selectedTab === TABS[tabName] ? "> " : " "}{TABS[tabName]}
+                            {TABS[tabName]}
                         </p>
                     )}
                 </div>

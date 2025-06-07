@@ -10,7 +10,7 @@ export default function MarketplaceHeader() {
         <div className={styles["mp-header-content"]}>
 
             <h2 className={styles["clickable"]}>
-                <a href="/marketplace">Nexus Marketplace</a>
+                <a href="/marketplace"><span className={styles["title-nexus"]}>Nexus </span>Marketplace</a>
             </h2>
             <HorizontalSpacer />
 
