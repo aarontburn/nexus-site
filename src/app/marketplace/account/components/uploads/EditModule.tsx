@@ -1,5 +1,6 @@
 import styles from "./edit.module.css";
-import accountStyles from "../../account.module.css"
+import accountStyles from "../../account.module.css";
+import globalStyles from "../../globals.module.css";
 
 import "./tag.css"
 
@@ -172,7 +173,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
     return <div className={styles["edit-screen"]}>
 
         <div className={styles["aligned"]}>
-            <button className={accountStyles["button"]} onClick={() => editModule(undefined)}>
+            <button className={globalStyles["button"]} onClick={() => editModule(undefined)}>
                 {'<'} Back
             </button>
 
@@ -191,10 +192,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
         </div>
 
 
-
-
-
-        <div className={styles["edit-fields"]}>
+        <div className={styles["edit-body"]}>
 
             <VerticalSpacer size={"1rem"} />
 
@@ -205,7 +203,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             </div>
             <VerticalSpacer size="1rem" />
 
-            <button className={accountStyles["button"]} onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
+            <button className={globalStyles["button"]} onClick={() => checkGitHubRepo(githubRepoInputRef.current?.value)}>Check</button>
 
             <VerticalSpacer size={"1rem"} />
             {isLoading && <Spinner />}
@@ -269,7 +267,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                         onChange={(event) => setUploadedImage((event.target.files ?? [])[0])}
                     />
 
-                    <button className={accountStyles["button"]} onClick={() => { imageUploadRef.current?.click() }}>
+                    <button className={globalStyles["button"]} onClick={() => { imageUploadRef.current?.click() }}>
                         Upload
                     </button>
                     <HorizontalSpacer size={"1rem"} />
@@ -301,7 +299,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                             />
 
                             <div className={styles["aligned"]}>
-                                <button className={accountStyles["button"]} onClick={() => { readmeUploadRef.current?.click() }}>
+                                <button className={globalStyles["button"]} onClick={() => { readmeUploadRef.current?.click() }}>
                                     Upload
                                 </button>
                                 <HorizontalSpacer size={"1rem"} />
@@ -315,7 +313,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                 <VerticalSpacer size={"2rem"} />
 
                 {isPublishing ? <Spinner /> :
-                    <button className={accountStyles["button"]} onClick={() => {
+                    <button className={globalStyles["button"]} onClick={() => {
                         onPublishPressed();
                     }}
                         disabled={isPublishing} >

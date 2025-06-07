@@ -3,6 +3,12 @@
     flex-wrap: wrap;
     gap: 1rem;
     justify-content: center;
+
+    @media (width < 768px) {
+        display: block;
+        margin-right: 1rem;
+    }
+
 }
 
 .module {
@@ -13,6 +19,12 @@
     width: 25rem;
     position: relative;
     height: 10rem;
+
+    @media (width < 768px) {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
 
     .spinner-container {
         display: flex;

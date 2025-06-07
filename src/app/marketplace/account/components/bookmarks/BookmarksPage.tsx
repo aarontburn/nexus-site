@@ -80,6 +80,8 @@ function Module({ moduleInfo, removeBookmark }: ModuleInfoProps) {
             <div className={styles["tag-container"]}>
                 {moduleInfo.tags?.slice(0, 3).map(tag => <p key={tag}>{tag}</p>)}
             </div>
+            <VerticalSpacer size={"0.5rem"} />
+
 
             <div className={styles["button-container"]}>
                 <HorizontalSpacer />

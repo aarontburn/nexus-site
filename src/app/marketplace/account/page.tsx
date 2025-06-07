@@ -118,10 +118,7 @@ export default function AccountPage() {
         <VerticalSpacer size={"4rem"} />
 
         <div className={styles["account-body"]}>
-
             <div className={styles.left}>
-
-
                 <div className={styles["sidebar-buttons"]}>
                     {Object.keys(TABS).map(tabName =>
                         <p

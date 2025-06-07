@@ -30,6 +30,11 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
+
+    @media (width < 768px) {
+        display: block;
+        margin-right: 1rem;
+    }
 }
 
 
@@ -39,8 +44,30 @@
     border: 1px solid var(--background-light-2);
     border-radius: 5px;
     width: 25rem;
-    min-height: 8.5rem;
+    height: 10rem;
     position: relative;
+
+    @media (width < 768px) {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .tag-container {
+        display: flex;
+        gap: 0.5rem;
+
+        p {
+            background-color: var(--background-light-1);
+            border-radius: 5px;
+            padding: 0.075rem 0.5rem;
+            font-size: 0.85rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            color: gray
+        }
+    }
+
 
     .title {
         display: flex;
