@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../../api/authOptions";
 import { UserBookmarkInfo, ModuleInfo } from "../../types";
 import { Collections, connectToDatabase } from "./connect";
+import { getNumberOfLikesForModule } from "./likes";
 
 
 export async function isModuleBookmarked(moduleObjectID: string): Promise<boolean> {
@@ -40,8 +41,8 @@ export async function removeBookmarkedModule(moduleObjectID: string): Promise<st
     }) ?? undefined;
 
     if (!result) {
-        console.error(`Error removing bookmark from from ${moduleObjectID}; entry doesn't exist.`)
-        return `Error removing bookmark from ${moduleObjectID}; entry doesn't exist.`;
+        console.warn(`Error removing bookmark from from ${moduleObjectID}; entry doesn't exist.`);
+        return undefined;
     }
 
     await collections.BOOKMARK_COLLECTION.deleteOne({ _id: result._id });
@@ -64,8 +65,8 @@ export async function bookmarkModule(moduleObjectID: string): Promise<string | u
     }) ?? undefined;
 
     if (result) {
-        console.error(`Error bookmarking ${moduleObjectID}; already liked.`)
-        return `Error liking ${moduleObjectID}; already liked.`;
+        console.warn(`Error bookmarking ${moduleObjectID}; already liked.`)
+        return undefined;
     }
 
     await collections.BOOKMARK_COLLECTION.insertOne({
@@ -111,13 +112,14 @@ export async function getBookmarkedModules(): Promise<(ModuleInfo & { bookmarkIn
     const result: WithId<UserBookmarkInfo>[] = await collections.BOOKMARK_COLLECTION.find({ "user-id": session.user.id }).toArray();
 
     const bookmarkedModules: (ModuleInfo & { bookmarkInfo: UserBookmarkInfo })[] = [];
-    for (const bookmarkInfo of result) {
+    await Promise.allSettled(result.map(async bookmarkInfo => {
         const module: WithId<ModuleInfo> | null = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(bookmarkInfo['module-id']) as any });
         if (module) {
             module._id = `${module._id}`;
+            module.metadata["like-count"] = await getNumberOfLikesForModule(`${module._id}`);
             bookmarkInfo._id = `${bookmarkInfo._id}`;
             bookmarkedModules.push({ ...module, bookmarkInfo: bookmarkInfo });
         }
-    }
+    }))
     return bookmarkedModules;
 }

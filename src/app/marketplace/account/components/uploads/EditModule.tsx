@@ -17,11 +17,13 @@ interface EditModuleScreenProps {
     editTarget: ModuleInfo | null;
     editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
     setNotificationText: (message: string) => void;
+    triggerRefresh: () => void;
+
 }
 
 
 
-export default function EditModuleScreen({ session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
+export default function EditModuleScreen({ triggerRefresh, session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
     const isNewModule: boolean = editTarget === null;
 
     /* Refs */
@@ -147,6 +149,7 @@ export default function EditModuleScreen({ session, editTarget, editModule, setN
                 }
             })
         }
+        triggerRefresh();
         setIsPublishing(false);
     }
 

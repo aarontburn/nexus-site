@@ -11,7 +11,7 @@ import rehypeRaw from 'rehype-raw';
 import { ModuleInfo } from '../types';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { isModuleLiked, onModuleRemoveLiked, onModuleLiked } from '../server/module-database/likes';
+import { isModuleLiked, removeModuleLike, onModuleLiked } from '../server/module-database/likes';
 import { getModule, onModuleDownloaded } from '../server/module-database/modules';
 import { bookmarkModule, isModuleBookmarked, removeBookmarkedModule } from '../server/module-database/bookmarks';
 
@@ -138,7 +138,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 <div className={styles['like-button']} onClick={() => {
                     if (session.status === "authenticated") {
                         if (isModuleLikedStatus) {
-                            onModuleRemoveLiked(moduleInfo._id)
+                            removeModuleLike(moduleInfo._id)
                                 .then(result => {
                                     if (result === undefined) {
                                         setIsModuleLiked(false);

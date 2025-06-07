@@ -39,7 +39,7 @@ export async function isModuleLiked(moduleObjectID: string): Promise<boolean> {
 }
 
 
-export async function onModuleRemoveLiked(moduleObjectID: string): Promise<string | undefined> {
+export async function removeModuleLike(moduleObjectID: string): Promise<string | undefined> {
     const session: Session | null = await getServerSession(authOptions);
 
     if (!session?.user.id) {
@@ -54,8 +54,8 @@ export async function onModuleRemoveLiked(moduleObjectID: string): Promise<strin
     }) ?? undefined;
 
     if (!result) {
-        console.error(`Error removing like from ${moduleObjectID}; entry doesn't exist.`)
-        return `Error removing like from ${moduleObjectID}; entry doesn't exist.`;
+        console.warn(`Error removing like from ${moduleObjectID}; entry doesn't exist.`)
+        return undefined;
     }
 
     await collections.LIKE_COLLECTION.deleteOne({ _id: result._id });
@@ -78,8 +78,8 @@ export async function onModuleLiked(moduleObjectID: string): Promise<string | un
     }) ?? undefined;
 
     if (result) {
-        console.error(`Error liking ${moduleObjectID}; already liked.`)
-        return `Error liking ${moduleObjectID}; already liked.`;
+        console.warn(`Error liking ${moduleObjectID}; already liked.`)
+        return undefined;
     }
 
     await collections.LIKE_COLLECTION.insertOne({
@@ -117,10 +117,10 @@ export async function addModuleToBookmark(moduleObjectID: string): Promise<strin
 
 export async function getNumberOfLikesForModule(moduleObjectID: string): Promise<number> {
     if (likeMap && likeMap[moduleObjectID] !== undefined) {
-        return likeMap[moduleObjectID] ?? 0
+        return likeMap[moduleObjectID] ?? 0;
     }
     await buildLikeMap();
-    return likeMap![moduleObjectID] ?? 0
+    return likeMap![moduleObjectID] ?? 0;
 }
 
 
@@ -134,13 +134,16 @@ export async function getLikedModulesForUser(): Promise<(ModuleInfo & { likeInfo
     const result: WithId<UserLikedInfo>[] = await collections.LIKE_COLLECTION.find({ "user-id": session.user.id }).toArray();
 
     const likedModules: (ModuleInfo & { likeInfo: UserLikedInfo })[] = [];
-    for (const likeInfo of result) {
+
+    await Promise.allSettled(result.map(async likeInfo => {
         const module: WithId<ModuleInfo> | null = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(likeInfo['module-id']) as any });
         if (module) {
             module._id = `${module._id}`;
-            likeInfo._id = `${likeInfo._id}`
+            likeInfo._id = `${likeInfo._id}`;
+            module.metadata["like-count"] = await getNumberOfLikesForModule(`${module._id}`);
+
             likedModules.push({...module, likeInfo: likeInfo});
         }
-    }
+    }))
     return likedModules;
 }

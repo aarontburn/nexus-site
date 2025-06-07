@@ -18,7 +18,7 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
         const result: WithId<ModuleInfo>[] | undefined = await collections.MODULE_COLLECTION.find({}).toArray();
         await Promise.all(result?.map(async moduleInfo => {
             moduleInfo._id = `${moduleInfo._id}`;
-            moduleInfo.metadata['like-count'] = await getNumberOfLikesForModule(moduleInfo._id)
+            moduleInfo.metadata['like-count'] = await getNumberOfLikesForModule(moduleInfo._id);
             moduleCache.set(`${moduleInfo._id}`, moduleInfo);
         }))
         resolve(result);

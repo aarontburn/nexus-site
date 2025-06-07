@@ -22,16 +22,6 @@ const SORT_OPTIONS: { [value: string]: string } = {
 }
 
 const sortFunction = (selectedSort: string, a: ModuleInfo, b: ModuleInfo) => {
-    if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
-        console.warn(`${a["module-id"]} has no date set.`);
-        return 0;
-    }
-
-    if (!a.metadata["date-modified"] || !a.metadata["date-uploaded"]) {
-        console.warn(`${b["module-id"]} has no date set.`)
-        return 1;
-    }
-
     switch (selectedSort) {
         case "name-descend": {
             return a.name.localeCompare(b.name);
@@ -81,15 +71,15 @@ const sortFunction = (selectedSort: string, a: ModuleInfo, b: ModuleInfo) => {
             }
             return difference;
         }
-        case "downloads-descend": {
-            const difference = b.metadata["download-count"] - a.metadata["download-count"];
+        case "downloads-descend": { // most to least
+            const difference: number = b.metadata["download-count"] - a.metadata["download-count"];
             if (difference === 0) {
                 return a.name.localeCompare(b.name);
             }
             return difference;
         }
-        case "downloads-ascend": {
-            const difference = a.metadata["download-count"] - b.metadata["download-count"];
+        case "downloads-ascend": { // least to most
+            const difference: number = a.metadata["download-count"] - b.metadata["download-count"];
             if (difference === 0) {
                 return a.name.localeCompare(b.name);
             }
@@ -184,10 +174,6 @@ export default function NexusMarket() {
             isLoading ? <div className={styles["centered"]}><Spinner /></div> :
 
                 <div className={styles["body"]}>
-
-
-
-
                     <h2>All Modules</h2>
 
                     <div className={styles["search-container"]}>

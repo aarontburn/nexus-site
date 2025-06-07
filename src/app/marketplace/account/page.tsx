@@ -1,18 +1,19 @@
 "use client"
 
-import { SessionContextValue, useSession } from "next-auth/react";
-import { HorizontalSpacer, Spinner, VerticalSpacer } from "../../components/Components";
+import { useSession } from "next-auth/react";
+import { VerticalSpacer } from "../../components/Components";
 import MarketplaceHeader from "../MarketplaceHeader";
-import styles from "./account.module.css"
+import styles from "./account.module.css";
+import globalStyles from "./globals.module.css"
+
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import { getAbbreviation } from "../../utils/utils";
 import { ModuleInfo, UserBookmarkInfo, UserLikedInfo } from "../types";
 import LikedPage from "./components/likes/LikedPage";
 import BookmarksPage from "./components/bookmarks/BookmarksPage";
 import { getLikedModulesForUser } from "../server/module-database/likes";
-import { getUploadedModules, deleteRemoteModule } from "../server/module-database/modules";
+import { getUploadedModules } from "../server/module-database/modules";
 import { getBookmarkedModules } from "../server/module-database/bookmarks";
 import UploadsPage from "./components/uploads/UploadsPage";
 
@@ -69,8 +70,14 @@ export default function AccountPage() {
     const [likedModules, setLikedModules] = useState<(ModuleInfo & { likeInfo: UserLikedInfo })[] | undefined>(undefined);
     const [bookmarkedModules, setBookmarkedModules] = useState<(ModuleInfo & { bookmarkInfo: UserBookmarkInfo })[] | undefined>(undefined);
     const [uploadedModules, setUploadedModules] = useState<ModuleInfo[] | undefined>(undefined);
+    const [refreshModules, triggerModuleRefresh] = useState<number>(0);
+
 
     useEffect(() => {
+        setLikedModules(undefined)
+        setBookmarkedModules(undefined)
+        setUploadedModules(undefined)
+
         getLikedModulesForUser().then(result => {
             if (typeof result === "string") {
                 notificationHelper(result);
@@ -96,15 +103,10 @@ export default function AccountPage() {
         });
 
 
-    }, [])
+    }, [refreshModules])
 
     const [selectedTab, setSelectedTab] = useState<string>(Object.values(TABS)[0])
     const [notificationText, setNotificationText] = useState<{ text: string, id: number }>({ text: '', id: 0 });
-    const [editTarget, setEditTarget] = useState<ModuleInfo | null | undefined>(undefined);
-
-    const editModule = useCallback((module: ModuleInfo | null | undefined) => {
-        setEditTarget(module);
-    }, [])
 
 
     const onTabPressed = (tabName: string) => {
@@ -144,8 +146,18 @@ export default function AccountPage() {
                     <p>{session.data?.user.email}</p>
                     <VerticalSpacer size="1rem" />
 
-                    <p className={styles["user-info-section"]}>User ID</p>
-                    <p className={styles["user-id"]}>{session.data?.user.id}</p>
+                    <p className={styles["user-info-section"]}>User ID  <span className={`${globalStyles["icon"]} ${styles['copy-icon']}`}></span></p>
+                    <p
+                        className={styles["user-id"]}
+                        onClick={() => {
+                            if (session.data?.user.id) {
+                                navigator.clipboard.writeText(session.data.user.id);
+                                notificationHelper("Copied user ID to clipboard.");
+                            }
+                        }}
+                    >
+                        {session.data?.user.id}
+                    </p>
                 </div>
                 <VerticalSpacer size="1rem" />
 
@@ -155,17 +167,31 @@ export default function AccountPage() {
             <div className={styles.right}>
                 {(() => {
                     switch (selectedTab) {
-                        case TABS.LIKES: return <LikedPage likedModules={likedModules} setNotificationText={notificationHelper} session={session} />
-                        case TABS.SAVED: return <BookmarksPage bookmarks={bookmarkedModules} setNotificationText={notificationHelper} session={session} />
-                        case TABS.UPLOAD: return <UploadsPage uploads={uploadedModules} setNotificationText={notificationHelper} session={session} />
+                        case TABS.LIKES: return <LikedPage
+                            likedModules={likedModules}
+                            setNotificationText={notificationHelper}
+                            session={session}
+                            triggerRefresh={() => triggerModuleRefresh(prev => prev + 1)}
+
+                        />
+
+                        case TABS.SAVED: return <BookmarksPage
+                            bookmarks={bookmarkedModules}
+                            setNotificationText={notificationHelper}
+                            session={session}
+                            triggerRefresh={() => triggerModuleRefresh(prev => prev + 1)}
+
+                        />
+
+                        case TABS.UPLOAD: return <UploadsPage
+                            uploads={uploadedModules}
+                            setNotificationText={notificationHelper}
+                            session={session}
+                            triggerRefresh={() => triggerModuleRefresh(prev => prev + 1)}
+                        />
                         default: return undefined;
                     }
                 })()}
-
-                {/* {editTarget !== undefined
-                    ? <EditModuleScreen setNotificationText={notificationHelper} editModule={editModule} editTarget={editTarget} session={session} />
-                    : <ModuleListScreen setNotificationText={notificationHelper} editModule={editModule} session={session} />
-                } */}
 
             </div>
         </div>

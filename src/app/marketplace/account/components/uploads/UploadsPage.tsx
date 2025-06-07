@@ -7,6 +7,7 @@ import { ModuleInfo } from "../../../types";
 import styles from "./styles.module.css";
 import React, { useState, useEffect, useCallback } from "react";
 import EditModuleScreen from "./EditModule";
+import { deleteRemoteModule } from "../../../server/module-database/modules";
 
 
 
@@ -15,6 +16,7 @@ interface UploadsPageProps {
     session: SessionContextValue;
     uploads: ModuleInfo[] | undefined;
     setNotificationText: (message: string) => void;
+    triggerRefresh: () => void;
 }
 
 const sort = (a: ModuleInfo, b: ModuleInfo) => {
@@ -23,8 +25,6 @@ const sort = (a: ModuleInfo, b: ModuleInfo) => {
 
 
 export default function UploadsPage(props: UploadsPageProps) {
-
-
     const [editTarget, setEditTarget] = useState<ModuleInfo | null | undefined>(undefined);
     const editModule = useCallback((module: ModuleInfo | null | undefined) => {
         setEditTarget(module);
@@ -34,11 +34,13 @@ export default function UploadsPage(props: UploadsPageProps) {
     return <>
         {editTarget !== undefined
             ? <EditModuleScreen
+                triggerRefresh={props.triggerRefresh}
                 setNotificationText={props.setNotificationText}
                 editModule={editModule} editTarget={editTarget}
                 session={props.session} />
-                
+
             : <ModuleListScreen
+                triggerRefresh={props.triggerRefresh}
                 uploads={props.uploads}
                 setNotificationText={props.setNotificationText}
                 editModule={editModule} />
@@ -51,14 +53,27 @@ interface ModuleListScreenProps {
     uploads?: ModuleInfo[] | undefined;
     setNotificationText: (s: string) => void;
     editModule: (moduleInfo: ModuleInfo | null | undefined) => void;
+    triggerRefresh: () => void;
 }
 
 function ModuleListScreen(props: ModuleListScreenProps) {
+    const deleteModule = (moduleInfo: ModuleInfo) => {
+        deleteRemoteModule(moduleInfo).then((result: string | undefined) => {
+            if (result === undefined) {
+                props.setNotificationText(`Successfully deleted ${moduleInfo["module-id"]}`);
+                props.triggerRefresh();
+            } else {
+                props.setNotificationText(`Could not delete ${moduleInfo["module-id"]}; ${result}`);
+            }
+        })
+    }
+
+
     return <>
         <div className={styles.header}>
             <h2>Your Modules</h2>
             <HorizontalSpacer />
-            <button className={styles["button"]} onClick={() => { }}>
+            <button className={styles["button"]} onClick={() => props.editModule(null)}>
                 + Upload Module
             </button>
             <HorizontalSpacer size="1rem" />
@@ -75,7 +90,7 @@ function ModuleListScreen(props: ModuleListScreenProps) {
                         {
                             props.uploads?.sort(sort).map((module, index) =>
                                 <React.Fragment key={index}>
-                                    <Module moduleInfo={module} editModule={props.editModule} />
+                                    <Module deleteModule={deleteModule} moduleInfo={module} editModule={props.editModule} />
                                 </React.Fragment>
                             )
                         }
@@ -96,7 +111,7 @@ function ModuleListScreen(props: ModuleListScreenProps) {
 
 interface ModuleProps {
     moduleInfo: ModuleInfo;
-    // deleteModule: (moduleInfo: ModuleInfo) => void;
+    deleteModule: (moduleInfo: ModuleInfo) => void;
     editModule: (module: ModuleInfo | null | undefined) => void;
 }
 
@@ -112,7 +127,7 @@ function Module(props: ModuleProps) {
 
         if (deleteButtonPressCount >= 2) {
             setIsLoading(true);
-            // deleteModule(moduleInfo)
+            props.deleteModule(props.moduleInfo);
             return;
         }
 
