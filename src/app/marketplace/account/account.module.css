@@ -32,11 +32,7 @@
     width: 100%;
     display: flex;
 
-
-}
-
-@media (max-width: 768px) {
-    .account-body {
+    @media (width < 768px) {
         flex-direction: column;
 
         .left {
@@ -56,6 +52,9 @@
                 display: none;
             }
         }
+        .right {
+            padding: 0;
+        }
 
         .left,
         .right {
@@ -63,8 +62,9 @@
         }
     }
 
-
 }
+
+
 
 
 

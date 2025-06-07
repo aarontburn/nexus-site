@@ -18,7 +18,7 @@
     border-radius: 5px;
     width: 25rem;
     position: relative;
-    height: 10rem;
+    height: 10.5rem;
 
     @media (width < 768px) {
         width: 100%;
