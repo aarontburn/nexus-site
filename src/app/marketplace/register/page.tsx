@@ -91,7 +91,7 @@ export default function RegisterPage() {
                 <input
                     ref={nameRef}
                     type="text"
-                    placeholder="Name"
+                    placeholder="Username"
                     className={styles["input-field"]}
                     name="name" />
 

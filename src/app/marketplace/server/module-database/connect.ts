@@ -31,8 +31,9 @@ export async function connectToDatabase(): Promise<Collections> {
         }
         client = globalWithMongo._mongoClient;
     } else {
-        // In production mode, it's best to not use a global variable.
-        client = new MongoClient(MONGODB_URI as string);
+        if (!client) {
+            client = new MongoClient(MONGODB_URI as string);
+        }
     }
 
     const database = client.db(DATABASE_NAME);
