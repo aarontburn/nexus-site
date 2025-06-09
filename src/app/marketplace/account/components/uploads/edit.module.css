@@ -44,6 +44,24 @@
             }
         }
 
+
+    }
+
+            .readme-input-area {
+                display: flex;
+                
+                flex-direction: column;
+        }
+
+    .remove-image {
+        cursor: pointer;
+        color: white;
+        margin-left: 0.5rem;
+        transition: 0.2s;
+
+        &:hover {
+            color: var(--accent-color)
+        }
     }
 
     .upload-or-text span:first-child {

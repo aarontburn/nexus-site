@@ -9,12 +9,12 @@ import { ModuleInfo } from "./types";
 import { getAllRemoteModules } from "./server/module-database/modules";
 
 const SORT_OPTIONS: { [value: string]: string } = {
+    "modified-descend": 'Date Modified (New - Old)',
+    "modified-ascend": 'Date Modified (Old - New)',
     "name-descend": 'Name (A - Z)',
     "name-ascend": 'Name (Z  - A)',
     "upload-descend": 'Date Uploaded (New - Old)',
     "upload-ascend": 'Date Uploaded (Old - New)',
-    "modified-descend": 'Date Modified (New - Old)',
-    "modified-ascend": 'Date Modified (Old - New)',
     "like-descend": 'Like Count (Most - Least)',
     "like-ascend": 'Like Count (Least - Most)',
     "downloads-descend": 'Download Count (Most - Least)',
@@ -106,14 +106,12 @@ export default function NexusMarket() {
     useEffect(() => {
         setIsLoading(true)
         getAllRemoteModules().then(([cachedModules, resolvingModules]) => {
-
             setDatabaseModules(cachedModules ?? []);
             setDisplayedModules(cachedModules ?? []);
 
             resolvingModules.then(result => {
                 setDatabaseModules(result ?? []);
                 setDisplayedModules(result ?? []);
-
                 setIsLoading(false);
             });
 
@@ -246,7 +244,7 @@ function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
     return <div className={styles["module"]}>
         <div className={styles["module-image-container"] + " " + styles["clickable"]}>
             {moduleInfo.image
-                ? <a href={modulePageLink}><img src={moduleInfo.image} alt="icon" /></a>
+                ? <a href={modulePageLink}><img src={moduleInfo.image} alt="icon" loading="lazy" /></a>
                 : <a href={modulePageLink} className={styles["module-abbreviation"]}>{getAbbreviation(moduleInfo.name)}</a>}
         </div>
 

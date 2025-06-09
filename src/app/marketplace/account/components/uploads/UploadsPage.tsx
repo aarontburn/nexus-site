@@ -27,7 +27,7 @@ const sort = (a: ModuleInfo, b: ModuleInfo) => {
 export default function UploadsPage(props: UploadsPageProps) {
     const [editTarget, setEditTarget] = useState<ModuleInfo | null | undefined>(undefined);
     const editModule = useCallback((module: ModuleInfo | null | undefined) => {
-        setEditTarget(module);
+        setEditTarget(module ? { ...module } : module);
     }, [])
 
 
@@ -149,7 +149,7 @@ function Module(props: ModuleProps) {
                     <div className={styles["title"]}>
                         <div className={styles["image"]}>
                             {props.moduleInfo.image
-                                ? <img src={props.moduleInfo.image} alt="Module Icon" />
+                                ? <img src={props.moduleInfo.image} alt="Module Icon" loading="lazy" />
                                 : <p className="module-abbreviation">{getAbbreviation(props.moduleInfo.name)}</p>}
                         </div>
                         <div className={styles["module-info"]}>
@@ -159,7 +159,7 @@ function Module(props: ModuleProps) {
                     </div>
 
                     <VerticalSpacer size={"0.5rem"} />
-                    
+
                     <div className={styles["tag-container"]}>
                         {props.moduleInfo.tags?.slice(0, 3).map(tag => <p key={tag}>{tag}</p>)}
                     </div>

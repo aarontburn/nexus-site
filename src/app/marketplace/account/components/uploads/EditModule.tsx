@@ -1,6 +1,8 @@
 import styles from "./edit.module.css";
 import accountStyles from "../../account.module.css";
 import globalStyles from "../../globals.module.css";
+import bson from "bson"
+import { normalize } from 'path';
 
 import "./tag.css"
 
@@ -22,8 +24,14 @@ interface EditModuleScreenProps {
 
 }
 
-const MAX_IMAGE_BYTE_SIZE: number = 6_000_000;
+const MAX_IMAGE_MB: number = 6;
+const MAX_MARKDOWN_MB: number = 0.5; // 500 KB
+const BYTES_PER_MB: number = 1_000_000;
 
+
+const Gray = ({ children }: { children?: any }) => {
+    return <span style={{ color: "gray" }}>{children}</span>
+}
 
 
 export default function EditModuleScreen({ triggerRefresh, session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
@@ -38,6 +46,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
     /* State */
     const [tags, setTags] = useState<Tag[]>(editTarget?.tags?.map(tag => ({ id: tag, className: '', text: tag })) ?? []);
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
+    const [uploadedImageForceUpdate, forceUpdateImage] = useState<number>(0);
     const [uploadedReadme, setUploadedReadme] = useState<File | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [remoteModuleInfo, setRemoteModuleInfo] = useState<RemoteModuleInfoJSON | undefined>(undefined);
@@ -73,10 +82,45 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
         }
     }
 
+    const formatMarkdownImageURLS = () => {
+        if (!readmeTextRef.current || !githubRepoInputRef.current) {
+            return;
+        }
+
+        const markdownImageRegex: RegExp = /(!\[.*?\]\()(.+?)(\))/g;
+        const htmlImageRegex: RegExp = /(<img[^>]*\s+src=["'])(.*?)(["'])/gi;
+
+        readmeTextRef.current.value = readmeTextRef.current.value.replace(markdownImageRegex,
+            (whole: string, start: string, path: string, end: string) => {
+                if (path.startsWith("https:")) {
+                    return whole;
+                }
+
+                const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
+                return normalize(start + githubLink + path.replace(/^(\.+)/, '') + end);
+            });
+
+
+
+
+        readmeTextRef.current.value = readmeTextRef.current.value.replace(htmlImageRegex,
+            (whole: string, start: string, path: string, end: string) => {
+                console.log(whole, start, path, end)
+                if (path.startsWith("https:")) {
+                    return whole;
+                }
+
+                const githubLink = `${githubRepoInputRef.current!.value}/raw/main/`;
+                return normalize(start + githubLink + path.replace(/^(\.+)/, '') + end);
+            }
+        );
+    }
+
+
 
     const onPublishPressed = async () => {
         if (!remoteModuleInfo) {
-            console.error("Remote module info is undefined.")
+            console.error("Remote module info is undefined.");
             return;
         }
 
@@ -92,34 +136,45 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
 
 
 
-        const base64Image: string | undefined = await (async () => {
+        const base64Image: string | undefined | null = await (async () => {
             const uploadedImage: File | undefined = imageUploadRef.current!.files?.[0];
             if (uploadedImage === undefined) { // no image uploaded
                 return editTarget?.image; // return the remote image, can be undefined
             }
 
-            if (uploadedImage.size > MAX_IMAGE_BYTE_SIZE) {
-                setNotificationText(`Error: Image icon exceeds the ${MAX_IMAGE_BYTE_SIZE / 1_000_000} MB file limit. (Got ${(uploadedImage.size / 1_000_000).toFixed(2)} MB)`);
-                return editTarget?.image; // return the remote image, can be undefined
+            if (uploadedImage.size > MAX_IMAGE_MB * BYTES_PER_MB) {
+                setNotificationText(`Error: Image icon exceeds the ${MAX_IMAGE_MB} MB file limit. (Got ${(uploadedImage.size / BYTES_PER_MB).toFixed(2)} MB)`);
+                return null;
             }
             return await imageToBase64(uploadedImage);
         })();
 
+        if (base64Image === null) {
+            return;
+        }
 
-        setIsPublishing(true);
-
-        const readme: string | undefined = await (async () => {
+        const readme: string | undefined | null = await (async () => {
             if (useReadmeUpload) {
                 const uploadedReadme: File | undefined = readmeUploadRef.current!.files?.[0];
                 if (uploadedReadme) {
+                    if (uploadedReadme.size > MAX_MARKDOWN_MB * BYTES_PER_MB) {
+                        setNotificationText(`Error: README exceeds the ${MAX_MARKDOWN_MB} MB file limit. (Got ${(uploadedReadme.size / BYTES_PER_MB).toFixed(2)} MB)`);
+                        return null;
+                    }
                     return await readUploadedText(uploadedReadme);
                 }
-                return editTarget?.image;
+                return editTarget?.readme;
 
             } else {
                 return readmeTextRef.current?.value ?? undefined;
             }
         })();
+        if (readme === null) {
+            return;
+        }
+
+
+        setIsPublishing(true);
 
         // author-id should be added in server-side
         const moduleInfo: ModuleInfoWithoutServerSideProperties = {
@@ -224,14 +279,14 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                 <h1>{remoteModuleInfo.name}</h1>
 
                 <p>{remoteModuleInfo.author}</p>
-                <p style={{ color: "gray" }}>{remoteModuleInfo.id} (v{remoteModuleInfo.version})</p>
+                <p><Gray>{remoteModuleInfo.id} (v{remoteModuleInfo.version})</Gray></p>
 
                 <p>{remoteModuleInfo.description}</p>
                 <p>{remoteModuleInfo.platforms ?? []}</p>
 
                 <VerticalSpacer size={"1rem"} />
 
-                <p><span style={{ color: "gray" }}>(Optional)</span> Add up to 10 tags (comma-separated). The first three will appear on the preview.</p>
+                <p><Gray>(Optional)</Gray> Add up to 10 tags (comma-separated). The first three will appear on the preview.</p>
                 <VerticalSpacer size={"0.25rem"} />
 
                 <ReactTags
@@ -265,7 +320,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                 <VerticalSpacer size="1rem" />
 
 
-                <p><span style={{ color: "gray" }}>(Optional)</span> Upload an image for your module.</p>
+                <p><Gray>(Optional)</Gray> Upload an icon for your module <Gray>(max 6 MB)</Gray>.</p>
                 <VerticalSpacer size={"0.25rem"} />
 
                 <div className={styles["aligned"]}>
@@ -280,13 +335,34 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                         Upload
                     </button>
                     <HorizontalSpacer size={"1rem"} />
-                    <span style={{ color: "gray" }}>{uploadedImage ? `(${uploadedImage.name})` : ''}</span>
+
+                    <Gray>
+                        {uploadedImage || editTarget?.image
+                            ? <>{`(${uploadedImage?.name ? uploadedImage.name : (editTarget?.image ? "uploaded_image" : '')})`}{' '}
+                                <span
+                                    className={styles["remove-image"]}
+                                    key={uploadedImageForceUpdate}
+                                    onClick={() => {
+                                        if (uploadedImage && imageUploadRef.current) {
+                                            imageUploadRef.current.value = '';
+                                        } else if (editTarget?.image) {
+                                            editTarget.image = undefined;
+                                        }
+
+                                        setUploadedImage(undefined);
+                                        forceUpdateImage(prev => prev + 1);
+                                    }}
+                                >
+                                    X
+                                </span></>
+                            : ''}
+                    </Gray>
                 </div>
 
 
                 <VerticalSpacer size={"1.25rem"} />
 
-                <p><span style={{ color: "gray" }}>(Optional)</span> Upload or type a README.</p>
+                <p><Gray>(Optional)</Gray> Upload or type a README.</p>
                 <VerticalSpacer size={"0.25rem"} />
 
                 <p className={styles["upload-or-text"]}>
@@ -304,7 +380,6 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                                 type='file'
                                 style={{ display: "none" }}
                                 onChange={(event) => setUploadedReadme((event.target.files ?? [])[0])}
-
                             />
 
                             <div className={styles["aligned"]}>
@@ -312,12 +387,14 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                                     Upload
                                 </button>
                                 <HorizontalSpacer size={"1rem"} />
-                                <span style={{ color: "gray" }}>{uploadedReadme ? `(${uploadedReadme.name})` : ''}</span>
+                                <Gray>{uploadedReadme ? `(${uploadedReadme.name})` : ''}</Gray>
                             </div>
                         </>
-                        : <>
+                        : <div className={styles["readme-input-area"]}>
                             <textarea ref={readmeTextRef} defaultValue={editTarget?.readme}></textarea>
-                        </>
+                            <VerticalSpacer size="1rem" />
+                            <button className={globalStyles["button"]} onClick={formatMarkdownImageURLS}>Replace relative image paths with absolute paths</button>
+                        </div>
                 }
                 <VerticalSpacer size={"2rem"} />
 

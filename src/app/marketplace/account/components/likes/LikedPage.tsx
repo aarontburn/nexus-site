@@ -66,7 +66,7 @@ function Module({ moduleInfo, unlikeModule }: ModuleInfoProps) {
             <div className={styles["title"]}>
                 <div className={styles["image"]}>
                     {moduleInfo.image
-                        ? <img src={moduleInfo.image} alt="Module Icon" />
+                        ? <img src={moduleInfo.image} alt="Module Icon" loading="lazy"/>
                         : <p className="module-abbreviation">{getAbbreviation(moduleInfo.name)}</p>}
                 </div>
                 <div className={styles["module-info"]}>
