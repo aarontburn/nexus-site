@@ -80,7 +80,6 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                         ? <img
                             src={moduleInfo.image}
                             alt="Module Icon"
-                            style={{ width: 'auto', height: '7.5rem' }}
                         />
                         : <p>{getAbbreviation(moduleInfo.name)}</p>
 

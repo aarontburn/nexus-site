@@ -22,6 +22,8 @@ interface EditModuleScreenProps {
 
 }
 
+const MAX_IMAGE_BYTE_SIZE: number = 6_000_000;
+
 
 
 export default function EditModuleScreen({ triggerRefresh, session, editTarget, editModule, setNotificationText }: EditModuleScreenProps) {
@@ -88,16 +90,23 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             return;
         }
 
-        setIsPublishing(true);
+
 
         const base64Image: string | undefined = await (async () => {
             const uploadedImage: File | undefined = imageUploadRef.current!.files?.[0];
             if (uploadedImage === undefined) { // no image uploaded
                 return editTarget?.image; // return the remote image, can be undefined
             }
+
+            if (uploadedImage.size > MAX_IMAGE_BYTE_SIZE) {
+                setNotificationText(`Error: Image icon exceeds the ${MAX_IMAGE_BYTE_SIZE / 1_000_000} MB file limit. (Got ${(uploadedImage.size / 1_000_000).toFixed(2)} MB)`);
+                return editTarget?.image; // return the remote image, can be undefined
+            }
             return await imageToBase64(uploadedImage);
         })();
 
+
+        setIsPublishing(true);
 
         const readme: string | undefined = await (async () => {
             if (useReadmeUpload) {
@@ -164,7 +173,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
         if (uploadedReadme) {
             setUseReadmeUpload(false);
             readUploadedText(uploadedReadme).then(text => {
-                if (readmeTextRef.current) readmeTextRef.current.value = `${text}` 
+                if (readmeTextRef.current) readmeTextRef.current.value = `${text}`
             })
         }
 
