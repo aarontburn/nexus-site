@@ -107,7 +107,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                 }
 
                 const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
-                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end).replace("https://", "https:/").replace("ht");
+                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end);
             });
     }
 
