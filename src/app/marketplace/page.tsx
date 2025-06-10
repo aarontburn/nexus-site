@@ -7,6 +7,7 @@ import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Compone
 import MarketplaceHeader from "./MarketplaceHeader";
 import { ModuleInfo } from "./types";
 import { getAllRemoteModules } from "./server/module-database/modules";
+import { SessionContextValue, useSession } from "next-auth/react";
 
 const SORT_OPTIONS: { [value: string]: string } = {
     "modified-descend": 'Date Modified (New - Old)',
@@ -240,7 +241,8 @@ interface ModuleProps {
 }
 
 function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
-    const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`
+    const modulePageLink: string = `/marketplace/${moduleInfo["_id"]}`;
+
     return <div className={styles["module"]}>
         <div className={styles["module-image-container"] + " " + styles["clickable"]}>
             {moduleInfo.image
@@ -262,8 +264,14 @@ function Module({ moduleInfo, setQuery, sortState }: ModuleProps) {
 
             <div className={styles["extra-info-wrapper"]}>
                 <div className={styles["info-left"]}>
-                    <p className={styles["likes"]}><span></span>{moduleInfo.metadata["like-count"]}</p>
-                    <p className={styles["downloads"]}><span></span>{moduleInfo.metadata["download-count"]}</p>
+                    <p className={styles["likes"]}>
+                        <span></span>
+                        {moduleInfo.metadata["like-count"]}
+                    </p>
+                    <p className={styles["downloads"]}>
+                        <span></span>
+                        {moduleInfo.metadata["download-count"]}
+                    </p>
                 </div>
                 <div className={styles["info-right"]}>
                     {sortState.startsWith("upload")

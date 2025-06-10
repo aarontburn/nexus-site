@@ -1,8 +1,5 @@
 import styles from "./edit.module.css";
-import accountStyles from "../../account.module.css";
 import globalStyles from "../../globals.module.css";
-import bson from "bson"
-import { normalize } from 'path';
 
 import "./tag.css"
 
@@ -87,6 +84,9 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             return;
         }
 
+        const normalizeURL = (url: string) => url.replace(/(?<!:)\/\/+/g, '/')
+
+
         const markdownImageRegex: RegExp = /(!\[.*?\]\()(.+?)(\))/g;
         const htmlImageRegex: RegExp = /(<img[^>]*\s+src=["'])(.*?)(["'])/gi;
 
@@ -97,23 +97,18 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                 }
 
                 const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
-                return normalize(start + githubLink + path.replace(/^(\.+)/, '') + end);
+                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end);
             });
-
-
-
 
         readmeTextRef.current.value = readmeTextRef.current.value.replace(htmlImageRegex,
             (whole: string, start: string, path: string, end: string) => {
-                console.log(whole, start, path, end)
                 if (path.startsWith("https:")) {
                     return whole;
                 }
 
-                const githubLink = `${githubRepoInputRef.current!.value}/raw/main/`;
-                return normalize(start + githubLink + path.replace(/^(\.+)/, '') + end);
-            }
-        );
+                const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
+                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end).replace("https://", "https:/").replace("ht");
+            });
     }
 
 

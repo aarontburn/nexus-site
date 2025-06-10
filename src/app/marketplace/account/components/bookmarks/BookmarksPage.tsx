@@ -73,6 +73,7 @@ function Module({ moduleInfo, removeBookmark }: ModuleInfoProps) {
                 <div className={styles["module-info"]}>
                     <h1><a href={modulePageLink}>{moduleInfo.name}</a></h1>
                     <h2>{moduleInfo["module-id"]}</h2>
+                    <h2 style={{color: "gray"}}>{moduleInfo.author}</h2>
                 </div>
             </div>
 
