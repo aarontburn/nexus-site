@@ -7,9 +7,10 @@ import { VerticalSpacer } from "../components/Components";
 
 
 const platformMap = {
-    "Windows": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup.exe",
+    "Windows": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-win.exe",
+    "Linux (AMD64)": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-amd64.deb",
+    "Linux (ARM64)": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-arm64.deb",
     "macOS": null,
-    "Linux": null,
 }
 
 
@@ -20,7 +21,7 @@ function OSDownload({ platform }: { platform: keyof typeof platformMap }) {
             className={`${styles["dl-download-button"]} ${platformMap[platform] ? '' : styles["disabled"]}`}
             aria-disabled={!platformMap[platform]}
         >
-            <div className={`${styles[`${platform}-logo`]} ${styles['dl-logo']}`}></div>
+            <div className={`${styles[`${platform.split(" ")[0]}-logo`]} ${styles['dl-logo']}`}></div>
             {platform}
         </a>
 
@@ -41,7 +42,6 @@ export default function NexusDownload() {
                 {Object.keys(platformMap).map(osName => <OSDownload key={osName} platform={osName as keyof typeof platformMap} />)}
             </div>
             <VerticalSpacer size="1rem" />
-            <sub>At this time, Nexus is Windows only. A Linux build is being actively worked on.</sub>
 
         </div>
 

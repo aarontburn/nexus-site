@@ -37,14 +37,13 @@ export default function Home() {
             <div className="left">
                 <VerticalSpacer size="5rem" />
 
-
                 <NexusLogo className={"nexus-logo-home"} width={"10rem"} height={"10rem"} />
 
                 <h1 className="title-text">NEXUS</h1>
 
                 <VerticalSpacer size="2rem" />
 
-                <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform<span style={{ color: "gray" }}>*</span> application loader.</p>
+                <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
 
 
                 <div className="home-buttons">
