@@ -71,7 +71,7 @@ export default function Home() {
             <h1 ref={aboutRef}>What is {<NexusText />}?</h1>
             <p>
                 Nexus is a versatile, cross-platform application loader designed to be a toolbox.
-                Browse the marketplace for applications, or <Accented>modules</Accented>, that you might find useful,
+                Browse the marketplace for applications, or <Accented>modules</Accented>, that you find useful,
                 whether its a Gmail client, Discord embed, or a Screenshot Manager, Nexus has something for everyone.
             </p>
         </div>
