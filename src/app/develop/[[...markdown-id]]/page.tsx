@@ -40,6 +40,7 @@ export default function DevelopPage() {
     }
 
     useEffect(() => {
+
         markdownRef.current?.scroll({
             top: 0
         });
@@ -89,11 +90,7 @@ export default function DevelopPage() {
                 <VerticalSpacer size="5rem" />
             </div>
 
-
-
         </div>
-
-
     </div>
 }
 

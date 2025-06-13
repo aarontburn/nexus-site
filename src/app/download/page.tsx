@@ -3,6 +3,7 @@
 import styles from "./styles.module.css"
 import sampleImage from "../assets/sample-image.png"
 import { VerticalSpacer } from "../components/Components";
+import { onDownloadPressed } from "../api/actions";
 
 
 
@@ -15,16 +16,17 @@ const platformMap = {
 
 
 function OSDownload({ platform }: { platform: keyof typeof platformMap }) {
-    return <>
+    return < >
         <a
             href={platformMap[platform] ? platformMap[platform] : ''}
             className={`${styles["dl-download-button"]} ${platformMap[platform] ? '' : styles["disabled"]}`}
             aria-disabled={!platformMap[platform]}
+            target="_blank"
+            onClick={(e) => onDownloadPressed()}
         >
             <div className={`${styles[`${platform.split(" ")[0]}-logo`]} ${styles['dl-logo']}`}></div>
             {platform}
         </a>
-
     </>
 }
 
