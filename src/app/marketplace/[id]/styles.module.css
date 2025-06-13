@@ -6,6 +6,10 @@
         flex-grow: 1;
         flex-basis: 0;
 
+        @media (width < 768px) {
+            display: none;
+        }
+
 
     }
 
@@ -13,6 +17,10 @@
         order: 2;
         flex-grow: 1;
         flex-basis: 0;
+
+        @media (width < 768px) {
+            display: none;
+        }
     }
 
     .main {
@@ -25,6 +33,10 @@
         margin-top: 1rem;
         border-radius: 5px;
         height: fit-content;
+
+        @media (width < 768px) {
+            width: 100%;
+        }
     }
 
 }
@@ -261,19 +273,6 @@
     }
 
     .module-link {
-        width: 100%;
-    }
-
-
-    .left {
-        display: none;
-    }
-
-    .right {
-        display: none;
-    }
-
-    .main {
         width: 100%;
     }
 

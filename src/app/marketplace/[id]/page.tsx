@@ -193,7 +193,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
             <p><span>Downloads:</span>{moduleInfo.metadata['download-count']}</p>
             <p><span>Upload Date:</span>{moduleInfo.metadata['date-uploaded']?.toLocaleString()}</p>
             <p><span>Modify Date:</span>{moduleInfo.metadata['date-modified']?.toLocaleString()}</p>
-            <p><span>Platforms:</span>{moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText) : "No platform information found."}</p>
+            <p><span>Platforms:</span>{moduleInfo.metadata.platforms?.length ? moduleInfo.metadata.platforms.map(platformToDisplayText).join(" ") : "No platform information found."}</p>
         </div>
 
         <VerticalSpacer size='1rem' />
