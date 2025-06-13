@@ -28,6 +28,7 @@ export default function DevelopPage() {
     const [sections, setSections] = useState<FileTree>({});
     const [markdown, setMarkdown] = useState<string>('');
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
+    const [headings, setHeadings] = useState<HTMLElement[]>([]);
 
     const onSectionPressed = (p: string) => {
         if (filePaths[p] === undefined) {
@@ -37,13 +38,21 @@ export default function DevelopPage() {
         getMarkdown(filePaths[p]).then((markdown) => {
             setMarkdown(markdown)
         });
+
+
     }
 
     useEffect(() => {
+        const nodes: HTMLElement[] = Array.from(markdownRef.current?.childNodes || []) as HTMLElement[];
+        const headerNodes = nodes.filter((node) =>
+            node.nodeType === 1 &&
+            node.tagName.startsWith("H")
+        );
+        setHeadings(headerNodes.slice(1)); // remove the first 
 
-        markdownRef.current?.scroll({
-            top: 0
-        });
+
+        (markdownRef.current?.firstChild as HTMLElement)?.scrollIntoView()
+
     }, [markdown, markdownRef])
 
     useEffect(() => {
@@ -88,6 +97,20 @@ export default function DevelopPage() {
 
                 </div>
                 <VerticalSpacer size="5rem" />
+            </div>
+
+            <div className={styles["sections-container"]}>
+                {headings.map((node, index) => {
+                    const headingType: string = node.tagName;
+                    const isCodeElement: boolean = (node.firstChild as HTMLElement)?.tagName === "CODE";
+                    return <p
+                        key={index}
+                        style={{ marginLeft: `${Number(headingType.at(-1)) - 1}rem` }}
+                        onClick={() => node.scrollIntoView({ behavior: "smooth" })}
+                    >
+                        {isCodeElement ? <code>{node.textContent}</code>: node.textContent}
+                    </p>
+                })}
             </div>
 
         </div>
