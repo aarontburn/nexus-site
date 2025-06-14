@@ -7,6 +7,7 @@ import { authOptions } from "../../../api/authOptions";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties } from "../../types";
 import { Collections, connectToDatabase } from "./connect";
 import { getNumberOfLikesForModule } from "./likes";
+import { createNewModuleDownloadAnalytic } from "../../../analytics/analytic-handler";
 
 const moduleCache: Map<string, ModuleInfo> = new Map();
 
@@ -28,9 +29,7 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
 
 export async function onModuleDownloaded(_id: string) {
     const collections: Collections = await connectToDatabase();
-
     const result: WithId<ModuleInfo> | undefined = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(_id) as any }) ?? undefined;
-
     if (!result) {
         console.error("Couldn't find module to increment download count: " + _id);
         return;
@@ -45,6 +44,8 @@ export async function onModuleDownloaded(_id: string) {
                 }
             }
         );
+        await createNewModuleDownloadAnalytic(_id, result["module-id"])
+
     } catch (e) {
         console.log(e)
     }
@@ -55,15 +56,21 @@ export async function getModule(moduleObjectID: string): Promise<[ModuleInfo | u
     const collections: Collections = await connectToDatabase();
 
     return [moduleCache.get(moduleObjectID), new Promise(async (resolve) => {
-        const result: WithId<ModuleInfo> | undefined = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(moduleObjectID) as any }) ?? undefined;
-        if (!result) {
-            return undefined;
+        try {
+            const result: WithId<ModuleInfo> | undefined = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(moduleObjectID) as any }) ?? undefined;
+            if (!result) {
+                resolve(undefined);
+                return
+            }
+
+            result.metadata['like-count'] = await getNumberOfLikesForModule(moduleObjectID);
+            result._id = `${result._id}`;
+            moduleCache.set(moduleObjectID, result);
+            resolve(result)
+        } catch (e) {
+            resolve(undefined);
         }
 
-        result.metadata['like-count'] = await getNumberOfLikesForModule(moduleObjectID);
-        result._id = `${result._id}`;
-        moduleCache.set(moduleObjectID, result);
-        resolve(result)
     })];
 }
 

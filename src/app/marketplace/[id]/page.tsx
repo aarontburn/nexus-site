@@ -21,6 +21,7 @@ interface PageProps {
 
 export default function ModulePage({ params }: PageProps) {
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | undefined>();
+    const router = useRouter();
 
     useEffect(() => {
         (async () => {
@@ -30,7 +31,12 @@ export default function ModulePage({ params }: PageProps) {
             if (cachedModule) {
                 setModuleInfo(moduleInfo);
             }
-            resolvingModule.then(moduleInfo => moduleInfo && setModuleInfo(moduleInfo));
+            resolvingModule.then(moduleInfo => {
+                if (moduleInfo === undefined) {
+                    router.push("/marketplace");
+                    return;
+                }
+                setModuleInfo(moduleInfo)});
         })();
     }, []);
 

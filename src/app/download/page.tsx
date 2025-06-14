@@ -4,28 +4,57 @@ import styles from "./styles.module.css"
 import sampleImage from "../assets/sample-image.png"
 import { VerticalSpacer } from "../components/Components";
 import { onDownloadPressed } from "../api/actions";
+import { createNewClientDownloadAnalytic } from "../analytics/analytic-handler";
 
 
-
-const platformMap = {
-    "Windows": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-win.exe",
-    "Linux (AMD64)": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-amd64.deb",
-    "Linux (ARM64)": "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-arm64.deb",
-    "macOS": null,
+interface Platform {
+    displayName: string;
+    platform: "win32" | "darwin" | 'linux';
+    cssName: string;
+    link: string | null;
 }
 
+const platforms: Platform[] = [
+    {
+        displayName: "Windows",
+        platform: "win32",
+        cssName: "Windows",
+        link: "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-win.exe"
+    },
+    {
+        displayName: "Linux (AMD64)",
+        platform: "linux",
+        cssName: "Linux",
+        link: "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-amd64.deb"
+    }
+    , {
+        displayName: "Linux (ARM64)",
+        platform: "linux",
+        cssName: "Linux",
+        link: "https://github.com/aarontburn/nexus-core/releases/latest/download/Nexus-Setup-linux-arm64.deb"
+    },
+    {
+        displayName: "macOS",
+        platform: "darwin",
+        cssName: "macOS",
+        link: null
+    }
+]
 
-function OSDownload({ platform }: { platform: keyof typeof platformMap }) {
+
+
+
+function OSDownload({ platform }: { platform: Platform }) {
     return < >
         <a
-            href={platformMap[platform] ? platformMap[platform] : ''}
-            className={`${styles["dl-download-button"]} ${platformMap[platform] ? '' : styles["disabled"]}`}
-            aria-disabled={!platformMap[platform]}
+            href={platform.link ? platform.link : ''}
+            className={`${styles["dl-download-button"]} ${platform.link ? '' : styles["disabled"]}`}
+            aria-disabled={!platform.link}
             target="_blank"
-            onClick={(e) => onDownloadPressed()}
+            onClick={() => createNewClientDownloadAnalytic(platform.platform)}
         >
-            <div className={`${styles[`${platform.split(" ")[0]}-logo`]} ${styles['dl-logo']}`}></div>
-            {platform}
+            <div className={`${styles[`${platform.cssName}-logo`]} ${styles['dl-logo']}`}></div>
+            {platform.displayName}
         </a>
     </>
 }
@@ -41,7 +70,7 @@ export default function NexusDownload() {
                 Already have Nexus installed? Check out the <a style={{ color: "var(--accent-color)" }} href="/marketplace">marketplace</a> to install modules.
             </p>
             <div className={styles["download-container"]}>
-                {Object.keys(platformMap).map(osName => <OSDownload key={osName} platform={osName as keyof typeof platformMap} />)}
+                {platforms.map(platform => <OSDownload key={platform.displayName} platform={platform} />)}
             </div>
             <VerticalSpacer size="1rem" />
 
