@@ -1,11 +1,11 @@
 "use server";
 
 import { Collections, connectToDatabase } from "../marketplace/server/module-database/connect";
-import { BaseAnalytic, DownloadAnalytic } from "./analytics-schema";
+import { BaseAnalytic } from "./analytics-schema";
 
 
 
-export async function createNewClientDownloadAnalytic(platform: "win32" | "darwin" | "linux") {
+export async function createClientDownloadAnalytic(platform: "win32" | "darwin" | "linux") {
     const collections: Collections = await connectToDatabase();
 
     await collections.ANALYTIC_COLLECTION.insertOne({
@@ -15,7 +15,7 @@ export async function createNewClientDownloadAnalytic(platform: "win32" | "darwi
     } as BaseAnalytic);
 }
 
-export async function createNewModuleDownloadAnalytic(moduleObjectID: string, moduleAppID: string) {
+export async function createModuleDownloadAnalytic(moduleObjectID: string, moduleAppID: string) {
     const collections: Collections = await connectToDatabase();
 
     await collections.ANALYTIC_COLLECTION.insertOne({
@@ -25,3 +25,14 @@ export async function createNewModuleDownloadAnalytic(moduleObjectID: string, mo
         moduleAppID: moduleAppID
     } as BaseAnalytic);
 }
+
+export async function createAccountAnalytic(email: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "ACCOUNT_CREATED",
+        date: new Date(),
+        email
+    } as BaseAnalytic);
+}
+

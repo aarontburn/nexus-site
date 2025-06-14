@@ -7,7 +7,7 @@ import { authOptions } from "../../../api/authOptions";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties } from "../../types";
 import { Collections, connectToDatabase } from "./connect";
 import { getNumberOfLikesForModule } from "./likes";
-import { createNewModuleDownloadAnalytic } from "../../../analytics/analytic-handler";
+import { createModuleDownloadAnalytic } from "../../../analytics/analytic-handler";
 
 const moduleCache: Map<string, ModuleInfo> = new Map();
 
@@ -44,7 +44,7 @@ export async function onModuleDownloaded(_id: string) {
                 }
             }
         );
-        await createNewModuleDownloadAnalytic(_id, result["module-id"])
+        await createModuleDownloadAnalytic(_id, result["module-id"])
 
     } catch (e) {
         console.log(e)

@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs";
 import { connectDB } from "./MongoDB";
 import User from "./User";
+import { createAccountAnalytic } from "../../analytics/analytic-handler";
 
 
 export interface RegisterProps {
@@ -36,6 +37,7 @@ export const register = async (values: RegisterProps) => {
         });
 
         await user.save();
+        await createAccountAnalytic(email);
 
     } catch (e) {
         console.log(e);
