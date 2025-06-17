@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./marketplace.module.css"
 
 import { signOut, useSession } from "next-auth/react";

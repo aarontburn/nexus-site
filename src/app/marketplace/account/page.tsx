@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import { VerticalSpacer } from "../../components/Components";
-import MarketplaceHeader from "../MarketplaceHeader";
 import styles from "./account.module.css";
 import globalStyles from "./globals.module.css"
 
@@ -114,7 +113,6 @@ export default function AccountPage() {
     }
 
     return <>
-        <MarketplaceHeader />
         <VerticalSpacer size={"4rem"} />
 
         <div className={styles["account-body"]}>

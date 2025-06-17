@@ -14,10 +14,13 @@ import { useRouter } from 'next/navigation';
 import { isModuleLiked, removeModuleLike, onModuleLiked } from '../server/module-database/likes';
 import { getModule, onModuleDownloaded } from '../server/module-database/modules';
 import { bookmarkModule, isModuleBookmarked, removeBookmarkedModule } from '../server/module-database/bookmarks';
+import { Metadata, ResolvingMetadata } from 'next';
 
 interface PageProps {
     params: Promise<{ id: string }>;
 }
+
+
 
 export default function ModulePage({ params }: PageProps) {
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | undefined>();
@@ -36,7 +39,8 @@ export default function ModulePage({ params }: PageProps) {
                     router.push("/marketplace");
                     return;
                 }
-                setModuleInfo(moduleInfo)});
+                setModuleInfo(moduleInfo)
+            });
         })();
     }, []);
 

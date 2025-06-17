@@ -4,10 +4,8 @@ import { Ref, useEffect, useRef, useState } from "react";
 import styles from "./marketplace.module.css"
 import { getAbbreviation } from "../utils/utils";
 import { HorizontalSpacer, Spinner, VerticalSpacer } from "../components/Components";
-import MarketplaceHeader from "./MarketplaceHeader";
 import { ModuleInfo } from "./types";
 import { getAllRemoteModules } from "./server/module-database/modules";
-import { SessionContextValue, useSession } from "next-auth/react";
 
 const SORT_OPTIONS: { [value: string]: string } = {
     "modified-descend": 'Date Modified (New - Old)',
@@ -165,7 +163,6 @@ export default function NexusMarket() {
 
 
     return <div className={styles["page"]}>
-        <MarketplaceHeader />
         <br />
         <VerticalSpacer size="4rem" />
 

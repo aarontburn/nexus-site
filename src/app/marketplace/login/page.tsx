@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 import styles from "./login.module.css";
 import { NexusLogo, VerticalSpacer } from "../../components/Components";
-import MarketplaceHeader from "../MarketplaceHeader";
 
 
 
@@ -60,8 +59,6 @@ export default function LoginPage() {
 
 
     return <>
-        <MarketplaceHeader />
-
         <div className={styles["container"]}>
 
             <div className={styles["login-container"]}>

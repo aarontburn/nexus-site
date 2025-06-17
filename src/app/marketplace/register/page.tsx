@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import styles from "./register.module.css";
 import { NexusLogo, VerticalSpacer } from "../../components/Components";
 import { register } from "../../api/auth/register";
-import MarketplaceHeader from "../MarketplaceHeader";
 import { useSession } from "next-auth/react";
 
 
@@ -78,7 +77,6 @@ export default function RegisterPage() {
 
 
     return <>
-        <MarketplaceHeader />
         <div className={styles["container"]}>
             <div className={styles["login-container"]}>
                 <NexusLogo width={"6rem"} height="6rem" />
