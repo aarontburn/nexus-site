@@ -36,3 +36,59 @@ export async function createAccountAnalytic(email: string) {
     } as BaseAnalytic);
 }
 
+export async function createModuleLikeAnalytic(userID: string, moduleObjectID: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "MODULE_LIKED",
+        date: new Date(),
+        userID: `${userID}`,
+        moduleObjectID: `${moduleObjectID}`
+    } as BaseAnalytic);
+}
+export async function createModuleUnlikeAnalytic(userID: string, moduleObjectID: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "MODULE_UNLIKED",
+        date: new Date(),
+        userID: `${userID}`,
+        moduleObjectID: `${moduleObjectID}`
+    } as BaseAnalytic);
+}
+
+
+export async function createModuleUploadAnalytic(userID: string, moduleAppID: string, moduleObjectID: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "MODULE_UPLOADED",
+        date: new Date(),
+        userID: `${userID}`,
+        moduleAppID: `${moduleAppID}`,
+        moduleObjectID: `${moduleObjectID}`
+    } as BaseAnalytic);
+}
+
+export async function createModuleEditAnalytic(userID: string, moduleAppID: string, moduleObjectID: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "MODULE_EDITED",
+        date: new Date(),
+        userID: `${userID}`,
+        moduleAppID: `${moduleAppID}`,
+        moduleObjectID: `${moduleObjectID}`
+    } as BaseAnalytic);
+}
+
+export async function createModuleDeleteAnalytic(userID: string, moduleAppID: string) {
+    const collections: Collections = await connectToDatabase();
+
+    await collections.ANALYTIC_COLLECTION.insertOne({
+        type: "MODULE_DELETED",
+        date: new Date(),
+        userID: `${userID}`,
+        moduleAppID: `${moduleAppID}`,
+    } as BaseAnalytic);
+}

@@ -1,13 +1,13 @@
 "use server";
 
 import { Session } from "next-auth";
-import { WithId, ObjectId } from "mongodb";
+import { WithId, ObjectId, InsertOneResult } from "mongodb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../api/authOptions";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties } from "../../types";
 import { Collections, connectToDatabase } from "./connect";
 import { getNumberOfLikesForModule } from "./likes";
-import { createModuleDownloadAnalytic } from "../../../analytics/analytic-handler";
+import { createModuleDeleteAnalytic, createModuleDownloadAnalytic, createModuleEditAnalytic, createModuleUploadAnalytic } from "../../../analytics/analytic-handler";
 
 const moduleCache: Map<string, ModuleInfo> = new Map();
 
@@ -131,6 +131,8 @@ export async function editRemoteModule(moduleInfo: ModuleInfoWithoutServerSidePr
             }
         } as any);
 
+        await createModuleEditAnalytic(userID, moduleInfo["module-id"], result._id);
+
         return undefined;
     } catch (err) {
         console.error("Error inserting module:", err);
@@ -165,8 +167,8 @@ export async function deleteRemoteModule(moduleInfo: ModuleInfo) {
         "module-id": moduleInfo['module-id']
     })
 
-
-    await collections.LIKE_COLLECTION.deleteMany({ "module-id": moduleInfo['module-id'] })
+    await collections.LIKE_COLLECTION.deleteMany({ "module-id": moduleInfo['module-id'] });
+    await createModuleDeleteAnalytic(userID, moduleInfo["module-id"]);
 
 }
 
@@ -191,7 +193,7 @@ export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProper
     }
 
     try {
-        await collections.MODULE_COLLECTION.insertOne({
+        const result: InsertOneResult<ModuleInfo> = await collections.MODULE_COLLECTION.insertOne({
             ...moduleInfo,
             "author-id": userID,
             "author": session.user.name,
@@ -202,10 +204,9 @@ export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProper
                 "download-count": 0,
                 "like-count": 0,
             }
-
         } as any);
 
-
+        await createModuleUploadAnalytic(userID, moduleInfo["module-id"], result.insertedId);
         return undefined;
     } catch (error) {
         console.error("Error inserting module:", error);

@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../../api/authOptions";
 import { UserLikedInfo, UserBookmarkInfo, ModuleInfo } from "../../types";
 import { Collections, connectToDatabase } from "./connect";
+import { createModuleLikeAnalytic, createModuleUnlikeAnalytic } from "../../../analytics/analytic-handler";
 
 
 let likeMap: { [moduleObjectID: string]: number } | undefined = undefined;
@@ -59,6 +60,7 @@ export async function removeModuleLike(moduleObjectID: string): Promise<string |
     }
 
     await collections.LIKE_COLLECTION.deleteOne({ _id: result._id });
+    await createModuleUnlikeAnalytic(session.user.id, result._id);
 }
 
 
@@ -87,6 +89,7 @@ export async function onModuleLiked(moduleObjectID: string): Promise<string | un
         'module-id': moduleObjectID,
         "liked-at": new Date()
     } as any);
+    await createModuleLikeAnalytic(session.user.id, moduleObjectID);
 }
 
 export async function addModuleToBookmark(moduleObjectID: string): Promise<string | undefined> {
@@ -142,7 +145,7 @@ export async function getLikedModulesForUser(): Promise<(ModuleInfo & { likeInfo
             likeInfo._id = `${likeInfo._id}`;
             module.metadata["like-count"] = await getNumberOfLikesForModule(`${module._id}`);
 
-            likedModules.push({...module, likeInfo: likeInfo});
+            likedModules.push({ ...module, likeInfo: likeInfo });
         }
     }))
     return likedModules;
