@@ -31,12 +31,13 @@ export default function DevelopPage() {
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
     const [headings, setHeadings] = useState<HTMLElement[]>([]);
 
-    const onSectionPressed = (p: string) => {
-        if (filePaths[p] === undefined) {
+    const onSectionPressed = (markdownID: string) => {
+        console.log(filePaths)
+        if (filePaths[markdownID] === undefined) {
             return;
         }
-        window.history.pushState({}, '', `/develop/${p}`);
-        getMarkdown(filePaths[p]).then((markdown) => {
+        window.history.pushState({}, '', `/develop/${markdownID}`);
+        getMarkdown(filePaths[markdownID]).then((markdown) => {
             setMarkdown(markdown)
         });
     }
