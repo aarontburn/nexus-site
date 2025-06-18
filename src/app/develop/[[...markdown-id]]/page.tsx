@@ -36,20 +36,33 @@ export default function DevelopPage() {
         if (filePaths[markdownID] === undefined) {
             return;
         }
-        window.history.pushState({}, '', `/develop/${markdownID}`);
+        window.history.pushState({ filePaths }, '', `/develop/${markdownID}`);
         getMarkdown(filePaths[markdownID]).then((markdown) => {
             setMarkdown(markdown)
         });
     }
     useEffect(() => {
-        const handlePopState = () => {
+        const handlePopState = (event: PopStateEvent) => {
             const url: string = document.location.href;
             const markdownID: string | undefined = getMarkdownID(url);
             console.log(markdownID)
             if (markdownID) {
                 onSectionPressed(markdownID);
             }
+
+            if (event.state.filePath) {
+                getMarkdown(event.state.filePath).then((markdown) => {
+                    setMarkdown(markdown);
+                });
+            } else if (markdownID && filePaths[markdownID]) {
+                getMarkdown(filePaths[markdownID]).then((markdown) => {
+                    setMarkdown(markdown);
+                });
+            }
         };
+
+
+
 
         window.addEventListener('popstate', handlePopState);
 
