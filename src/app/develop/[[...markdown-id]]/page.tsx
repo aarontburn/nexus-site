@@ -50,22 +50,26 @@ export default function DevelopPage() {
                 onSectionPressed(markdownID);
             }
 
-            if (event.state.filePath) {
-                getMarkdown(event.state.filePath).then((markdown) => {
-                    setMarkdown(markdown);
-                });
-            } else if (markdownID && filePaths[markdownID]) {
-                getMarkdown(filePaths[markdownID]).then((markdown) => {
-                    setMarkdown(markdown);
+            if (event.state.filePaths) {
+                setFilePaths(event.state.filePaths)
+            } else {
+                getAllDocuments().then(([filePaths, tree]) => {
+                    setSections(tree);
+                    const paths: { [shortPath: string]: string } = {};
+                    if (filePaths.length > 0) {
+                        const delimiter: "\\" | "/" = filePaths[0].includes("/") ? "/" : "\\"
+
+                        for (const p of filePaths) {
+                            paths[p.split(delimiter).at(-1) as string] = p;
+                        }
+                    }
+
+                    setFilePaths(paths);
                 });
             }
         };
 
-
-
-
         window.addEventListener('popstate', handlePopState);
-
         return () => {
             window.removeEventListener('popstate', handlePopState);
         };

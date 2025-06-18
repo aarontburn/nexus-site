@@ -43,9 +43,17 @@ export async function getAllDocuments(): Promise<[string[], FileTree]> {
     return [files, buildFileTree(files)];
 }
 
+const markdownMap: { [mdPath: string]: string } = {};
+
 
 export async function getMarkdown(mdPath: string) {
     console.log("Getting markdown for " + mdPath)
-    const file = await fs.promises.readFile(path.join(DOC_PATH, mdPath), "utf8");
-    return file;
+
+    if (markdownMap[mdPath]) {
+        return markdownMap[mdPath];
+    }
+    const markdownContents: string = await fs.promises.readFile(path.join(DOC_PATH, mdPath), "utf8");
+    markdownMap[mdPath] = markdownContents;
+
+    return markdownContents;
 }
