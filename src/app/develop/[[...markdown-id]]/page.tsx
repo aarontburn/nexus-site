@@ -8,10 +8,10 @@ import { FileTree, getAllDocuments, getMarkdown } from "./markdown-accessor";
 import Markdown from "react-markdown";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 
-function getMarkdownID(pathName: string) {
+function getMarkdownID(pathName: string): string | undefined {
     const split = pathName.split('/').at(-1) as string;
 
     if (split === "develop") {
@@ -43,8 +43,11 @@ export default function DevelopPage() {
     useEffect(() => {
         const handlePopState = () => {
             const url: string = document.location.href;
-            console.log(url.split("/").at(-1))
-            onSectionPressed((url.split("/").at(-1) as string).replaceAll("%20", " "))
+            const markdownID: string | undefined = getMarkdownID(url);
+            console.log(markdownID)
+            if (markdownID) {
+                onSectionPressed(markdownID);
+            }
         };
 
         window.addEventListener('popstate', handlePopState);
@@ -63,8 +66,6 @@ export default function DevelopPage() {
             node.tagName.startsWith("H")
         );
         setHeadings(headerNodes.slice(1)); // remove the first 
-
-
         (markdownRef.current?.firstChild as HTMLElement)?.scrollIntoView()
 
     }, [markdown, markdownRef])
