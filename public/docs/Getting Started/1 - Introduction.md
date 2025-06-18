@@ -16,11 +16,11 @@ Nexus is **100% free**, including browsing the [application marketplace](https:/
 
 
 ## Installing Nexus
-Currently, Nexus is **Windows only**, but support for Linux and MacOS is being worked on.
-
 Visit the Download page and install the correct version for your operating system.
 
 ### [Download Now](https://www.nexus-app.net/download)
+
+At the moment, **Nexus is not signed** and may cause your computer to treat it as a suspicious program. 
 
 
 ## What is a module?
@@ -61,11 +61,6 @@ Easily add remote updating to your module so your users have the latest release.
 
 ### 4. Export and Distribution
 Easily package your module into a lightweight `.zip` to share with others, or on the official [Nexus Marketplace](https://nexus-app.net/marketplace); no need to worry about different build configurations for different operating systems*.
-
-### 5. Unique Build Tools
-Utilizing your module's [`module-info.json`](../API/module-info.json.md), you can specify a unique exporting procedure, including removing/including files or replacing text occurrences in any file.
-
-To begin developing a module for Nexus, visit [Building Your First Module](./2%20-%20Building%20Your%20First%20Module.md).
 
 
 ## What can you make with Nexus?

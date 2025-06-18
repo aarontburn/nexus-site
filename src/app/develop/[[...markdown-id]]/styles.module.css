@@ -20,6 +20,10 @@
         background: #3d3d3d;
         padding: 0 0.3em;
         border-radius: 5px;
+
+        @media (prefers-color-scheme: light) {
+            background: var(--background-light-2);
+        }
     }
 
     summary {

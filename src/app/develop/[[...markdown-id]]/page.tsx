@@ -8,7 +8,7 @@ import { FileTree, getAllDocuments, getMarkdown } from "./markdown-accessor";
 import Markdown from "react-markdown";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 
 function getMarkdownID(pathName: string) {
@@ -25,6 +25,7 @@ export default function DevelopPage() {
     const markdownRef: Ref<HTMLDivElement | null> = useRef(null);
     const selectedMarkdownID: string | undefined = getMarkdownID(usePathname());
 
+
     const [sections, setSections] = useState<FileTree>({});
     const [markdown, setMarkdown] = useState<string>('');
     const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
@@ -34,13 +35,26 @@ export default function DevelopPage() {
         if (filePaths[p] === undefined) {
             return;
         }
-        window.history.replaceState({}, '', `/develop/${p}`);
+        window.history.pushState({}, '', `/develop/${p}`);
         getMarkdown(filePaths[p]).then((markdown) => {
             setMarkdown(markdown)
         });
-
-
     }
+    useEffect(() => {
+        const handlePopState = () => {
+            const url: string = document.location.href;
+            console.log(url.split("/").at(-1))
+            onSectionPressed((url.split("/").at(-1) as string).replaceAll("%20", " "))
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
+
+
 
     useEffect(() => {
         const nodes: HTMLElement[] = Array.from(markdownRef.current?.childNodes || []) as HTMLElement[];
@@ -108,7 +122,7 @@ export default function DevelopPage() {
                         style={{ marginLeft: `${Number(headingType.at(-1)) - 1}rem` }}
                         onClick={() => node.scrollIntoView({ behavior: "smooth" })}
                     >
-                        {isCodeElement ? <code>{node.textContent}</code>: node.textContent}
+                        {isCodeElement ? <code>{node.textContent}</code> : node.textContent}
                     </p>
                 })}
             </div>

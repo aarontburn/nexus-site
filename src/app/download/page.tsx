@@ -3,7 +3,6 @@
 import styles from "./styles.module.css"
 import sampleImage from "../assets/sample-image.png"
 import { VerticalSpacer } from "../components/Components";
-import { onDownloadPressed } from "../api/actions";
 import { createClientDownloadAnalytic } from "../analytics/analytic-handler";
 
 
