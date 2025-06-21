@@ -1,6 +1,6 @@
 "use client";
 
-import { Ref, useEffect, useRef, useState } from "react";
+import { Ref, useContext, useEffect, useRef, useState } from "react";
 import { VerticalSpacer } from "../../components/Components";
 import styles from "./styles.module.css";
 import "./markdown.css"
@@ -8,7 +8,9 @@ import { FileTree, getAllDocuments, getMarkdown } from "./markdown-accessor";
 import Markdown from "react-markdown";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { DevelopContextType, getDevelopContext } from "./context";
+import LeftSidebar from "./LeftSidebar";
 
 
 function getMarkdownID(pathName: string): string | undefined {
@@ -22,58 +24,31 @@ function getMarkdownID(pathName: string): string | undefined {
 
 
 export default function DevelopPage() {
+    const context: DevelopContextType = getDevelopContext();
+
     const markdownRef: Ref<HTMLDivElement | null> = useRef(null);
-    const selectedMarkdownID: string | undefined = getMarkdownID(usePathname());
 
+    const pathName = usePathname();
+    const router = useRouter();
 
-    const [sections, setSections] = useState<FileTree>({});
-    const [markdown, setMarkdown] = useState<string>('');
-    const [filePaths, setFilePaths] = useState<{ [shortPath: string]: string }>({});
-    const [headings, setHeadings] = useState<HTMLElement[]>([]);
 
     const onSectionPressed = (markdownID: string) => {
-        console.log(filePaths)
-        if (filePaths[markdownID] === undefined) {
+        if (context.filePaths[markdownID] === undefined) {
             return;
         }
-        window.history.pushState({ filePaths }, '', `/develop/${markdownID}`);
-        getMarkdown(filePaths[markdownID]).then((markdown) => {
-            setMarkdown(markdown)
-        });
+        router.push(`/develop/${markdownID}`);
     }
+
     useEffect(() => {
-        const handlePopState = (event: PopStateEvent) => {
-            const url: string = document.location.href;
-            const markdownID: string | undefined = getMarkdownID(url);
-            console.log(markdownID)
-            if (markdownID) {
-                onSectionPressed(markdownID);
-            }
+        const markdownID: string = getMarkdownID(pathName) ?? "1 - Introduction.md";
+        if (context.filePaths[markdownID] === undefined) {
+            return;
+        }
 
-            if (event.state.filePaths) {
-                setFilePaths(event.state.filePaths)
-            } else {
-                getAllDocuments().then(([filePaths, tree]) => {
-                    setSections(tree);
-                    const paths: { [shortPath: string]: string } = {};
-                    if (filePaths.length > 0) {
-                        const delimiter: "\\" | "/" = filePaths[0].includes("/") ? "/" : "\\"
-
-                        for (const p of filePaths) {
-                            paths[p.split(delimiter).at(-1) as string] = p;
-                        }
-                    }
-
-                    setFilePaths(paths);
-                });
-            }
-        };
-
-        window.addEventListener('popstate', handlePopState);
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, []);
+        getMarkdown(context.filePaths[markdownID]).then((markdown) => {
+            context.setMarkdown(markdown)
+        });
+    }, [pathName, context.filePaths])
 
 
 
@@ -83,24 +58,15 @@ export default function DevelopPage() {
             node.nodeType === 1 &&
             node.tagName.startsWith("H")
         );
-        setHeadings(headerNodes.slice(1)); // remove the first 
+        context.setHeadings(headerNodes.slice(1));
         (markdownRef.current?.firstChild as HTMLElement)?.scrollIntoView()
 
-    }, [markdown, markdownRef])
-
-    useEffect(() => {
-        const markdownID: string = selectedMarkdownID ?? "1 - Introduction.md";
-        if (!filePaths[markdownID]) {
-            return;
-        }
-        getMarkdown(filePaths[markdownID]).then(setMarkdown);
-        window.history.replaceState({}, '', `/develop/${markdownID}`);
-    }, [filePaths]);
+    }, [context.markdown, markdownRef])
 
 
     useEffect(() => {
         getAllDocuments().then(([filePaths, tree]) => {
-            setSections(tree);
+            context.setSections(tree);
             const paths: { [shortPath: string]: string } = {};
             if (filePaths.length > 0) {
                 const delimiter: "\\" | "/" = filePaths[0].includes("/") ? "/" : "\\"
@@ -109,8 +75,7 @@ export default function DevelopPage() {
                     paths[p.split(delimiter).at(-1) as string] = p;
                 }
             }
-
-            setFilePaths(paths);
+            context.setFilePaths(paths);
         });
     }, []);
 
@@ -119,21 +84,18 @@ export default function DevelopPage() {
     return <div style={{ height: "calc(100% - var(--header-size) - 1.15rem)" }}>
         <VerticalSpacer size="1rem" />
         <div className={styles["develop-page"]}>
-            <div className={styles["sidebar"]}>
-                <FileTreeView onClick={onSectionPressed} tree={sections} />
-            </div>
 
 
             <div className={styles["markdown-container"]}>
                 <div className={"markdown-body"} ref={markdownRef}>
-                    <DocMarkdown markdown={markdown} onSectionPressed={onSectionPressed} />
+                    <DocMarkdown markdown={context.markdown} onSectionPressed={onSectionPressed} />
 
                 </div>
                 <VerticalSpacer size="5rem" />
             </div>
 
             <div className={styles["sections-container"]}>
-                {headings.map((node, index) => {
+                {context.headings.map((node, index) => {
                     const headingType: string = node.tagName;
                     const isCodeElement: boolean = (node.firstChild as HTMLElement)?.tagName === "CODE";
                     return <p
@@ -185,58 +147,3 @@ function DocMarkdown({ markdown, onSectionPressed }: { markdown: string, onSecti
     </Markdown>
 }
 
-
-const FileTreeView = ({ onClick, tree, level = 0 }: { onClick: (name: string) => void, tree: FileTree, level?: number }) => {
-    return (
-        <>
-            {Object.entries(tree).sort((a: [string, FileTree | null], b: [string, FileTree | null]) => {
-                const [name1, child1] = a;
-                const [name2, child2] = b;
-
-                const isAFolder: boolean = child1 !== null;
-                const isBFolder: boolean = child2 !== null;
-
-                if (level === 0) {
-                    if (name1 === "Getting Started") {
-                        return -1;
-                    } else if (name2 === "Getting Started") {
-                        return 1;
-                    }
-                }
-
-                if (isAFolder && !isBFolder) {
-                    if (name1.charAt(0) >= "0" && name1.charAt(0) <= "9") {
-                        return name1.localeCompare(name2);
-                    }
-                    return 1;
-                }
-                if (!isAFolder && isBFolder) {
-                    if (name2.charAt(0) >= "0" && name2.charAt(0) <= "9") {
-                        return name1.localeCompare(name2);
-                    }
-                    return -1;
-                }
-
-                return name1.localeCompare(name2);
-
-            }).map(([name, child], index) => (
-                <React.Fragment key={name + index}>
-                    {child ? (
-                        <details style={{ marginLeft: `${level}rem` }} open={index === 0}>
-                            <summary>{name}</summary>
-                            <FileTreeView onClick={onClick} tree={child} level={level + 1} />
-                        </details>
-                    ) : (
-                        <p
-                            onClick={() => onClick(name)}
-                            style={{ marginLeft: `${level / 2}rem` }}
-                        >
-                            {name.includes(".ts") || name.includes(".json") ? <code>{name.replace(".md", '')}</code> : name.replace(".md", '')}
-                        </p>
-                    )}
-                </React.Fragment>
-            ))}
-        </>
-    );
-
-};

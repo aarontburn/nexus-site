@@ -1,5 +1,7 @@
 import { Metadata } from "next";
-
+import { DevelopContextProvider } from "./context";
+import LeftSidebar from "./LeftSidebar";
+import styles from "./styles.module.css";
 
 export const metadata: Metadata = {
     title: 'Documentation | Nexus',
@@ -8,7 +10,7 @@ export const metadata: Metadata = {
     openGraph: {
         type: "website",
         url: "https://nexus-app.net/develop",
-        title: "Download | Nexus",
+        title: "Documentation | Nexus",
         description: 'Developer documentation for Nexus.',
         siteName: "Nexus",
         images: ['https://www.nexus-app.net/images/develop.png']
@@ -17,7 +19,10 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: any }) {
-    return <>
-        {children}
-    </>
+    return <div className={styles["develop-page"]}>
+        <DevelopContextProvider>
+            <LeftSidebar />
+            {children}
+        </DevelopContextProvider>
+    </div>
 }
