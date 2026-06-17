@@ -9,8 +9,13 @@ export type AnalyticTypes =
     "MODULE_EDITED" | 
     "MODULE_DELETED"
 
+export type RemoteAnalyticTypes = 
+    "REMOTE_CLIENT_FIRST_BOOT" |
+    "REMOTE_CLIENT_UPDATED" |
+    "REMOTE_CLIENT_UNINSTALL" |
+    "REMOTE_INSTALLED_MODULE" 
 
 export interface BaseAnalytic {
-    type: AnalyticTypes;
+    type: AnalyticTypes | RemoteAnalyticTypes;
     date: Date;
 }
