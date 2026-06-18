@@ -6,7 +6,6 @@ import { BaseAnalytic } from "../../analytics/analytics-schema";
 interface Param {
     paramName: string,
     type: "string" | "number" | "boolean",
-    required?: boolean | undefined
 }
 
 interface ValidatedRequestBody {
@@ -15,10 +14,36 @@ interface ValidatedRequestBody {
 }
 
 const REQUIRED_PARAMS_PER_ANALYTIC_TYPE: { [K in RemoteAnalyticTypes]: Param[] } = {
-    "REMOTE_CLIENT_FIRST_BOOT": [],
-    "REMOTE_CLIENT_UPDATED": [{ paramName: "oldVersion", type: "string" }, { paramName: "newVersion", type: "string" }],
-    "REMOTE_INSTALLED_MODULE": [{ paramName: "moduleId", type: "string" }],
-    "REMOTE_CLIENT_UNINSTALL": [],
+    "REMOTE_CLIENT_FIRST_BOOT": [
+        { paramName: "uid", type: "string" }, 
+    ],
+    "REMOTE_CLIENT_UPDATED": [
+        { paramName: "uid", type: "string" }, 
+        { paramName: "oldVersion", type: "string" }, 
+        { paramName: "newVersion", type: "string" },
+    ],
+    "REMOTE_INSTALLED_MODULE_FROM_SITE": [
+        { paramName: "uid", type: "string" }, 
+        { paramName: "moduleId", type: "string" },
+
+    ],
+    "REMOTE_IMPORTED_MODULE": [
+        { paramName: "uid", type: "string" }, 
+        { paramName: "moduleId", type: "string" },
+    ],
+    "REMOTE_CLIENT_UNINSTALL": [
+        { paramName: "uid", type: "string" }, 
+        { paramName: "moduleId", type: "string" },
+    ],
+    "REMOTE_UPDATED_MODULE": [
+        { paramName: "uid", type: "string" }, 
+        { paramName: "moduleId", type: "string" },
+        { paramName: "oldVersion", type: "string" },
+        { paramName: "newVersion", type: "string" },
+    ],
+    "REMOTE_CLIENT_ACTIVE": [
+        { paramName: "uid", type: "string" }, 
+    ]
 }
 
 export async function POST(request: NextRequest) {
@@ -31,8 +56,14 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ received: JSON.stringify(request) }, { status: 400 });
         }
 
-        console.info(`Received valid remote analytic event.`);
-        createRemoteAnalytic(validationResult, body["isDevTest"] !== undefined);
+        const isTestAnalytic: boolean = body["isDevTest"] !== undefined;
+        if (isTestAnalytic) {
+            console.info(`Received valid test analytic event: ${JSON.stringify(validationResult)}`);
+        } else {
+            console.info(`Received valid remote analytic event: ${JSON.stringify(validationResult)}`);
+        }
+
+        createRemoteAnalytic(validationResult, isTestAnalytic);
 
         return NextResponse.json({}, { status: 201 });
 
@@ -60,9 +91,6 @@ function validateBodyPerAnalyticType(body: any): string | ValidatedRequestBody {
 
     for (const param of params) {
         const inputValue = body[param.paramName];
-        if (param.required && inputValue === undefined) 
-            return `MISSING_REQUIRED_PARAM ${param.paramName}`;
-
         if (inputValue && typeof inputValue !== param.type) 
             return `INVALID_VAR_TYPE ${param.paramName}`;
 
@@ -71,7 +99,7 @@ function validateBodyPerAnalyticType(body: any): string | ValidatedRequestBody {
     return returnObj
 }
 
-async function createRemoteAnalytic(analytic: ValidatedRequestBody, isDevTest: boolean) {
+async function createRemoteAnalytic(analytic: ValidatedRequestBody, isTestAnalytic: boolean) {
     const collections: Collections = await connectToDatabase();
 
     const uploaded: any = {
@@ -80,12 +108,14 @@ async function createRemoteAnalytic(analytic: ValidatedRequestBody, isDevTest: b
         date: new Date(),
     }
 
-
-    if (isDevTest) {
-        console.info("Did not post analytic since analytic is marked as isDevTest");
-        console.info(`${JSON.stringify(uploaded)}`)
+    if (isTestAnalytic) {
+        uploaded["ttl"] = new Date();
     }
 
+    if (process.env.ENABLE_ANALYTICS === "1") {
+        await collections.ANALYTIC_COLLECTION.insertOne(uploaded);
+    } else {
+        console.warn("Analytics disabled.")
+    }
 
-    await collections.ANALYTIC_COLLECTION.insertOne(uploaded);
 }
