@@ -23,19 +23,16 @@ The Nexus Marketplace collects the following data when registering:
   
 This information is used solely for user authentication and account management and is never shared with third parties.
 
-
 When uploading a module to the marketplace, only provided module metadata is stored, including:
 - Module Name
 - Author Username
 - Source GitHub Repository
 
+For analytics, Nexus records only specific, anonymous events, such as (but not limited to):
+- When a client is first launched
+- When a module is installed/uninstalled/updated
 
 Registered users may request deletion or modification of their personal data by contacting aarontburn@outlook.com. Nexus retains account data only as long as necessary for account functionality and compliance with legal obligations.
-
-
-
-The Nexus desktop application **does not** collect or send any information by itself. However, as stated above, there is no guarantee that community-created applications do not collect any information 
-
 
 ## Best Practices
 1. Never install modules from an untrusted source.

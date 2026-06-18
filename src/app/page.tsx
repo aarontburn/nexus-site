@@ -89,7 +89,7 @@ export default function Home() {
                 <h1>Are you a</h1>
                 <div className="feature-grid">
                     <Card>
-                        <h3>🎨 Artist or Designer?</h3>
+                        <h3>Artist or Designer?</h3>
                         <p>
                             Use the <Link url="marketplace/68342fbea2fbe5b2c6a76cf1" text="Color Picker" /> module
                             for quick access to a color palette and eyedropper.
@@ -97,7 +97,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3>🤖 AI Enthusiast?</h3>
+                        <h3>AI Enthusiast?</h3>
                         <p>
                             The <Link url="marketplace/68351c5ceacf2ce8680778ee" text="ChatGPT" /> module gives you instant
                             access to the AI chatbot inside Nexus.
@@ -105,7 +105,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3>📬 Emailaholic?</h3>
+                        <h3>Emailaholic?</h3>
                         <p>
                             Install the <Link url="marketplace/6837a73f382d9ca237cba6ec" text="Outlook" />
                             or <Link url="marketplace/6837a678382d9ca237cba6e5" text="Gmail" /> module for one-click inbox and calendar access.
@@ -113,7 +113,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3 >🎮 Gamer?</h3>
+                        <h3>Gamer?</h3>
                         <p>
                             Embed tools like <Link url="marketplace/6837a709382d9ca237cba6e9" text="Medal" />
                             , <Link url="marketplace/6837aa9f382d9ca237cba6fd" text="Steam" />,
@@ -122,7 +122,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3>💬 Messenger?</h3>
+                        <h3>Messenger?</h3>
                         <p>
                             Try modules that embed <Link url="marketplace/68379fdd4e3ad55b4a193abd" text="Discord" />
                             , <Link url="marketplace/6837a6cf382d9ca237cba6e7" text="Instagram" />,
@@ -131,7 +131,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3>⌨️ Coder?</h3>
+                        <h3>Coder?</h3>
                         <p>
                             Modules like an embedded <Link url="marketplace/6837a535382d9ca237cba6e1" text="GitHub Desktop" /> and
                             a <Link url="marketplace/68342d1da2fbe5b2c6a76ce6" text="Debug Console" /> keep your coding workspace clutter free.
@@ -139,7 +139,7 @@ export default function Home() {
                     </Card>
 
                     <Card>
-                        <h3>🎶 Audiophile?</h3>
+                        <h3>Audiophile?</h3>
                         <p>
                             Keep <Link url="marketplace/6837aa21382d9ca237cba6fb" text="Spotify" /> or
                             a <Link url="marketplace/6837ab14382d9ca237cba701" text="Volume Controller" /> handy
@@ -149,8 +149,6 @@ export default function Home() {
                 </div>
 
                 <VerticalSpacer size="1rem" />
-                <h1>One application. Infinite uses.</h1>
-
 
             </div>
             <a className="main-clickable" href="/marketplace">
@@ -165,47 +163,46 @@ export default function Home() {
 
             <div className="feature-grid">
                 <Card>
-                    <h3>📊 Familiar Web Technologies</h3>
+                    <h3>Familiar Web Technologies</h3>
                     <p>Develop modules using familiar web technologies like TypeScript, React, Node.js, and HTML.</p>
                 </Card>
 
                 <Card>
-                    <h3>🛠️ Templates</h3>
+                    <h3>Templates</h3>
                     <p>Quickly start building using numerous templates that fit your needs, whether you want to use React, plain HTML, or more.</p>
                 </Card>
 
                 <Card>
-                    <h3>⚙️ Setting Management</h3>
+                    <h3>Setting Management</h3>
                     <p>Handle user preferences effortlessly. Nexus takes care of your settings UI, storage, and lifecycle - so you can focus on developing.</p>
                 </Card>
 
                 <Card>
-                    <h3>📩 Module Communication</h3>
+                    <h3>Module Communication</h3>
                     <p>Modules can make requests to each other, enabling a powerful and connected modular ecosystem.</p>
                 </Card>
 
                 <Card>
-                    <h3>📤 Export & Distribution</h3>
+                    <h3>Export & Distribution</h3>
                     <p>Package your module into a lightweight ZIP file and share it on the Nexus marketplace or host it yourself.</p>
                 </Card>
 
                 <Card>
-                    <h3>🆕 Auto Updates</h3>
+                    <h3>Auto Updates</h3>
                     <p>Supports automatic updates with minimal setup - keep your modules fresh without manual intervention.</p>
                 </Card>
 
                 <Card>
-                    <h3>📜 Developer-Friendly Docs</h3>
+                    <h3>Developer-Friendly Docs</h3>
                     <p>Well-written and growing documentation makes it easy to get started and build advanced modules with confidence.</p>
                 </Card>
 
                 <Card>
-                    <h3>♾️ Limitless Possibilities</h3>
-                    <p>Built on Electron, Nexus lets you use the full Electron API and any NPM package - no constraints, just creativity.</p>
+                    <h3>Limitless Possibilities</h3>
+                    <p>Built on Electron, Nexus lets you use the full Electron API and any NPM package - no constraints.</p>
                 </Card>
 
             </div>
-
 
             <a className="main-clickable" href="/develop">
                 Start Developing
