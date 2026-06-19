@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
             console.info(`Received valid remote analytic event: ${JSON.stringify(validationResult)}`);
         }
 
-        createRemoteAnalytic(validationResult, isTestAnalytic);
+        await createRemoteAnalytic(validationResult, isTestAnalytic);
 
         return NextResponse.json({}, { status: 201 });
 
