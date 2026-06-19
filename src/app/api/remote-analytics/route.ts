@@ -112,12 +112,11 @@ async function createRemoteAnalytic(analytic: ValidatedRequestBody, isTestAnalyt
         uploaded["ttl"] = new Date();
     }
 
-    console.log(process.env.ENABLE_ANALYTICS)
-    console.log(typeof process.env.ENABLE_ANALYTICS)
-    console.log(process.env.ENABLE_ANALYTICS === "1")
-    
     if (process.env.ENABLE_ANALYTICS === "1") {
+        console.log("Updaling analytic:")
         const response = await collections.ANALYTIC_COLLECTION.insertOne(uploaded);
+        console.log("Finished uploading analytic")
+
         console.log(response)
     } else {
         console.warn("Analytics disabled.")
