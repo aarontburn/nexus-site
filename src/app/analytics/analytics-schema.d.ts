@@ -22,4 +22,5 @@ export type RemoteAnalyticTypes =
 export interface BaseAnalytic {
     type: AnalyticTypes | RemoteAnalyticTypes;
     date: Date;
+    ttl?: Date;
 }

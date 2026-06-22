@@ -189,7 +189,7 @@ export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProper
     ) ?? undefined;
 
     if (result) {
-        return `Error inserting module; Module with the ID of ${moduleInfo["module-id"]} already found for user.`
+        return `Error uploading module; Module with the ID of ${moduleInfo["module-id"]} already found for user.`
     }
 
     try {

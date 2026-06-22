@@ -6,11 +6,12 @@ import "./tag.css"
 import { SessionContextValue } from "next-auth/react";
 import { Ref, RefObject, useEffect, useRef, useState } from "react";
 import { VerticalSpacer, Spinner, HorizontalSpacer } from "../../../../components/Components";
-import { imageToBase64, readUploadedText } from "../../../../utils/utils";
+import { imageToBase64 } from "../../../../utils/utils";
 import { getGitHubModuleInfo, Response } from "../../../server/github-handler";
 import { SEPARATORS, WithContext as ReactTags, Tag } from "react-tag-input";
 import { ModuleInfo, ModuleInfoWithoutServerSideProperties, RemoteModuleInfoJSON } from "../../../types";
 import { insertModule, editRemoteModule } from "../../../server/module-database/modules";
+import { formatMarkdownImageURLS, onReadmeUploaded, retrieveReadmeFromGithub } from "./utils";
 
 interface EditModuleScreenProps {
     session: SessionContextValue;
@@ -22,7 +23,6 @@ interface EditModuleScreenProps {
 }
 
 const MAX_IMAGE_MB: number = 6;
-const MAX_MARKDOWN_MB: number = 0.5; // 500 KB
 const BYTES_PER_MB: number = 1_000_000;
 
 
@@ -44,11 +44,12 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
     const [tags, setTags] = useState<Tag[]>(editTarget?.tags?.map(tag => ({ id: tag, className: '', text: tag })) ?? []);
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
     const [uploadedImageForceUpdate, forceUpdateImage] = useState<number>(0);
-    const [uploadedReadme, setUploadedReadme] = useState<File | undefined>(undefined);
+    const [readmeState, setReadmeValue] = useState<{value: string | undefined}>({value: editTarget?.readme});
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [remoteModuleInfo, setRemoteModuleInfo] = useState<RemoteModuleInfoJSON | undefined>(undefined);
     const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(isNewModule);
     const [isPublishing, setIsPublishing] = useState<boolean>(false);
+
 
 
     const checkGitHubRepo = (repoLink: string | undefined) => {
@@ -79,38 +80,6 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
         }
     }
 
-    const formatMarkdownImageURLS = () => {
-        if (!readmeTextRef.current || !githubRepoInputRef.current) {
-            return;
-        }
-
-        const normalizeURL = (url: string) => url.replace(/(?<!:)\/\/+/g, '/')
-
-
-        const markdownImageRegex: RegExp = /(!\[.*?\]\()(.+?)(\))/g;
-        const htmlImageRegex: RegExp = /(<img[^>]*\s+src=["'])(.*?)(["'])/gi;
-
-        readmeTextRef.current.value = readmeTextRef.current.value.replace(markdownImageRegex,
-            (whole: string, start: string, path: string, end: string) => {
-                if (path.startsWith("https:")) {
-                    return whole;
-                }
-
-                const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
-                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end);
-            });
-
-        readmeTextRef.current.value = readmeTextRef.current.value.replace(htmlImageRegex,
-            (whole: string, start: string, path: string, end: string) => {
-                if (path.startsWith("https:")) {
-                    return whole;
-                }
-
-                const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
-                return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end);
-            });
-    }
-
 
 
     const onPublishPressed = async () => {
@@ -129,8 +98,6 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             return;
         }
 
-
-
         const base64Image: string | undefined | null = await (async () => {
             const uploadedImage: File | undefined = imageUploadRef.current!.files?.[0];
             if (uploadedImage === undefined) { // no image uploaded
@@ -144,30 +111,9 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             return await imageToBase64(uploadedImage);
         })();
 
-        if (base64Image === null) {
+        if (base64Image === null || readmeState.value === undefined) {
             return;
         }
-
-        const readme: string | undefined | null = await (async () => {
-            if (useReadmeUpload) {
-                const uploadedReadme: File | undefined = readmeUploadRef.current!.files?.[0];
-                if (uploadedReadme) {
-                    if (uploadedReadme.size > MAX_MARKDOWN_MB * BYTES_PER_MB) {
-                        setNotificationText(`Error: README exceeds the ${MAX_MARKDOWN_MB} MB file limit. (Got ${(uploadedReadme.size / BYTES_PER_MB).toFixed(2)} MB)`);
-                        return null;
-                    }
-                    return await readUploadedText(uploadedReadme);
-                }
-                return editTarget?.readme;
-
-            } else {
-                return readmeTextRef.current?.value ?? undefined;
-            }
-        })();
-        if (readme === null) {
-            return;
-        }
-
 
         setIsPublishing(true);
 
@@ -177,7 +123,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             "module-id": remoteModuleInfo["id"],
             version: remoteModuleInfo.version,
             description: remoteModuleInfo.description,
-            readme: readme,
+            readme: readmeState.value,
             image: base64Image,
             repository: githubRepoInputRef.current!.value,
             tags: tags.map(tag => tag.text),
@@ -215,19 +161,16 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
 
     useEffect(() => {
         if (editTarget) {
-            checkGitHubRepo(editTarget.repository)
+            checkGitHubRepo(editTarget.repository);
         }
     }, []);
 
     useEffect(() => {
-        if (uploadedReadme) {
+        if (readmeState.value) {
             setUseReadmeUpload(false);
-            readUploadedText(uploadedReadme).then(text => {
-                if (readmeTextRef.current) readmeTextRef.current.value = `${text}`
-            })
         }
 
-    }, [uploadedReadme])
+    }, [readmeState])
 
     return <div className={styles["edit-screen"]}>
 
@@ -256,7 +199,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
             <VerticalSpacer size={"1rem"} />
 
             <div className={styles['edit-field']}>
-                <label>GitHub Repository</label>
+                <label>GitHub Repository <Gray>(e.g. https://github.com/username/repo-name)</Gray></label>
                 <VerticalSpacer size="0.25rem" />
                 <input ref={githubRepoInputRef} type="text" disabled={!isNewModule} defaultValue={editTarget?.repository ?? ''} />
             </div>
@@ -273,11 +216,11 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
 
                 <h1>{remoteModuleInfo.name}</h1>
 
-                <p>{remoteModuleInfo.author}</p>
+                <p>Author: {remoteModuleInfo.author}</p>
                 <p><Gray>{remoteModuleInfo.id} (v{remoteModuleInfo.version})</Gray></p>
 
-                <p>{remoteModuleInfo.description}</p>
-                <p>{remoteModuleInfo.platforms ?? []}</p>
+                <p>Description: {remoteModuleInfo.description}</p>
+                <p>Supported Platforms: {remoteModuleInfo.platforms ? (remoteModuleInfo.platforms ?? []).join(", ") : "No information found."}</p>
 
                 <VerticalSpacer size={"1rem"} />
 
@@ -374,7 +317,11 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                                 ref={readmeUploadRef}
                                 type='file'
                                 style={{ display: "none" }}
-                                onChange={(event) => setUploadedReadme((event.target.files ?? [])[0])}
+                                onChange={(event) => onReadmeUploaded({
+                                    setReadmeValue, 
+                                    event, 
+                                    sendNotification: setNotificationText
+                                })}
                             />
 
                             <div className={styles["aligned"]}>
@@ -382,13 +329,22 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                                     Upload
                                 </button>
                                 <HorizontalSpacer size={"1rem"} />
-                                <Gray>{uploadedReadme ? `(${uploadedReadme.name})` : ''}</Gray>
+
+                                <button className={globalStyles["button"]} onClick={() => retrieveReadmeFromGithub({
+                                    setReadmeValue,
+                                    sendNotification: setNotificationText, 
+                                    githubRepoInputRef: githubRepoInputRef
+                                })}>
+                                    Retrieve from repository
+                                </button>
+
+                                <HorizontalSpacer size={"1rem"} />
                             </div>
                         </>
                         : <div className={styles["readme-input-area"]}>
-                            <textarea ref={readmeTextRef} defaultValue={editTarget?.readme}></textarea>
+                            <textarea ref={readmeTextRef} defaultValue={readmeState.value} onChange={event => setReadmeValue({value: event.target.value})}></textarea>
                             <VerticalSpacer size="1rem" />
-                            <button className={globalStyles["button"]} onClick={formatMarkdownImageURLS}>Replace relative image paths with absolute paths</button>
+                            <button className={globalStyles["button"]} onClick={() => formatMarkdownImageURLS({readmeTextRef, githubRepoInputRef})}>Replace relative image paths with absolute paths</button>
                         </div>
                 }
                 <VerticalSpacer size={"2rem"} />

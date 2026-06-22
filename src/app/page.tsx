@@ -6,7 +6,8 @@ import "./styles.css";
 import googleCalendarImage from "./assets/google-calendar.png";
 import debugConsoleImage from "./assets/debug-console.png";
 import spotifyMonkeyImage from "./assets/spotify-monkey.png";
-import { Ref, useEffect, useRef } from "react";
+import { Ref, useEffect, useRef, useState } from "react";
+import { getLatestClientVersion } from "./utils/utils";
 
 
 function Accented({ children }: any) {
@@ -25,9 +26,15 @@ function Link({ url, text }: { text: string, url: string }) {
 
 export default function Home() {
     const aboutRef: Ref<HTMLHeadingElement> = useRef(null);
+    const [latest, setLatest] = useState<{ version: string; releaseDate: string } | null>(null);
+
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
+        (async () => {
+            const versionDetails = await getLatestClientVersion();
+            setLatest(versionDetails);
+        })();
     }, [])
 
 
@@ -35,15 +42,19 @@ export default function Home() {
 
         <div className="container first">
             <div className="left">
-                
+
                 <NexusLogo className={"nexus-logo-home"} width={"10rem"} height={"10rem"} />
                 <h1 className="title-text">NEXUS</h1>
+
                 <VerticalSpacer size="2rem" />
                 <p className="nexus-desc" style={{ fontSize: "1.5em" }}>A cross-platform application loader.</p>
-
                 <div className="home-buttons">
-                    <a className="main-clickable" href="/download">
-                        Download Now
+                    <a className="main-clickable download" href="/download">
+                        <p>Download Now</p>
+
+                        {latest && <sub>
+                            Latest <span style={{ color: "var(--accent-color)"}}>v{latest.version}</span> ({new Date(latest.releaseDate).toLocaleDateString()})
+                        </sub>}
                     </a>
 
                     <button
