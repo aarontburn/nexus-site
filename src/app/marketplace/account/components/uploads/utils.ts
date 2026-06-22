@@ -6,8 +6,8 @@ const BYTES_PER_MB: number = 1_000_000;
 
 
 export const onReadmeUploaded = async ({ setReadmeValue, sendNotification, event }: {
-    setReadmeValue: Dispatch<SetStateAction<{value: string | undefined}>>, 
-    sendNotification: (s: string) => void, 
+    setReadmeValue: Dispatch<SetStateAction<{ value: string | undefined }>>,
+    sendNotification: (s: string) => void,
     event: ChangeEvent<HTMLInputElement>
 }) => {
 
@@ -26,12 +26,12 @@ export const onReadmeUploaded = async ({ setReadmeValue, sendNotification, event
         return;
     }
     const uploadedText: string | undefined = await readUploadedText(uploadedFile);
-    setReadmeValue({value: uploadedText});
+    setReadmeValue({ value: uploadedText });
 }
 
 
 export const retrieveReadmeFromGithub = async ({ setReadmeValue, sendNotification, githubRepoInputRef }: {
-    setReadmeValue: Dispatch<SetStateAction<{value: string | undefined}>>,
+    setReadmeValue: Dispatch<SetStateAction<{ value: string | undefined }>>,
     sendNotification: (s: string) => void
     githubRepoInputRef: RefObject<HTMLInputElement | null>,
 }) => {
@@ -62,24 +62,28 @@ const normalizeURL = (url: string) => url.replace(/(?<!:)\/\/+/g, '/');
 const markdownImageRegex: RegExp = /(!\[.*?\]\()(.+?)(\))/g;
 const htmlImageRegex: RegExp = /(<img[^>]*\s+src=["'])(.*?)(["'])/gi;
 
-export const formatMarkdownImageURLS = ({ readmeTextRef, githubRepoInputRef }: {
-    readmeTextRef: RefObject<HTMLTextAreaElement | null>,
-    githubRepoInputRef: RefObject<HTMLInputElement | null>
-}) => {
-    if (!readmeTextRef.current || !githubRepoInputRef.current) {
-        return;
-    }
 
+
+export const formatMarkdownImageURLS = ({ githubURL, currentReadmeValue, setReadmeValue }: {
+    githubURL: string,
+    currentReadmeValue: string | undefined,
+    setReadmeValue: Dispatch<SetStateAction<{ value: string | undefined }>>
+}) => {
     const replacementFunction = (whole: string, start: string, path: string, end: string): string => {
         if (path.startsWith("https:")) {
             return whole;
         }
 
-        const githubLink: string = `${githubRepoInputRef.current!.value}/raw/main/`;
+        const githubLink: string = `${githubURL}/raw/main/`;
         return normalizeURL(start + githubLink + path.replace(/^(\.+)/, '') + end);
     }
 
-    readmeTextRef.current.value = readmeTextRef.current.value
-        .replace(markdownImageRegex, replacementFunction)
-        .replace(htmlImageRegex, replacementFunction);
+    if (currentReadmeValue) {
+        console.log("here")
+        const newReadmeValue = currentReadmeValue!
+            .replace(markdownImageRegex, replacementFunction)
+            .replace(htmlImageRegex, replacementFunction)
+
+        setReadmeValue({ value: newReadmeValue });
+    }
 }

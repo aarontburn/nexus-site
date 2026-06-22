@@ -44,7 +44,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
     const [tags, setTags] = useState<Tag[]>(editTarget?.tags?.map(tag => ({ id: tag, className: '', text: tag })) ?? []);
     const [uploadedImage, setUploadedImage] = useState<File | undefined>(undefined);
     const [uploadedImageForceUpdate, forceUpdateImage] = useState<number>(0);
-    const [readmeState, setReadmeValue] = useState<{value: string | undefined}>({value: editTarget?.readme});
+    const [readmeState, setReadmeValue] = useState<{ value: string | undefined }>({ value: editTarget?.readme });
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [remoteModuleInfo, setRemoteModuleInfo] = useState<RemoteModuleInfoJSON | undefined>(undefined);
     const [useReadmeUpload, setUseReadmeUpload] = useState<boolean>(isNewModule);
@@ -318,8 +318,8 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                                 type='file'
                                 style={{ display: "none" }}
                                 onChange={(event) => onReadmeUploaded({
-                                    setReadmeValue, 
-                                    event, 
+                                    setReadmeValue,
+                                    event,
                                     sendNotification: setNotificationText
                                 })}
                             />
@@ -332,7 +332,7 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
 
                                 <button className={globalStyles["button"]} onClick={() => retrieveReadmeFromGithub({
                                     setReadmeValue,
-                                    sendNotification: setNotificationText, 
+                                    sendNotification: setNotificationText,
                                     githubRepoInputRef: githubRepoInputRef
                                 })}>
                                     Retrieve from repository
@@ -342,9 +342,15 @@ export default function EditModuleScreen({ triggerRefresh, session, editTarget, 
                             </div>
                         </>
                         : <div className={styles["readme-input-area"]}>
-                            <textarea ref={readmeTextRef} defaultValue={readmeState.value} onChange={event => setReadmeValue({value: event.target.value})}></textarea>
+                            <textarea ref={readmeTextRef} value={readmeState.value} onChange={event => setReadmeValue({ value: event.target.value })}></textarea>
                             <VerticalSpacer size="1rem" />
-                            <button className={globalStyles["button"]} onClick={() => formatMarkdownImageURLS({readmeTextRef, githubRepoInputRef})}>Replace relative image paths with absolute paths</button>
+                            <button className={globalStyles["button"]} onClick={() => formatMarkdownImageURLS({
+                                githubURL: githubRepoInputRef.current!.value,
+                                currentReadmeValue: readmeState.value,
+                                setReadmeValue
+                            })}>
+                                Replace relative image paths with absolute paths
+                            </button>
                         </div>
                 }
                 <VerticalSpacer size={"2rem"} />
