@@ -52,7 +52,10 @@ function OSDownload({ platform }: { platform: Platform }) {
             className={`${styles["dl-download-button"]} ${platform.link ? '' : styles["disabled"]}`}
             aria-disabled={!platform.link}
             target="_blank"
-            onClick={() => createClientDownloadAnalytic(platform.platform)}
+            onClick={() => {
+                console.info(`Nexus client downloaded: platform: ${platform}`);  
+                createClientDownloadAnalytic(platform.platform);
+            }}
         >
             <div className={`${styles[`${platform.cssName}-logo`]} ${styles['dl-logo']}`}></div>
             {platform.displayName}

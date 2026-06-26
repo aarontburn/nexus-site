@@ -27,11 +27,11 @@ export async function getAllRemoteModules(): Promise<[ModuleInfo[], Promise<Modu
 }
 
 
-export async function onModuleDownloaded(_id: string) {
+export async function onModuleDownloaded(_id: string, source: "client" | "package") {
     const collections: Collections = await connectToDatabase();
     const result: WithId<ModuleInfo> | undefined = await collections.MODULE_COLLECTION.findOne({ _id: new ObjectId(_id) as any }) ?? undefined;
     if (!result) {
-        console.error("Couldn't find module to increment download count: " + _id);
+        console.error("[onModuleDownloaded] Couldn't find module to increment download count: " + _id);
         return;
     }
 
@@ -47,8 +47,13 @@ export async function onModuleDownloaded(_id: string) {
         await createModuleDownloadAnalytic(_id, result["module-id"])
 
     } catch (e) {
-        console.log(e)
+        console.error(`[onModuleDownloaded] Error in updateOne on _id: ${_id}`);
+        console.error(e);
+        return;
     }
+
+    
+    console.info(`[onModuleDownloaded] Module downloaded: ${result.name} | ${source}`);
 }
 
 
@@ -169,7 +174,6 @@ export async function deleteRemoteModule(moduleInfo: ModuleInfo) {
 
     await collections.LIKE_COLLECTION.deleteMany({ "module-id": moduleInfo['module-id'] });
     await createModuleDeleteAnalytic(userID, moduleInfo["module-id"]);
-
 }
 
 export async function insertModule(moduleInfo: ModuleInfoWithoutServerSideProperties) {

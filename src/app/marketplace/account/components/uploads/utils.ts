@@ -79,7 +79,6 @@ export const formatMarkdownImageURLS = ({ githubURL, currentReadmeValue, setRead
     }
 
     if (currentReadmeValue) {
-        console.log("here")
         const newReadmeValue = currentReadmeValue!
             .replace(markdownImageRegex, replacementFunction)
             .replace(htmlImageRegex, replacementFunction)

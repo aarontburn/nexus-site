@@ -116,7 +116,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 href={`nexus-app://install_${moduleInfo.repository?.replace("https://", '')}/releases/latest/download/${moduleInfo['module-id']}.zip`}
                 className={styles['module-link']}
                 style={{ backgroundColor: "#2d4677" }}
-                onClick={() => onModuleDownloaded(moduleInfo._id)}
+                onClick={() => onModuleDownloaded(moduleInfo._id, "client")}
             >
                 <NexusLogo className={styles['logo']} style={{ backgroundColor: "white" }} width={"1em"} height={"1em"} />
                 <p>Install to Nexus</p>
@@ -127,7 +127,7 @@ function ModuleInfoBody({ moduleInfo }: { moduleInfo: ModuleInfo }) {
                 href={`${moduleInfo.repository}/releases/latest/download/${moduleInfo['module-id']}.zip`}
                 className={styles['module-link']}
                 target='_blank'
-                onClick={() => onModuleDownloaded(moduleInfo._id)}
+                onClick={() => onModuleDownloaded(moduleInfo._id, "package")}
             >
                 <div className={`${styles["download-logo"]} ${styles['logo']}`}></div>
                 <p>Manual Download</p>
